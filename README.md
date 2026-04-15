@@ -72,9 +72,7 @@ vaulta/
 ├── app.html            # App / deposit interface
 ├── docs.html           # Documentation page
 ├── SKILL.md            # Full project context & design system
-├── README.md           # This file
-└── .github/
-    └── ISSUE_TEMPLATE.md
+└── README.md           # This file
 ```
 
 ---
