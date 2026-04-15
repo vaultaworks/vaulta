@@ -105,18 +105,19 @@ body::after { content:''; position:fixed; inset:0; z-index:9999; pointer-events:
 .dep-sub { font-family:var(--mono); font-size:10px; letter-spacing:1.5px; color:var(--fog); }
 
 /* VAULT TABS */
-.vault-tabs { display:flex; gap:1px; background:var(--line2); margin-bottom:32px; }
+.vault-tabs { display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin-bottom:32px; }
 .vtab {
-  flex:1; padding:14px 8px; text-align:center; border:none; background:var(--surface);
-  cursor:pointer; transition:all var(--t); font-family:var(--mono); font-size:9px;
-  letter-spacing:1.5px; text-transform:uppercase; color:var(--fog);
-  display:flex; flex-direction:column; align-items:center; gap:4px;
+  padding:16px 14px; text-align:left; border:1px solid var(--line); background:var(--lift);
+  cursor:pointer; transition:all var(--t); font-family:var(--mono); font-size:10px;
+  letter-spacing:1px; text-transform:uppercase; color:var(--fog); border-radius:4px;
+  display:flex; flex-direction:column; align-items:flex-start; gap:8px;
 }
-.vtab:hover { background:var(--lift); color:var(--ink); }
-.vtab.sel-stable { background:var(--lime-bg); color:var(--lime); border:1px solid var(--lime-bd); border-bottom:2px solid var(--lime); }
-.vtab.sel-boost  { background:var(--gold-bg); color:var(--gold); border:1px solid var(--gold-bd); border-bottom:2px solid var(--gold); }
-.vtab.sel-alpha  { background:var(--red-bg);  color:var(--red);  border:1px solid var(--red-bd);  border-bottom:2px solid var(--red); }
-.vtab-apy { font-family:var(--display); font-size:18px; letter-spacing:1px; }
+.vtab:hover { border-color:var(--gold-bd); transform:translateY(-2px); background:var(--surface); }
+.vtab.sel-stable { background:var(--lime-bg); color:var(--ink); border:1px solid var(--lime); box-shadow: 0 4px 20px rgba(57,217,138,0.15); }
+.vtab.sel-boost  { background:var(--gold-bg); color:var(--ink); border:1px solid var(--gold); box-shadow: 0 4px 20px rgba(255,255,255,0.1); }
+.vtab.sel-alpha  { background:var(--red-bg);  color:var(--ink); border:1px solid var(--red); box-shadow: 0 4px 20px rgba(212,89,92,0.15); }
+.vtab-apy { font-family:var(--display); font-size:24px; letter-spacing:1px; display:flex; align-items:baseline; gap:4px; }
+.vtab-apy span:last-child { font-size:10px; color:var(--fog); font-family:var(--mono); }
 
 /* FORM */
 .form-group { margin-bottom:24px; }
@@ -209,7 +210,13 @@ canvas.chart-c { width:100%; height:180px; display:block; }
     <div class="nav-pulse"></div>
     TESTNET · BASE SEPOLIA
   </div>
-  <a href="index.html" class="nav-back">← Back to site</a>
+  <div style="display:flex; align-items:center; gap:24px;">
+    <a href="index.html" class="nav-back">← Back to site</a>
+    <div style="background:var(--lift); border:1px solid var(--line); border-radius:20px; padding:6px 14px; display:flex; align-items:center; gap:8px; font-family:var(--mono); font-size:10px; color:var(--ink); cursor:pointer; transition:all var(--t);" onmouseover="this.style.borderColor='var(--gold-bd)'" onmouseout="this.style.borderColor='var(--line)'">
+      <div style="width:6px;height:6px;border-radius:50%;background:var(--lime);box-shadow:0 0 6px var(--lime);"></div>
+      <span style="color:var(--fog)">Connected:</span> 0x1234...5678
+    </div>
+  </div>
 </nav>
 
 <!-- APP LAYOUT -->
@@ -266,16 +273,25 @@ canvas.chart-c { width:100%; height:180px; display:block; }
 
       <div class="vault-tabs" id="vaultTabs">
         <button class="vtab sel-stable" onclick="selectVault('stable', null, this)" id="tab-stable">
-          <span>Stable</span>
-          <span class="vtab-apy c-stable-t" id="tab-apy-stable">11.2%</span>
+          <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+            <span style="font-weight:700;">Stable</span>
+            <div style="color:var(--lime); font-size:14px;">✦</div>
+          </div>
+          <div class="vtab-apy c-stable-t"><span id="tab-apy-stable">11.2%</span> <span>APY</span></div>
         </button>
         <button class="vtab" onclick="selectVault('boost', null, this)" id="tab-boost">
-          <span>Boost</span>
-          <span class="vtab-apy c-boost-t" id="tab-apy-boost">18.7%</span>
+          <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+            <span style="font-weight:700;">Boost</span>
+            <div style="color:var(--gold); font-size:14px;">✦✦</div>
+          </div>
+          <div class="vtab-apy c-boost-t"><span id="tab-apy-boost">18.7%</span> <span>APY</span></div>
         </button>
         <button class="vtab" onclick="selectVault('alpha', null, this)" id="tab-alpha">
-          <span>Alpha</span>
-          <span class="vtab-apy c-alpha-t" id="tab-apy-alpha">33.4%</span>
+          <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+            <span style="font-weight:700;">Alpha</span>
+            <div style="color:var(--red); font-size:14px;">✦✦✦</div>
+          </div>
+          <div class="vtab-apy c-alpha-t"><span id="tab-apy-alpha">33.4%</span> <span>APY</span></div>
         </button>
       </div>
 
@@ -288,6 +304,7 @@ canvas.chart-c { width:100%; height:180px; display:block; }
         <div class="form-input-wrap">
           <div class="form-pfx">$</div>
           <input class="form-input" id="amount" type="number" value="1000" min="1" oninput="calc()">
+          <button style="align-self:center; margin-right:12px; background:var(--gold-bg); border:1px solid var(--gold-bd); border-radius:3px; color:var(--gold); cursor:pointer; font-family:var(--mono); font-size:9px; font-weight:700; padding:6px 10px; transition:all 0.2s;" onmouseover="this.style.background='var(--gold)'; this.style.color='var(--void)'" onmouseout="this.style.background='var(--gold-bg)'; this.style.color='var(--gold)'" onclick="setAmt(250000)">MAX</button>
         </div>
         <div class="quick-btns">
           <button class="qbtn" onclick="setAmt(100)">$100</button>
@@ -410,6 +427,9 @@ canvas.chart-c { width:100%; height:180px; display:block; }
     <button class="modal-x" onclick="closeModal()">✕</button>
     <div class="modal-vname" id="mName">STABLE VAULT</div>
     <div class="modal-vsub">// testnet simulation · base-sepolia · chain 84532</div>
+    <div id="mProgWrap" style="height:4px;width:100%;background:rgba(255,255,255,0.05);margin-bottom:24px;border-radius:2px;overflow:hidden;display:none;">
+      <div id="mProgBar" style="height:100%;width:0%;background:var(--lime);transition:width 0.4s var(--ease);box-shadow:0 0 10px var(--lime);"></div>
+    </div>
     <div class="tx-steps" id="txSteps">
       <div class="tx-step" id="s1"><div class="tx-n">01</div><div><div class="tx-title">CONNECT WALLET</div><div class="tx-desc">Simulating wallet handshake with Base Sepolia...</div></div></div>
       <div class="tx-step" id="s2"><div class="tx-n">02</div><div><div class="tx-title">APPROVE USDC</div><div class="tx-desc">ERC-20 approval (simulated gas: 0.0002 ETH)...</div></div></div>
@@ -579,19 +599,26 @@ function openModal() {
   const names = { stable:'STABLE VAULT', boost:'BOOST VAULT', alpha:'ALPHA VAULT' };
   document.getElementById('mName').textContent = names[vault];
   document.getElementById('txSteps').style.display = 'flex';
+  document.getElementById('mProgWrap').style.display = 'block';
+  document.getElementById('mProgBar').style.width = '0%';
   document.getElementById('mOk').className = 'modal-ok';
   ['s1','s2','s3','s4'].forEach(id => document.getElementById(id).className = 'tx-step');
   document.getElementById('modal').classList.add('open');
 
   const aTimes = [80, 1000, 2100, 3200];
   const dTimes = [900, 2000, 3100, 4300];
+  const progW  = ['10%', '40%', '75%', '100%'];
   ['s1','s2','s3','s4'].forEach((id, i) => {
-    setTimeout(() => document.getElementById(id).className = 'tx-step active', aTimes[i]);
+    setTimeout(() => { 
+      document.getElementById(id).className = 'tx-step active'; 
+      document.getElementById('mProgBar').style.width = progW[i];
+    }, aTimes[i]);
     setTimeout(() => document.getElementById(id).className = 'tx-step done', dTimes[i]);
   });
 
   setTimeout(() => {
     document.getElementById('txSteps').style.display = 'none';
+    document.getElementById('mProgWrap').style.display = 'none';
     const amt = parseFloat(document.getElementById('amount').value) || 1000;
     const apy = APY[vault];
     const hash = '0x' + [...Array(40)].map(() => Math.floor(Math.random()*16).toString(16)).join('');
