@@ -456,16 +456,36 @@ body::after {
 .vault {
   background: var(--surface); padding: 44px 36px;
   position: relative; overflow: hidden;
-  transition: background var(--t);
+  transition: background var(--t), transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+  z-index: 1;
 }
 .vault::before {
   content: ''; position: absolute; top: 0; inset: 0 0 auto 0; height: 1px;
   transition: opacity var(--t);
 }
+.vault::after {
+  content: ''; position: absolute; inset: 0; border: 1px solid transparent;
+  pointer-events: none; transition: border-color 0.4s var(--ease);
+}
 .vault.v-stable::before { background: linear-gradient(90deg, transparent 0%, var(--lime) 50%, transparent 100%); }
 .vault.v-boost::before  { background: linear-gradient(90deg, transparent 0%, var(--gold) 50%, transparent 100%); }
 .vault.v-alpha::before  { background: linear-gradient(90deg, transparent 0%, var(--red) 50%, transparent 100%); }
-.vault:hover { background: var(--lift); }
+.vault:hover { 
+  background: var(--lift); 
+  transform: scale(1.02) translateY(-4px); 
+  z-index: 10; 
+}
+.vault.v-stable:hover { box-shadow: 0 12px 40px rgba(57,217,138,0.12); }
+.vault.v-stable:hover::after { border-color: rgba(57,217,138,0.4); }
+.vault.v-boost:hover  { box-shadow: 0 12px 40px rgba(255,255,255,0.08); }
+.vault.v-boost:hover::after { border-color: rgba(255,255,255,0.25); }
+.vault.v-alpha:hover  { box-shadow: 0 12px 40px rgba(212,89,92,0.15); }
+.vault.v-alpha:hover::after { border-color: rgba(212,89,92,0.35); }
+
+@keyframes apyShimmer {
+  0% { transform: skewX(-20deg) translateX(-150%); }
+  50%, 100% { transform: skewX(-20deg) translateX(250%); }
+}
 .vault-risk {
   font-family: var(--mono); font-size: 9px; letter-spacing: 2.5px;
   text-transform: uppercase; padding: 4px 10px;
@@ -476,7 +496,16 @@ body::after {
 .v-alpha  .vault-risk { color: var(--red); border-color: rgba(212,89,92,0.25); background: rgba(212,89,92,0.05); }
 
 .vault-name { font-family: var(--display); font-size: 32px; letter-spacing: 3px; margin-bottom: 12px; }
-.vault-apy  { font-family: var(--display); font-size: 58px; line-height: 1; letter-spacing: 1px; }
+.vault-apy  { 
+  font-family: var(--display); font-size: 58px; line-height: 1; letter-spacing: 1px; 
+  position: relative; overflow: hidden; display: inline-block; padding-right: 4px;
+}
+.vault-apy::after {
+  content: ''; position: absolute; top: 0; left: 0; width: 40%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transform: skewX(-20deg) translateX(-150%);
+  animation: apyShimmer 4s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
 .vault-apy-sub { font-family: var(--mono); font-size: 9px; letter-spacing: 2.5px; color: var(--fog); margin-bottom: 28px; margin-top: 4px; }
 .v-stable .vault-apy { color: var(--lime); }
 .v-boost  .vault-apy { color: var(--gold); }
@@ -503,7 +532,11 @@ body::after {
   letter-spacing: 2.5px; text-transform: uppercase;
   border: 1px solid; background: transparent; cursor: pointer;
   text-align: center; text-decoration: none;
-  transition: background var(--t), color var(--t);
+  transition: all 0.4s var(--ease);
+  opacity: 0; transform: translateY(15px); pointer-events: none;
+}
+.vault:hover .vault-action {
+  opacity: 1; transform: translateY(0); pointer-events: auto;
 }
 .v-stable .vault-action { color: var(--lime); border-color: var(--lime-bd); }
 .v-stable .vault-action:hover { background: var(--lime); color: var(--void); }
@@ -1065,7 +1098,7 @@ footer {
           <div class="vault-bar-meta"><span>TVL CAPACITY</span><span>$1.24M / $5M</span></div>
           <div class="vault-bar-track"><div class="vault-bar-fill" style="width:0" data-target="24.8"></div></div>
         </div>
-        <button class="vault-action" onclick="openModal('STABLE','Stable Vault')">Deposit on Testnet →</button>
+        <button class="vault-action" onclick="openModal('STABLE','Stable Vault')">Select Vault →</button>
       </div>
 
       <!-- BOOST -->
@@ -1085,7 +1118,7 @@ footer {
           <div class="vault-bar-meta"><span>TVL CAPACITY</span><span>$680K / $10M</span></div>
           <div class="vault-bar-track"><div class="vault-bar-fill" style="width:0" data-target="6.8"></div></div>
         </div>
-        <button class="vault-action" onclick="openModal('BOOST','Boost Vault')">Deposit on Testnet →</button>
+        <button class="vault-action" onclick="openModal('BOOST','Boost Vault')">Select Vault →</button>
       </div>
 
       <!-- ALPHA -->
@@ -1105,7 +1138,7 @@ footer {
           <div class="vault-bar-meta"><span>TVL CAPACITY</span><span>$210K / $5M</span></div>
           <div class="vault-bar-track"><div class="vault-bar-fill" style="width:0" data-target="4.2"></div></div>
         </div>
-        <button class="vault-action" onclick="openModal('ALPHA','Alpha Vault')">Deposit on Testnet →</button>
+        <button class="vault-action" onclick="openModal('ALPHA','Alpha Vault')">Select Vault →</button>
       </div>
 
     </div>
