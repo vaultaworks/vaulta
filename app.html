@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VAULTA — App · Testnet Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #000000; --deep: #080808; --surface: #111111; --lift: #1a1a1a;
+  --line: rgba(255,255,255,0.055); --line2: rgba(255,255,255,0.028);
+  --gold: #ffffff; --gold-hi: #eeeeee; --gold-lo: rgba(255,255,255,0.35);
+  --gold-bg: rgba(255,255,255,0.05); --gold-bd: rgba(255,255,255,0.15);
+  --lime: #39d98a; --lime-lo: rgba(57,217,138,0.45);
+  --lime-bg: rgba(57,217,138,0.06); --lime-bd: rgba(57,217,138,0.2);
+  --sky: #aaaaaa; --red: #d4595c; --red-bg: rgba(212,89,92,0.05); --red-bd: rgba(212,89,92,0.25);
+  --ink: #f0f0f0; --fog: rgba(240,240,240,0.42); --mist: rgba(240,240,240,0.2);
+  --sans: 'DM Sans', sans-serif; --mono: 'Space Mono', monospace; --display: 'Bebas Neue', sans-serif;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1); --t: 0.28s;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { background:var(--void); color:var(--ink); font-family:var(--sans); -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+body::after { content:''; position:fixed; inset:0; z-index:9999; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='1'/%3E%3C/svg%3E"); opacity:0.02; mix-blend-mode:overlay; }
+::-webkit-scrollbar { width:4px; } ::-webkit-scrollbar-track { background:var(--void); } ::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.2); }
+
+/* NAV */
+.app-nav {
+  position:fixed; top:0; left:0; right:0; z-index:200; height:60px;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 32px; background:rgba(0,0,0,0.96); border-bottom:1px solid var(--line2);
+  backdrop-filter:blur(16px);
+}
+.nav-brand { font-family:var(--display); font-size:20px; letter-spacing:6px; color:var(--gold); text-decoration:none; display:flex; align-items:center; gap:8px; }
+.nav-pulse { width:5px; height:5px; border-radius:50%; background:var(--lime); animation:pulse 2s infinite; }
+.nav-testnet-badge { background:var(--lime-bg); border:1px solid var(--lime-bd); padding:4px 12px; font-family:var(--mono); font-size:9px; letter-spacing:2px; color:var(--lime); display:flex; align-items:center; gap:6px; }
+.nav-back { color:var(--fog); text-decoration:none; font-family:var(--mono); font-size:10px; letter-spacing:2px; transition:color var(--t); }
+.nav-back:hover { color:var(--ink); }
+@keyframes pulse { 0%,100% { opacity:1; box-shadow:0 0 0 0 rgba(57,217,138,0.5); } 50% { opacity:.6; box-shadow:0 0 0 5px rgba(57,217,138,0); } }
+
+/* LAYOUT */
+.app-layout {
+  display:grid; grid-template-columns:300px 1fr 340px;
+  gap:1px; background:var(--line2); min-height:100vh;
+  padding-top:60px;
+}
+.sidebar-l, .sidebar-r { background:var(--deep); border-right:1px solid var(--line2); }
+.sidebar-r { border-right:none; border-left:1px solid var(--line2); }
+.main-col { background:var(--void); }
+@media (max-width:1100px) { .app-layout { grid-template-columns:1fr; } .sidebar-l,.sidebar-r { display:none; } }
+
+/* PANEL HEADER */
+.panel-hd {
+  padding:20px 24px; border-bottom:1px solid var(--line2);
+  display:flex; align-items:center; gap:10px;
+  font-family:var(--mono); font-size:10px; letter-spacing:2.5px; color:var(--fog);
+}
+.panel-hd-dot { width:4px; height:4px; border-radius:50%; background:var(--lime); animation:pulse 2s infinite; }
+
+/* VAULT SELECTOR */
+.vault-selector { padding:20px 16px; display:flex; flex-direction:column; gap:6px; }
+.vs-item {
+  display:flex; align-items:center; gap:12px; padding:14px 16px;
+  border:1px solid var(--line2); background:transparent; cursor:pointer;
+  transition:all var(--t); text-align:left; width:100%;
+}
+.vs-item:hover { border-color:var(--gold-bd); background:var(--gold-bg); }
+.vs-item.active-v { border-color:var(--gold-bd); background:var(--gold-bg); }
+.vs-item.active-stable { border-color:var(--lime-bd); background:var(--lime-bg); }
+.vs-item.active-boost  { border-color:var(--gold-bd); background:var(--gold-bg); }
+.vs-item.active-alpha  { border-color:var(--red-bd);  background:var(--red-bg); }
+.vs-color { width:3px; height:40px; border-radius:2px; flex-shrink:0; }
+.c-stable { background:var(--lime); }
+.c-boost  { background:var(--gold); }
+.c-alpha  { background:var(--red); }
+.vs-name { font-family:var(--display); font-size:16px; letter-spacing:2px; }
+.vs-apy { font-family:var(--mono); font-size:10px; letter-spacing:1px; margin-top:2px; }
+.c-stable-t { color:var(--lime); } .c-boost-t { color:var(--gold); } .c-alpha-t { color:var(--red); }
+.vs-risk { margin-left:auto; font-family:var(--mono); font-size:8px; letter-spacing:1px; color:var(--fog); }
+
+/* LIVE STATS SIDEBAR */
+.live-stats { padding:16px; display:flex; flex-direction:column; gap:6px; }
+.ls-card { background:var(--surface); border:1px solid var(--line2); padding:14px 16px; }
+.ls-label { font-family:var(--mono); font-size:9px; letter-spacing:2px; color:var(--fog); margin-bottom:6px; }
+.ls-val { font-family:var(--display); font-size:22px; letter-spacing:2px; }
+.ls-sub { font-family:var(--mono); font-size:9px; color:var(--fog); margin-top:3px; }
+.ls-live { display:flex; align-items:center; gap:5px; font-family:var(--mono); font-size:8px; color:var(--lime); margin-top:4px; }
+.ls-pip { width:4px; height:4px; border-radius:50%; background:var(--lime); animation:pulse 1.5s infinite; }
+
+/* REBALANCE LOG */
+.rlog { padding:16px; }
+.rlog-title { font-family:var(--mono); font-size:9px; letter-spacing:2px; color:var(--fog); margin-bottom:12px; }
+.rlog-list { display:flex; flex-direction:column; gap:4px; max-height:240px; overflow-y:auto; }
+.rlog-list::-webkit-scrollbar { width:2px; } .rlog-list::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.2); }
+.rlog-item { font-family:var(--mono); font-size:9px; letter-spacing:0.8px; color:var(--fog); padding:6px 10px; border:1px solid var(--line2); background:rgba(255,255,255,0.01); display:flex; gap:10px; align-items:center; }
+.rlog-time { color:var(--gold-lo); white-space:nowrap; }
+.rlog-act  { color:var(--lime); }
+.rlog-proto { color:rgba(200,200,200,0.7); }
+
+/* MAIN DEPOSIT UI */
+.deposit-ui { padding:40px 48px; max-width:640px; }
+.dep-header { margin-bottom:36px; }
+.dep-title { font-family:var(--display); font-size:40px; letter-spacing:4px; margin-bottom:6px; }
+.dep-sub { font-family:var(--mono); font-size:10px; letter-spacing:1.5px; color:var(--fog); }
+
+/* VAULT TABS */
+.vault-tabs { display:flex; gap:1px; background:var(--line2); margin-bottom:32px; }
+.vtab {
+  flex:1; padding:14px 8px; text-align:center; border:none; background:var(--surface);
+  cursor:pointer; transition:all var(--t); font-family:var(--mono); font-size:9px;
+  letter-spacing:1.5px; text-transform:uppercase; color:var(--fog);
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+}
+.vtab:hover { background:var(--lift); color:var(--ink); }
+.vtab.sel-stable { background:var(--lime-bg); color:var(--lime); border:1px solid var(--lime-bd); border-bottom:2px solid var(--lime); }
+.vtab.sel-boost  { background:var(--gold-bg); color:var(--gold); border:1px solid var(--gold-bd); border-bottom:2px solid var(--gold); }
+.vtab.sel-alpha  { background:var(--red-bg);  color:var(--red);  border:1px solid var(--red-bd);  border-bottom:2px solid var(--red); }
+.vtab-apy { font-family:var(--display); font-size:18px; letter-spacing:1px; }
+
+/* FORM */
+.form-group { margin-bottom:24px; }
+.form-label { font-family:var(--mono); font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--fog); display:flex; justify-content:space-between; margin-bottom:10px; }
+.form-input-wrap { display:flex; border:1px solid var(--line); background:rgba(255,255,255,0.02); transition:border-color var(--t); }
+.form-input-wrap:focus-within { border-color:var(--gold-bd); }
+.form-pfx { padding:0 18px; font-family:var(--mono); font-size:14px; color:var(--gold); border-right:1px solid var(--line); display:flex; align-items:center; }
+.form-input { flex:1; background:transparent; border:none; outline:none; color:var(--ink); font-family:var(--mono); font-size:22px; padding:14px 18px; letter-spacing:1px; -moz-appearance:textfield; }
+.form-input::-webkit-inner-spin-button, .form-input::-webkit-outer-spin-button { -webkit-appearance:none; }
+.quick-btns { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
+.qbtn { padding:5px 12px; border:1px solid var(--line2); font-family:var(--mono); font-size:9px; letter-spacing:1.5px; color:var(--fog); cursor:pointer; background:transparent; transition:all var(--t); }
+.qbtn:hover { border-color:var(--gold-bd); color:var(--gold); }
+
+/* DURATION SLIDER */
+.slider { width:100%; cursor:pointer; accent-color:var(--gold); }
+
+/* RESULTS PANEL */
+.results {
+  background:rgba(255,255,255,0.015); border:1px solid var(--line);
+  padding:24px; margin-bottom:28px;
+}
+.result-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--line2); }
+.result-row:last-child { border-bottom:none; padding-bottom:0; }
+.result-lbl { font-family:var(--mono); font-size:10px; letter-spacing:1.5px; color:var(--fog); }
+.result-val { font-family:var(--display); font-size:24px; letter-spacing:1px; color:var(--lime); }
+.result-val.gold { color:var(--gold); }
+.result-val.sm { font-size:16px; }
+
+/* ACTION BTN */
+.dep-btn {
+  width:100%; padding:16px; font-family:var(--mono); font-size:11px;
+  letter-spacing:3px; text-transform:uppercase; cursor:pointer;
+  border:1px solid; background:transparent; font-weight:700;
+  transition:all var(--t); display:flex; align-items:center; justify-content:center; gap:10px;
+}
+.dep-btn-stable { color:var(--lime); border-color:var(--lime-bd); }
+.dep-btn-stable:hover { background:var(--lime); color:var(--void); }
+.dep-btn-boost  { color:var(--gold); border-color:var(--gold-bd); }
+.dep-btn-boost:hover  { background:var(--gold); color:var(--void); }
+.dep-btn-alpha  { color:var(--red);  border-color:var(--red-bd); }
+.dep-btn-alpha:hover  { background:var(--red);  color:var(--void); }
+.dep-note { margin-top:10px; font-family:var(--mono); font-size:9px; letter-spacing:0.8px; color:var(--mist); text-align:center; }
+
+/* CHART AREA */
+.chart-area { padding:40px 48px; border-top:1px solid var(--line2); }
+.chart-hd { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:24px; }
+.chart-title { font-family:var(--display); font-size:22px; letter-spacing:3px; }
+.chart-sub { font-family:var(--mono); font-size:9px; letter-spacing:1.5px; color:var(--fog); margin-top:4px; }
+.chart-legend { display:flex; gap:16px; font-family:var(--mono); font-size:9px; letter-spacing:1.5px; }
+.leg-item { display:flex; align-items:center; gap:6px; cursor:pointer; transition:opacity var(--t); }
+.leg-dot { width:8px; height:8px; border-radius:50%; }
+canvas.chart-c { width:100%; height:180px; display:block; }
+
+/* TX FLOW MODAL */
+.modal-bg { position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.94); backdrop-filter:blur(14px); display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.3s; }
+.modal-bg.open { opacity:1; pointer-events:all; }
+.modal-box { background:var(--deep); border:1px solid var(--gold-bd); max-width:460px; width:90%; padding:44px; position:relative; transform:translateY(20px); transition:transform 0.35s var(--ease); }
+.modal-bg.open .modal-box { transform:translateY(0); }
+.modal-x { position:absolute; top:18px; right:18px; background:none; border:none; color:var(--fog); font-size:18px; cursor:pointer; width:32px; height:32px; display:flex; align-items:center; justify-content:center; transition:color var(--t); }
+.modal-x:hover { color:var(--ink); }
+.modal-vname { font-family:var(--display); font-size:28px; letter-spacing:3px; margin-bottom:4px; }
+.modal-vsub { font-family:var(--mono); font-size:10px; letter-spacing:1.5px; color:var(--fog); margin-bottom:36px; }
+.tx-steps { display:flex; flex-direction:column; gap:10px; }
+.tx-step { display:flex; align-items:center; gap:16px; padding:16px; border:1px solid var(--line); background:rgba(255,255,255,0.015); transition:all 0.3s; }
+.tx-step.active { border-color:var(--gold-bd); background:var(--gold-bg); }
+.tx-step.done { border-color:var(--lime-bd); background:var(--lime-bg); }
+.tx-n { width:34px; height:34px; border-radius:50%; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:11px; color:var(--fog); flex-shrink:0; transition:all 0.3s; }
+.tx-step.active .tx-n { border-color:var(--gold); color:var(--gold); animation:glow-g 1.2s infinite; }
+.tx-step.done .tx-n   { border-color:var(--lime); color:var(--lime); background:var(--lime-bg); }
+@keyframes glow-g { 0%,100% { box-shadow:0 0 0 0 rgba(255,255,255,0.2); } 50% { box-shadow:0 0 0 6px rgba(255,255,255,0.2); } }
+.tx-title { font-family:var(--display); font-size:15px; letter-spacing:2px; }
+.tx-desc  { font-family:var(--mono); font-size:10px; color:var(--fog); margin-top:3px; }
+.modal-ok { display:none; text-align:center; padding:16px 0; }
+.modal-ok.show { display:block; }
+.ok-icon { width:56px; height:56px; border-radius:50%; border:1px solid var(--lime-bd); background:var(--lime-bg); display:flex; align-items:center; justify-content:center; margin:0 auto 18px; font-size:22px; color:var(--lime); }
+.ok-title { font-family:var(--display); font-size:24px; letter-spacing:3px; color:var(--lime); margin-bottom:8px; }
+.ok-detail { font-family:var(--mono); font-size:11px; color:var(--fog); line-height:1.85; }
+.ok-hash { font-family:var(--mono); font-size:9px; color:var(--gold-lo); margin-top:12px; word-break:break-all; }
+</style>
+</head>
+<body>
+
+<!-- APP NAV -->
+<nav class="app-nav">
+  <a class="nav-brand" href="index.html">
+    <div class="nav-pulse"></div>
+    VAULTA
+  </a>
+  <div class="nav-testnet-badge">
+    <div class="nav-pulse"></div>
+    TESTNET · BASE SEPOLIA
+  </div>
+  <a href="index.html" class="nav-back">← Back to site</a>
+</nav>
+
+<!-- APP LAYOUT -->
+<div class="app-layout">
+
+  <!-- LEFT SIDEBAR: Vault Selector -->
+  <div class="sidebar-l">
+    <div class="panel-hd">
+      <div class="panel-hd-dot"></div>
+      SELECT VAULT
+    </div>
+    <div class="vault-selector">
+      <button class="vs-item active-stable" id="vs-stable" onclick="selectVault('stable', this)">
+        <div class="vs-color c-stable"></div>
+        <div>
+          <div class="vs-name">STABLE VAULT</div>
+          <div class="vs-apy c-stable-t" id="vs-apy-stable">11.2% Est. APY</div>
+        </div>
+        <div class="vs-risk">LOW</div>
+      </button>
+      <button class="vs-item" id="vs-boost" onclick="selectVault('boost', this)">
+        <div class="vs-color c-boost"></div>
+        <div>
+          <div class="vs-name">BOOST VAULT</div>
+          <div class="vs-apy c-boost-t" id="vs-apy-boost">18.7% Est. APY</div>
+        </div>
+        <div class="vs-risk">MED</div>
+      </button>
+      <button class="vs-item" id="vs-alpha" onclick="selectVault('alpha', this)">
+        <div class="vs-color c-alpha"></div>
+        <div>
+          <div class="vs-name">ALPHA VAULT</div>
+          <div class="vs-apy c-alpha-t" id="vs-apy-alpha">33.4% Est. APY</div>
+        </div>
+        <div class="vs-risk">HIGH</div>
+      </button>
+    </div>
+
+    <div style="padding:0 16px 8px;border-top:1px solid var(--line2)">
+      <div class="rlog">
+        <div class="rlog-title">AI REBALANCE LOG</div>
+        <div class="rlog-list" id="rlog"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN: Deposit + Chart -->
+  <div class="main-col">
+    <div class="deposit-ui">
+      <div class="dep-header">
+        <div class="dep-title" id="depTitle">STABLE VAULT</div>
+        <div class="dep-sub">// simulate_deposit · base-sepolia · no real funds at risk</div>
+      </div>
+
+      <div class="vault-tabs" id="vaultTabs">
+        <button class="vtab sel-stable" onclick="selectVault('stable', null, this)" id="tab-stable">
+          <span>Stable</span>
+          <span class="vtab-apy c-stable-t" id="tab-apy-stable">11.2%</span>
+        </button>
+        <button class="vtab" onclick="selectVault('boost', null, this)" id="tab-boost">
+          <span>Boost</span>
+          <span class="vtab-apy c-boost-t" id="tab-apy-boost">18.7%</span>
+        </button>
+        <button class="vtab" onclick="selectVault('alpha', null, this)" id="tab-alpha">
+          <span>Alpha</span>
+          <span class="vtab-apy c-alpha-t" id="tab-apy-alpha">33.4%</span>
+        </button>
+      </div>
+
+      <!-- AMOUNT -->
+      <div class="form-group">
+        <div class="form-label">
+          <span>Deposit Amount</span>
+          <span style="color:var(--gold)">USDC</span>
+        </div>
+        <div class="form-input-wrap">
+          <div class="form-pfx">$</div>
+          <input class="form-input" id="amount" type="number" value="1000" min="1" oninput="calc()">
+        </div>
+        <div class="quick-btns">
+          <button class="qbtn" onclick="setAmt(100)">$100</button>
+          <button class="qbtn" onclick="setAmt(500)">$500</button>
+          <button class="qbtn" onclick="setAmt(1000)">$1K</button>
+          <button class="qbtn" onclick="setAmt(5000)">$5K</button>
+          <button class="qbtn" onclick="setAmt(10000)">$10K</button>
+          <button class="qbtn" onclick="setAmt(50000)">$50K</button>
+        </div>
+      </div>
+
+      <!-- DURATION -->
+      <div class="form-group">
+        <div class="form-label">
+          <span>Duration</span>
+          <span id="durLabel" style="color:var(--ink)">12 months</span>
+        </div>
+        <input class="slider" type="range" id="duration" min="1" max="36" value="12"
+          oninput="document.getElementById('durLabel').textContent=this.value+' month'+(this.value>1?'s':'');calc()">
+      </div>
+
+      <!-- RESULTS -->
+      <div class="results">
+        <div class="result-row">
+          <div class="result-lbl">$vsUSD Received</div>
+          <div class="result-val gold" id="rVsUSD">1,000.00</div>
+        </div>
+        <div class="result-row">
+          <div class="result-lbl">Projected Yield</div>
+          <div class="result-val" id="rYield">+$112.00</div>
+        </div>
+        <div class="result-row">
+          <div class="result-lbl">Total Value at Maturity</div>
+          <div class="result-val sm" id="rTotal">$1,112.00</div>
+        </div>
+        <div class="result-row">
+          <div class="result-lbl">vs. Savings Account (4%)</div>
+          <div class="result-val sm" style="color:var(--gold)" id="rExtra">+$72.00 more</div>
+        </div>
+      </div>
+
+      <!-- BUTTON -->
+      <button class="dep-btn dep-btn-stable" id="depBtn" onclick="openModal()">
+        <span class="nav-pulse"></span>
+        SIMULATE DEPOSIT ON TESTNET
+      </button>
+      <div class="dep-note">* Simulation only · No real USDC required · Base Sepolia testnet</div>
+    </div>
+
+    <!-- CHART -->
+    <div class="chart-area">
+      <div class="chart-hd">
+        <div>
+          <div class="chart-title">LIVE APY FEED</div>
+          <div class="chart-sub">// updates every 4s · base-sepolia</div>
+        </div>
+        <div class="chart-legend">
+          <div class="leg-item"><div class="leg-dot" style="background:var(--lime)"></div>STABLE</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--gold)"></div>BOOST</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--red)"></div>ALPHA</div>
+        </div>
+      </div>
+      <canvas class="chart-c" id="chart"></canvas>
+    </div>
+  </div>
+
+  <!-- RIGHT SIDEBAR: Live Stats -->
+  <div class="sidebar-r">
+    <div class="panel-hd">
+      <div class="panel-hd-dot"></div>
+      LIVE PROTOCOL DATA
+    </div>
+    <div class="live-stats">
+      <div class="ls-card">
+        <div class="ls-label">STABLE VAULT APY</div>
+        <div class="ls-val" style="color:var(--lime)" id="ls-s">11.2%</div>
+        <div class="ls-live"><div class="ls-pip"></div>LIVE</div>
+      </div>
+      <div class="ls-card">
+        <div class="ls-label">BOOST VAULT APY</div>
+        <div class="ls-val" style="color:var(--gold)" id="ls-b">18.7%</div>
+        <div class="ls-live"><div class="ls-pip"></div>LIVE</div>
+      </div>
+      <div class="ls-card">
+        <div class="ls-label">ALPHA VAULT APY</div>
+        <div class="ls-val" style="color:var(--red)" id="ls-a">33.4%</div>
+        <div class="ls-live"><div class="ls-pip"></div>LIVE</div>
+      </div>
+      <div class="ls-card">
+        <div class="ls-label">AI REBALANCES TODAY</div>
+        <div class="ls-val" style="color:var(--lime)" id="ls-rb">1,847</div>
+        <div class="ls-live"><div class="ls-pip"></div>LIVE</div>
+      </div>
+      <div class="ls-card">
+        <div class="ls-label">$vsUSD HOLDERS</div>
+        <div class="ls-val" style="color:var(--gold)">3,104</div>
+      </div>
+      <div class="ls-card">
+        <div class="ls-label">MORPHO TVL</div>
+        <div class="ls-val" style="color:var(--gold)" id="ls-tvl">$4.1M</div>
+        <div class="ls-sub">Base mainnet</div>
+      </div>
+      <div class="ls-card">
+        <div class="ls-label">x402 FLOWS (24H)</div>
+        <div class="ls-val" style="color:var(--sky)" id="ls-x402">218</div>
+        <div class="ls-live"><div class="ls-pip"></div>AGENTIC</div>
+      </div>
+      <div class="ls-card">
+        <div class="ls-label">NETWORK</div>
+        <div class="ls-val" style="font-size:14px;font-family:var(--mono);letter-spacing:1px;color:var(--lime)">BASE SEPOLIA</div>
+        <div class="ls-sub">Testnet · Chain ID 84532</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TX MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal-box">
+    <button class="modal-x" onclick="closeModal()">✕</button>
+    <div class="modal-vname" id="mName">STABLE VAULT</div>
+    <div class="modal-vsub">// testnet simulation · base-sepolia · chain 84532</div>
+    <div class="tx-steps" id="txSteps">
+      <div class="tx-step" id="s1"><div class="tx-n">01</div><div><div class="tx-title">CONNECT WALLET</div><div class="tx-desc">Simulating wallet handshake with Base Sepolia...</div></div></div>
+      <div class="tx-step" id="s2"><div class="tx-n">02</div><div><div class="tx-title">APPROVE USDC</div><div class="tx-desc">ERC-20 approval (simulated gas: 0.0002 ETH)...</div></div></div>
+      <div class="tx-step" id="s3"><div class="tx-n">03</div><div><div class="tx-title">DEPOSIT & MINT $vsUSD</div><div class="tx-desc">Minting yield-bearing $vsUSD 1:1 ratio...</div></div></div>
+      <div class="tx-step" id="s4"><div class="tx-n">04</div><div><div class="tx-title">AI ROUTING CAPITAL</div><div class="tx-desc">Optimizer allocating to highest risk-adjusted yield...</div></div></div>
+    </div>
+    <div class="modal-ok" id="mOk">
+      <div class="ok-icon">✓</div>
+      <div class="ok-title">DEPOSIT SIMULATED</div>
+      <div class="ok-detail" id="mOkD">Loading...</div>
+      <div class="ok-hash" id="mOkH"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ─── STATE ─── */
+const APY = { stable: 11.2, boost: 18.7, alpha: 33.4 };
+let vault = 'stable';
+let modalBusy = false;
+
+/* ─── VAULT SELECTION ─── */
+function selectVault(v, sidebarEl, tabEl) {
+  vault = v;
+
+  // sidebar
+  ['stable','boost','alpha'].forEach(x => {
+    const el = document.getElementById('vs-' + x);
+    if (el) { el.className = 'vs-item'; }
+  });
+  if (sidebarEl) sidebarEl.className = 'vs-item active-' + v;
+  else { const el = document.getElementById('vs-' + v); if (el) el.className = 'vs-item active-' + v; }
+
+  // tabs
+  ['stable','boost','alpha'].forEach(x => {
+    const el = document.getElementById('tab-' + x);
+    if (el) el.className = 'vtab';
+  });
+  if (tabEl) tabEl.className = 'vtab sel-' + v;
+  else { const el = document.getElementById('tab-' + v); if (el) el.className = 'vtab sel-' + v; }
+
+  // title
+  const names = { stable:'STABLE VAULT', boost:'BOOST VAULT', alpha:'ALPHA VAULT' };
+  document.getElementById('depTitle').textContent = names[v];
+
+  // button class
+  const btn = document.getElementById('depBtn');
+  btn.className = 'dep-btn dep-btn-' + v;
+
+  calc();
+}
+
+/* ─── CALC ─── */
+function setAmt(n) { document.getElementById('amount').value = n; calc(); }
+function calc() {
+  const amt = parseFloat(document.getElementById('amount').value) || 0;
+  const dur = parseInt(document.getElementById('duration').value) || 12;
+  const apy = APY[vault] / 100;
+  const yield_ = amt * apy * (dur / 12);
+  const savings = amt * 0.04 * (dur / 12);
+  const total = amt + yield_;
+  const extra = yield_ - savings;
+  const fmt = (n, prefix='') => prefix + n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+  document.getElementById('rVsUSD').textContent = fmt(amt);
+  document.getElementById('rYield').textContent = '+$' + fmt(yield_);
+  document.getElementById('rTotal').textContent = '$' + fmt(total);
+  document.getElementById('rExtra').textContent = (extra>=0?'+':'') + '$' + fmt(extra) + ' more';
+}
+
+/* ─── LIVE CHART ─── */
+const chartData = { stable:[], boost:[], alpha:[] };
+for (let i=0;i<60;i++) {
+  chartData.stable.push(10.8 + Math.random()*0.8);
+  chartData.boost.push(17.5 + Math.random()*2.4);
+  chartData.alpha.push(30 + Math.random()*7);
+}
+
+function drawChart() {
+  const canvas = document.getElementById('chart');
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  if (!rect.width) return;
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const W = rect.width, H = rect.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.04)'; ctx.lineWidth = 1;
+  for (let i=0;i<=4;i++) { const y=(i/4)*H; ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+
+  const draw = (data, color) => {
+    if (data.length < 2) return;
+    const minV=8, maxV=44;
+    ctx.beginPath(); ctx.strokeStyle=color; ctx.lineWidth=1.5;
+    data.forEach((v,i) => {
+      const x=(i/(data.length-1))*W, y=H-((v-minV)/(maxV-minV))*H;
+      i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    }); ctx.stroke();
+    ctx.beginPath();
+    data.forEach((v,i) => { const x=(i/(data.length-1))*W, y=H-((v-minV)/(maxV-minV))*H; i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+    ctx.lineTo(W,H); ctx.lineTo(0,H); ctx.closePath();
+    const grad=ctx.createLinearGradient(0,0,0,H);
+    grad.addColorStop(0, color.replace('1)','0.08)')); grad.addColorStop(1, color.replace('1)','0)'));
+    ctx.fillStyle=grad; ctx.fill();
+  };
+  draw(chartData.stable, 'rgba(57,217,138,1)');
+  draw(chartData.boost,  'rgba(255,255,255,0.2)');
+  draw(chartData.alpha,  'rgba(212,89,92,1)');
+}
+setTimeout(drawChart, 100);
+window.addEventListener('resize', drawChart);
+
+/* ─── LIVE UPDATES ─── */
+const protos = ['Morpho','Aerodrome','Ondo Finance','Centrifuge','x402 Agent','AAVE v3'];
+const actions = ['REBALANCE','ALLOCATE','COMPOUND','ROUTE'];
+let rbCount = 1847;
+let x402c = 218;
+
+function addLog() {
+  const log = document.getElementById('rlog');
+  const now = new Date().toTimeString().slice(0,8);
+  const act = actions[Math.floor(Math.random()*actions.length)];
+  const proto = protos[Math.floor(Math.random()*protos.length)];
+  const pct = (Math.random()*18+2).toFixed(1);
+  const item = document.createElement('div');
+  item.className = 'rlog-item';
+  item.innerHTML = `<span class="rlog-time">${now}</span><span class="rlog-act">${act}</span><span class="rlog-proto">${proto}</span><span style="margin-left:auto;color:var(--fog)">${pct}%</span>`;
+  log.insertBefore(item, log.firstChild);
+  if (log.children.length > 22) log.removeChild(log.lastChild);
+}
+
+function liveUpdate() {
+  const s=(10.8+Math.random()*0.8).toFixed(1)+'%';
+  const b=(17.4+Math.random()*2.6).toFixed(1)+'%';
+  const a=(30+Math.random()*7).toFixed(1)+'%';
+  rbCount += Math.floor(Math.random()*4);
+  x402c += Math.floor(Math.random()*3);
+  document.getElementById('ls-s').textContent=s;
+  document.getElementById('ls-b').textContent=b;
+  document.getElementById('ls-a').textContent=a;
+  document.getElementById('ls-rb').textContent=rbCount.toLocaleString();
+  document.getElementById('ls-x402').textContent=x402c;
+  document.getElementById('vs-apy-stable').textContent=s+' Est. APY';
+  document.getElementById('vs-apy-boost').textContent=b+' Est. APY';
+  document.getElementById('vs-apy-alpha').textContent=a+' Est. APY';
+  document.getElementById('tab-apy-stable').textContent=(10.8+Math.random()*0.8).toFixed(1)+'%';
+  document.getElementById('tab-apy-boost').textContent=(17.4+Math.random()*2.6).toFixed(1)+'%';
+  document.getElementById('tab-apy-alpha').textContent=(30+Math.random()*7).toFixed(1)+'%';
+  chartData.stable.push(parseFloat(s)); chartData.stable.shift();
+  chartData.boost.push(parseFloat(b)); chartData.boost.shift();
+  chartData.alpha.push(parseFloat(a)); chartData.alpha.shift();
+  if (Math.random()>0.35) addLog();
+  drawChart();
+}
+
+for (let i=0;i<8;i++) addLog();
+setInterval(liveUpdate, 4000);
+
+/* ─── MODAL ─── */
+function openModal() {
+  if (modalBusy) return;
+  modalBusy = true;
+  const names = { stable:'STABLE VAULT', boost:'BOOST VAULT', alpha:'ALPHA VAULT' };
+  document.getElementById('mName').textContent = names[vault];
+  document.getElementById('txSteps').style.display = 'flex';
+  document.getElementById('mOk').className = 'modal-ok';
+  ['s1','s2','s3','s4'].forEach(id => document.getElementById(id).className = 'tx-step');
+  document.getElementById('modal').classList.add('open');
+
+  const aTimes = [80, 1000, 2100, 3200];
+  const dTimes = [900, 2000, 3100, 4300];
+  ['s1','s2','s3','s4'].forEach((id, i) => {
+    setTimeout(() => document.getElementById(id).className = 'tx-step active', aTimes[i]);
+    setTimeout(() => document.getElementById(id).className = 'tx-step done', dTimes[i]);
+  });
+
+  setTimeout(() => {
+    document.getElementById('txSteps').style.display = 'none';
+    const amt = parseFloat(document.getElementById('amount').value) || 1000;
+    const apy = APY[vault];
+    const hash = '0x' + [...Array(40)].map(() => Math.floor(Math.random()*16).toString(16)).join('');
+    document.getElementById('mOkD').innerHTML =
+      `<strong style="color:var(--ink)">${amt.toLocaleString()} USDC</strong> deposited into ${names[vault]}<br>` +
+      `<strong style="color:var(--ink)">${amt.toLocaleString()} $vsUSD</strong> minted — earning <strong style="color:var(--lime)">${apy}% Est. APY</strong>`;
+    document.getElementById('mOkH').textContent = 'TX: ' + hash.slice(0, 44) + '…';
+    document.getElementById('mOk').className = 'modal-ok show';
+  }, 4700);
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  setTimeout(() => { modalBusy = false; }, 350);
+}
+
+const names = { stable:'STABLE VAULT', boost:'BOOST VAULT', alpha:'ALPHA VAULT' };
+document.getElementById('modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VAULTA — Documentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void:#000000;--deep:#080808;--surface:#111111;--lift:#1a1a1a;
+  --line:rgba(255,255,255,0.055);--line2:rgba(255,255,255,0.028);
+  --gold:#ffffff;--gold-lo:rgba(255,255,255,0.35);
+  --gold-bg: rgba(255,255,255,0.05); --gold-bd: rgba(255,255,255,0.15);
+  --lime:#39d98a;--lime-bg:rgba(57,217,138,0.06);--lime-bd:rgba(57,217,138,0.2);
+  --sky:#aaaaaa;--red:#d4595c;
+  --ink:#f0f0f0;--fog:rgba(240,240,240,0.42);--mist:rgba(240,240,240,0.2);
+  --sans:'DM Sans',sans-serif;--mono:'Space Mono',monospace;--display:'Bebas Neue',sans-serif;
+  --t:0.28s;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='1'/%3E%3C/svg%3E");opacity:0.02;mix-blend-mode:overlay;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--void);}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.2);}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 48px;background:rgba(0,0,0,0.97);border-bottom:1px solid var(--line2);backdrop-filter:blur(16px);}
+.nav-brand{font-family:var(--display);font-size:20px;letter-spacing:6px;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:8px;}
+.nav-pulse{width:5px;height:5px;border-radius:50%;background:var(--lime);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(57,217,138,0.5);}50%{opacity:.6;box-shadow:0 0 0 5px rgba(57,217,138,0);}}
+.nav-back{color:var(--fog);text-decoration:none;font-family:var(--mono);font-size:10px;letter-spacing:2px;transition:color var(--t);}
+.nav-back:hover{color:var(--ink);}
+
+/* DOCS LAYOUT */
+.docs-layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh;padding-top:60px;}
+.docs-sidebar{background:var(--deep);border-right:1px solid var(--line2);position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;padding:32px 0;}
+.docs-sidebar::-webkit-scrollbar{width:2px;}.docs-sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.2);}
+.docs-main{background:var(--void);padding:56px 64px;max-width:900px;}
+
+/* SIDEBAR NAV */
+.sb-section-title{font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-lo);padding:0 24px;margin-bottom:8px;margin-top:24px;}
+.sb-section-title:first-child{margin-top:0;}
+.sb-link{display:block;padding:9px 24px;font-family:var(--mono);font-size:11px;letter-spacing:1.5px;color:var(--fog);text-decoration:none;transition:all var(--t);border-left:2px solid transparent;}
+.sb-link:hover{color:var(--ink);border-left-color:var(--gold-lo);}
+.sb-link.active{color:var(--gold);border-left-color:var(--gold);background:var(--gold-bg);}
+
+/* DOCS CONTENT */
+.doc-section{margin-bottom:72px;padding-top:8px;}
+.doc-section:last-child{margin-bottom:0;}
+.doc-h1{font-family:var(--display);font-size:52px;letter-spacing:4px;margin-bottom:12px;}
+.doc-h2{font-family:var(--display);font-size:32px;letter-spacing:3px;margin-bottom:16px;color:var(--gold);}
+.doc-h3{font-family:var(--display);font-size:22px;letter-spacing:2px;margin-bottom:12px;}
+.doc-lead{font-size:16px;color:var(--fog);line-height:1.85;font-weight:300;margin-bottom:24px;max-width:680px;}
+.doc-p{font-size:14px;color:var(--fog);line-height:1.9;font-weight:300;margin-bottom:18px;max-width:680px;}
+.doc-p:last-child{margin-bottom:0;}
+.doc-p strong{color:var(--ink);font-weight:500;}
+.doc-sep{border:none;border-top:1px solid var(--line2);margin:48px 0;}
+
+/* CODE BLOCK */
+.code-block{background:var(--surface);border:1px solid var(--line);padding:24px;margin:24px 0;position:relative;}
+.code-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--gold-lo);margin-bottom:12px;}
+.code-block pre{font-family:var(--mono);font-size:12px;line-height:1.75;color:var(--fog);overflow-x:auto;}
+.code-block pre .k{color:var(--gold);}
+.code-block pre .s{color:var(--lime);}
+.code-block pre .c{color:rgba(57,217,138,0.35);}
+.code-block pre .v{color:rgba(200,200,200,0.8);}
+
+/* TABLE */
+.doc-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:13px;}
+.doc-table th{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-lo);padding:10px 16px;border-bottom:1px solid var(--line);text-align:left;}
+.doc-table td{padding:12px 16px;border-bottom:1px solid var(--line2);color:var(--fog);vertical-align:top;}
+.doc-table tr:last-child td{border-bottom:none;}
+.doc-table td:first-child{font-family:var(--mono);font-size:11px;color:var(--ink);}
+
+/* CALLOUT */
+.callout{display:flex;gap:14px;padding:18px 20px;border-left:2px solid;margin:24px 0;font-size:13px;color:var(--fog);line-height:1.75;}
+.callout.info{border-color:rgba(255,255,255,0.25);background:rgba(255,255,255,0.03);}
+.callout.warn{border-color:var(--gold);background:var(--gold-bg);}
+.callout.safe{border-color:var(--lime);background:var(--lime-bg);}
+.callout-icon{flex-shrink:0;font-size:14px;}
+
+/* VAULT PILLS */
+.vault-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border:1px solid;font-family:var(--mono);font-size:10px;letter-spacing:1.5px;margin:2px 4px 2px 0;}
+.vp-s{color:var(--lime);border-color:var(--lime-bd);}
+.vp-b{color:var(--gold);border-color:var(--gold-bd);}
+.vp-a{color:var(--red);border-color:rgba(212,89,92,0.3);}
+
+@media(max-width:768px){.docs-layout{grid-template-columns:1fr;}.docs-sidebar{display:none;}.docs-main{padding:32px 24px;}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="index.html"><div class="nav-pulse"></div>VAULTA</a>
+  <div style="display:flex;gap:16px;align-items:center">
+    <a href="app.html" style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--lime);text-decoration:none;border:1px solid var(--lime-bd);padding:6px 14px;background:var(--lime-bg)">OPEN APP</a>
+    <a href="index.html" class="nav-back">← Home</a>
+  </div>
+</nav>
+
+<div class="docs-layout">
+
+  <!-- SIDEBAR -->
+  <div class="docs-sidebar">
+    <div class="sb-section-title">Getting Started</div>
+    <a href="#overview" class="sb-link active">Overview</a>
+    <a href="#how" class="sb-link">How It Works</a>
+    <a href="#testnet" class="sb-link">Testnet Guide</a>
+
+    <div class="sb-section-title">Vaults</div>
+    <a href="#stable" class="sb-link">Stable Vault</a>
+    <a href="#boost" class="sb-link">Boost Vault</a>
+    <a href="#alpha" class="sb-link">Alpha Vault</a>
+
+    <div class="sb-section-title">Protocol</div>
+    <a href="#vsusd" class="sb-link">$vsUSD Token</a>
+    <a href="#ai" class="sb-link">AI Optimizer</a>
+    <a href="#security" class="sb-link">Security</a>
+    <a href="#integrations" class="sb-link">Integrations</a>
+
+    <div class="sb-section-title">Resources</div>
+    <a href="#faq" class="sb-link">FAQ</a>
+    <a href="#roadmap" class="sb-link">Roadmap</a>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="docs-main">
+
+    <div class="doc-section" id="overview">
+      <div class="doc-h1">DOCUMENTATION</div>
+      <p class="doc-lead">Vaulta is an AI-driven, autonomous yield infrastructure protocol built on Base. This documentation covers the protocol architecture, vault products, $vsUSD token mechanics, and the AI optimizer engine.</p>
+      <div class="callout safe">
+        <div class="callout-icon">✓</div>
+        <div>Vaulta is currently live on <strong style="color:var(--ink)">Base Sepolia testnet</strong>. Mainnet launch is targeted for Q3 2026. All APY figures are estimates based on current protocol conditions — not guarantees.</div>
+      </div>
+    </div>
+
+    <hr class="doc-sep">
+
+    <div class="doc-section" id="how">
+      <div class="doc-h2">HOW IT WORKS</div>
+      <p class="doc-p">The core Vaulta flow is designed to be simple for users while complex under the hood:</p>
+
+      <div class="code-block">
+        <div class="code-label">// Protocol Flow</div>
+        <pre><span class="c">// 1. User deposits USDC into a vault</span>
+<span class="k">await</span> vault.<span class="v">deposit</span>(<span class="s">1000_000000</span>, user.address); <span class="c">// 1000 USDC (6 decimals)</span>
+
+<span class="c">// 2. Smart contract mints $vsUSD 1:1</span>
+<span class="c">// vsUSD.balanceOf(user) === 1000e18</span>
+
+<span class="c">// 3. AI optimizer routes capital (off-chain decision, on-chain execution)</span>
+<span class="c">// Allocates to: Morpho (40%), Aerodrome (35%), Ondo (25%)</span>
+
+<span class="c">// 4. Yield compounds automatically — vsUSD appreciates</span>
+<span class="c">// After 12 months at 11.2%: 1000 vsUSD → worth ~$1,112 USDC</span>
+
+<span class="c">// 5. User redeems anytime — no lock-up</span>
+<span class="k">await</span> vault.<span class="v">redeem</span>(vsUSD.balanceOf(user), user.address);</pre>
+      </div>
+
+      <p class="doc-p">The AI optimizer runs on an hourly cycle, evaluating APY rates, liquidity depth, counterparty risk, and gas efficiency before making any rebalancing decision. All decisions are executed as on-chain transactions and are fully verifiable.</p>
+    </div>
+
+    <hr class="doc-sep">
+
+    <div class="doc-section" id="testnet">
+      <div class="doc-h2">TESTNET GUIDE</div>
+      <p class="doc-p">The Vaulta testnet is live on <strong>Base Sepolia</strong> (Chain ID: 84532). You can simulate the full deposit flow without any real funds.</p>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠</div>
+        <div>The testnet simulator uses <strong style="color:var(--ink)">simulated transactions only</strong>. No real USDC or ETH is required or at risk. This is purely for protocol familiarization.</div>
+      </div>
+
+      <div class="doc-h3" style="margin-top:28px">Try It Now</div>
+      <p class="doc-p">Visit the <a href="app.html" style="color:var(--gold)">Testnet App</a> to simulate deposits across all three vaults. The interface shows live APY feeds, AI rebalance logs, and the full transaction simulation flow.</p>
+
+      <table class="doc-table">
+        <thead><tr><th>Network</th><th>Chain ID</th><th>RPC</th><th>Faucet</th></tr></thead>
+        <tbody>
+          <tr><td>Base Sepolia</td><td>84532</td><td>https://sepolia.base.org</td><td>base-sepolia.faucet.alchemy.com</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr class="doc-sep">
+
+    <div class="doc-section" id="stable">
+      <div class="doc-h2">STABLE VAULT</div>
+      <span class="vault-pill vp-s">Low Risk</span>
+      <p class="doc-lead">The Stable Vault maintains 100% stablecoin exposure, deploying capital across blue-chip DeFi lending protocols and LP positions on Base.</p>
+      <table class="doc-table">
+        <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Est. APY</td><td>8–14% (current: 11.2%)</td></tr>
+          <tr><td>Risk Level</td><td>Low — stablecoin-only exposure</td></tr>
+          <tr><td>Deposit Token</td><td>USDC</td></tr>
+          <tr><td>Receipt Token</td><td>$vsUSD</td></tr>
+          <tr><td>Redemption</td><td>Anytime, no lock-up</td></tr>
+          <tr><td>Protocols</td><td>Morpho, Aerodrome (USDC/USDT LP)</td></tr>
+          <tr><td>TVL Capacity</td><td>$5M (Phase 1)</td></tr>
+        </tbody>
+      </table>
+      <div class="callout info"><div class="callout-icon">ℹ</div><div>The Stable Vault is the recommended starting point for new users. Capital preservation is the primary objective — yield is secondary.</div></div>
+    </div>
+
+    <hr class="doc-sep">
+
+    <div class="doc-section" id="boost">
+      <div class="doc-h2">BOOST VAULT</div>
+      <span class="vault-pill vp-b">Medium Risk</span>
+      <p class="doc-lead">The Boost Vault blends on-chain DeFi yield with real-world asset income through Ondo Finance and Centrifuge, targeting enhanced risk-adjusted returns.</p>
+      <table class="doc-table">
+        <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Est. APY</td><td>14–22% (current: 18.7%)</td></tr>
+          <tr><td>Risk Level</td><td>Medium — RWA + DeFi blend</td></tr>
+          <tr><td>Allocation Split</td><td>~70% DeFi / ~30% RWA (AI-adjusted)</td></tr>
+          <tr><td>Protocols</td><td>Ondo Finance (T-bills), Centrifuge, Aerodrome LP</td></tr>
+          <tr><td>TVL Capacity</td><td>$10M (Phase 2)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr class="doc-sep">
+
+    <div class="doc-section" id="alpha">
+      <div class="doc-h2">ALPHA VAULT</div>
+      <span class="vault-pill vp-a">High Risk</span>
+      <p class="doc-lead">The Alpha Vault pursues maximum yield through perpetual funding rate capture, BTCFi yield strategies, and x402 agentic payment flow integration.</p>
+      <div class="callout warn"><div class="callout-icon">⚠</div><div>The Alpha Vault is designed for participants with high risk tolerance. APY is volatile and may fluctuate significantly. The AI risk engine monitors positions continuously, but losses are possible.</div></div>
+      <table class="doc-table" style="margin-top:20px">
+        <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Est. APY</td><td>25–40% (current: 33.4%)</td></tr>
+          <tr><td>Risk Level</td><td>High — perp funding + agentic flows</td></tr>
+          <tr><td>Strategies</td><td>Perp funding rate capture, BTCFi, x402 agentic flows</td></tr>
+          <tr><td>Approach</td><td>Delta-neutral where possible</td></tr>
+          <tr><td>TVL Capacity</td><td>$5M (Phase 3)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr class="doc-sep">
+
+    <div class="doc-section" id="vsusd">
+      <div class="doc-h2">$vsUSD TOKEN</div>
+      <p class="doc-p"><strong>$vsUSD</strong> is a yield-bearing ERC-20 stablecoin issued by Vaulta. When you deposit USDC into any vault, you receive $vsUSD at a 1:1 ratio. As the vault earns yield, $vsUSD appreciates in value relative to USDC.</p>
+      <table class="doc-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Standard</td><td>ERC-20 (OpenZeppelin)</td></tr>
+          <tr><td>Peg at deposit</td><td>1 $vsUSD = 1 USDC</td></tr>
+          <tr><td>Yield mechanism</td><td>Price appreciation (not rebasing)</td></tr>
+          <tr><td>Redemption</td><td>Anytime, permissionless</td></tr>
+          <tr><td>Composability</td><td>Usable as collateral in compatible DeFi protocols</td></tr>
+          <tr><td>Admin mint</td><td>None — only minted 1:1 with USDC deposits</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr class="doc-sep">
+
+    <div class="doc-section" id="ai">
+      <div class="doc-h2">AI OPTIMIZER</div>
+      <p class="doc-p">The AI optimizer is an off-chain agent that monitors on-chain data and submits allocation decisions as transactions. Its inputs include real-time APY data, TVL depth, counterparty risk scores, and gas prices.</p>
+      <p class="doc-p">The optimizer runs on an <strong>hourly cycle</strong>. If market conditions change significantly (e.g., sudden liquidity drain, APY spike), it can trigger an immediate rebalance. All decisions are recorded on-chain.</p>
+      <div class="code-block">
+        <div class="code-label">// Optimizer Decision Structure (simplified)</div>
+        <pre>{
+  <span class="k">timestamp</span>: <span class="s">1719432000</span>,
+  <span class="k">vault</span>: <span class="s">"stable"</span>,
+  <span class="k">allocations</span>: {
+    <span class="v">morpho_usdc</span>: <span class="s">0.42</span>,     <span class="c">// 42%</span>
+    <span class="v">aerodrome_lp</span>: <span class="s">0.35</span>,    <span class="c">// 35%</span>
+    <span class="v">ondo_tbill</span>: <span class="s">0.23</span>        <span class="c">// 23%</span>
+  },
+  <span class="k">risk_score</span>: <span class="s">2.1</span>,           <span class="c">// 0-10 scale</span>
+  <span class="k">expected_apy</span>: <span class="s">0.112</span>,      <span class="c">// 11.2%</span>
+  <span class="k">tx_hash</span>: <span class="s">"0xabc..."</span>
+}</pre>
+      </div>
+    </div>
+
+    <hr class="doc-sep">
+
+    <div class="doc-section" id="security">
+      <div class="doc-h2">SECURITY</div>
+      <table class="doc-table">
+        <thead><tr><th>Property</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>Custody</td><td>Non-custodial — users retain key control at all times</td></tr>
+          <tr><td>Admin mint</td><td>Disabled — $vsUSD only minted with USDC collateral</td></tr>
+          <tr><td>Circuit breaker</td><td>Multisig-controlled emergency pause on all vaults</td></tr>
+          <tr><td>Auditability</td><td>All AI decisions are on-chain transactions</td></tr>
+          <tr><td>Smart contract audit</td><td>Planned pre-mainnet (Q3 2026)</td></tr>
+          <tr><td>Bug bounty</td><td>Planned — details TBA</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr class="doc-sep">
+
+    <div class="doc-section" id="integrations">
+      <div class="doc-h2">INTEGRATIONS</div>
+      <table class="doc-table">
+        <thead><tr><th>Protocol</th><th>Type</th><th>Vault</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Morpho</td><td>Lending</td><td>Stable, Boost</td><td style="color:var(--lime)">Live</td></tr>
+          <tr><td>Aerodrome</td><td>LP / AMM</td><td>Stable, Boost</td><td style="color:var(--lime)">Live</td></tr>
+          <tr><td>Ondo Finance</td><td>RWA / T-Bills</td><td>Boost</td><td style="color:var(--lime)">Live</td></tr>
+          <tr><td>Centrifuge</td><td>Private Credit</td><td>Boost</td><td style="color:var(--gold)">Testnet</td></tr>
+          <tr><td>x402 Protocol</td><td>Agentic Commerce</td><td>Alpha</td><td style="color:var(--gold)">Testnet</td></tr>
+          <tr><td>BTCFi (cbBTC)</td><td>BTC Yield</td><td>Alpha</td><td style="color:var(--gold)">Testnet</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr class="doc-sep">
+
+    <div class="doc-section" id="faq">
+      <div class="doc-h2">FAQ</div>
+
+      <div style="margin-bottom:28px">
+        <div class="doc-h3">Is Vaulta audited?</div>
+        <p class="doc-p">An independent smart contract audit is planned before mainnet launch (Q3 2026). The audit report will be published publicly. The testnet contracts are unaudited.</p>
+      </div>
+      <div style="margin-bottom:28px">
+        <div class="doc-h3">Can I lose money?</div>
+        <p class="doc-p">Yes. While the Stable Vault is designed for capital preservation, all DeFi interactions carry smart contract risk, liquidity risk, and protocol risk. The Alpha Vault has additional exposure from perp funding strategies. Never deposit more than you can afford to lose.</p>
+      </div>
+      <div style="margin-bottom:28px">
+        <div class="doc-h3">How is APY calculated?</div>
+        <p class="doc-p">APY figures are estimates based on current protocol conditions: lending rates on Morpho, LP fees on Aerodrome, T-bill yields via Ondo, and funding rates on perp markets. These fluctuate constantly. The AI optimizer dynamically rebalances toward the best available rate.</p>
+      </div>
+      <div style="margin-bottom:28px">
+        <div class="doc-h3">What is x402?</div>
+        <p class="doc-p"><strong>x402</strong> is an open protocol for HTTP-native micropayments, enabling AI agents to pay for resources autonomously using crypto. Vaulta's Alpha Vault routes idle capital into x402 payment flows — generating yield from agentic commerce infrastructure. This is one of the highest-conviction 2026 narratives.</p>
+      </div>
+      <div>
+        <div class="doc-h3">Is there a token?</div>
+        <p class="doc-p"><strong>$vsUSD</strong> is the protocol's yield-bearing stablecoin. There is no separate governance token at launch. DAO governance is planned for Phase 3 (Q1 2026) — details will be published when available.</p>
+      </div>
+    </div>
+
+    <hr class="doc-sep">
+
+    <div class="doc-section" id="roadmap">
+      <div class="doc-h2">ROADMAP</div>
+      <table class="doc-table">
+        <thead><tr><th>Phase</th><th>Timeline</th><th>Milestone</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Phase 1</td><td>Q2 2026</td><td>Testnet live (Base Sepolia)</td><td style="color:var(--lime)">✓ Live</td></tr>
+          <tr><td>Phase 2</td><td>Q3 2026</td><td>Mainnet launch — Stable Vault. $500K TVL target</td><td style="color:var(--gold)">Upcoming</td></tr>
+          <tr><td>Phase 3</td><td>Q4 2026</td><td>Boost Vault + AI dashboard. $5M TVL target</td><td style="color:var(--fog)">Planned</td></tr>
+          <tr><td>Phase 4</td><td>Q1 2026</td><td>Alpha Vault + x402 + DAO governance. $25M+ TVL</td><td style="color:var(--fog)">Planned</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /docs-main -->
+</div><!-- /docs-layout -->
+
+<script>
+// Sidebar active link tracking
+const links = document.querySelectorAll('.sb-link');
+const sections = document.querySelectorAll('.doc-section');
+
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const active = document.querySelector('.sb-link[href="#'+e.target.id+'"]');
+      if (active) active.classList.add('active');
+    }
+  });
+}, { threshold: 0.4, rootMargin: '-20% 0px -60% 0px' });
+
+sections.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>
