@@ -148,14 +148,5 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 ---
 
-## Links
-
-- 🌐 Website: [vaulta.fi](https://vaulta.fi) *(coming soon)*
-- 🐦 Twitter: [@VaultaProtocol](https://twitter.com/VaultaProtocol)
-- 💬 Discord: *(coming soon)*
-- 📄 Docs: [docs.vaulta.fi](https://docs.vaulta.fi) *(coming soon)*
-- 🔍 Testnet: [Base Sepolia](https://sepolia.basescan.org)
-
----
 
 *Built on Base · Powered by AI · Non-custodial*
