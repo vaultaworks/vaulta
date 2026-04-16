@@ -119,7 +119,7 @@ Based on the sector tier list:
 | Phase 1 | Q2 2025 | Testnet live (Base Sepolia) — ACTIVE NOW |
 | Phase 2 | Q3 2025 | Mainnet launch — Stable Vault. Target TVL: $500K |
 | Phase 3 | Q4 2025 | Boost Vault + AI optimizer dashboard. Target: $5M TVL |
-| Phase 4 | Q1 2026 | Alpha Vault + x402 + DAO governance. Target: $25M+ TVL |
+| Phase 4 | Q1 2027 | Alpha Vault + x402 + DAO governance. Target: $25M+ TVL |
 
 ---
 
