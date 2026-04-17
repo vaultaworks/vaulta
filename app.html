@@ -1,642 +1,836 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VAULTA — App · Testnet Simulator</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-:root {
-  --void: #000000; --deep: #080808; --surface: #111111; --lift: #1a1a1a;
-  --line: rgba(255,255,255,0.055); --line2: rgba(255,255,255,0.028);
-  --gold: #ffffff; --gold-hi: #eeeeee; --gold-lo: rgba(255,255,255,0.35);
-  --gold-bg: rgba(255,255,255,0.05); --gold-bd: rgba(255,255,255,0.15);
-  --lime: #39d98a; --lime-lo: rgba(57,217,138,0.45);
-  --lime-bg: rgba(57,217,138,0.06); --lime-bd: rgba(57,217,138,0.2);
-  --sky: #aaaaaa; --red: #d4595c; --red-bg: rgba(212,89,92,0.05); --red-bd: rgba(212,89,92,0.25);
-  --ink: #f0f0f0; --fog: rgba(240,240,240,0.42); --mist: rgba(240,240,240,0.2);
-  --ease: ease-out; --t: 0.2s; --amber: #ffb300;
-}
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; }
-body { background:var(--void); color:var(--ink); font-family:var(--sans); -webkit-font-smoothing:antialiased; overflow-x:hidden; line-height:1.7; }
-body::after { content:''; position:fixed; inset:0; z-index:9999; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='1'/%3E%3C/svg%3E"); opacity:0.02; mix-blend-mode:overlay; }
-::-webkit-scrollbar { width:4px; } ::-webkit-scrollbar-track { background:var(--void); } ::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.2); }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VAULTA — App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #000;
+      --surface: #0a0a0a;
+      --border: #1a1a1a;
+      --border2: #222;
+      --text: #fff;
+      --muted: #555;
+      --dim: #333;
+      --green: #00ff88;
+      --green-dim: rgba(0,255,136,0.1);
+      --green-border: rgba(0,255,136,0.25);
+      --yellow: #f5c518;
+      --red: #ff4444;
+      --mono: 'IBM Plex Mono', monospace;
+      --sans: 'Inter', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+    }
 
-/* NAV */
-.app-nav {
-  position:fixed; top:0; left:0; right:0; z-index:200; height:60px;
-  display:flex; align-items:center; justify-content:space-between;
-  padding:0 32px; background:rgba(0,0,0,0.96); border-bottom:1px solid var(--line2);
-  backdrop-filter:blur(16px);
-}
-.nav-brand { font-family:var(--display); font-size:20px; letter-spacing:6px; color:var(--gold); text-decoration:none; display:flex; align-items:center; gap:8px; }
-.nav-pulse { width:5px; height:5px; border-radius:50%; background:var(--lime); animation:pulse 2s infinite; }
-.nav-testnet-badge { background:var(--lime-bg); border:1px solid var(--lime-bd); padding:4px 12px; font-family:var(--mono); font-size:9px; letter-spacing:2px; color:var(--lime); display:flex; align-items:center; gap:6px; }
-.nav-back { color:var(--fog); text-decoration:none; font-family:var(--mono); font-size:10px; letter-spacing:2px; transition:color var(--t); }
-.nav-back:hover { color:var(--ink); }
-@keyframes pulse { 0%,100% { opacity:1; box-shadow:0 0 0 0 rgba(57,217,138,0.5); } 50% { opacity:.6; box-shadow:0 0 0 5px rgba(57,217,138,0); } }
+    /* NAV */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(0,0,0,0.95);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .network-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border: 1px solid var(--border2);
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .network-badge .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-/* LAYOUT */
-.app-layout {
-  display:grid; grid-template-columns:300px 1fr 340px;
-  gap:1px; background:var(--line2); min-height:100vh;
-  padding-top:60px;
-}
-.sidebar-l, .sidebar-r { background:var(--deep); border-right:1px solid var(--line2); }
-.sidebar-r { border-right:none; border-left:1px solid var(--line2); }
-.main-col { background:var(--void); }
-@media (max-width:1100px) { .app-layout { grid-template-columns:1fr; } .sidebar-l,.sidebar-r { display:none; } }
+    #connectBtn {
+      padding: 8px 20px;
+      background: var(--text);
+      color: var(--bg);
+      border: none;
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    #connectBtn:hover { opacity: 0.85; }
+    #connectBtn.connected {
+      background: var(--green-dim);
+      color: var(--green);
+      border: 1px solid var(--green-border);
+    }
 
-/* PANEL HEADER */
-.panel-hd {
-  padding:20px 24px; border-bottom:1px solid var(--line2);
-  display:flex; align-items:center; gap:10px;
-  font-family:var(--mono); font-size:10px; letter-spacing:2.5px; color:var(--fog);
-}
-.panel-hd-dot { width:4px; height:4px; border-radius:50%; background:var(--lime); animation:pulse 2s infinite; }
+    /* WALLET STATUS BANNER */
+    #walletBanner {
+      display: none;
+      padding: 10px 32px;
+      font-family: var(--mono);
+      font-size: 11px;
+      text-align: center;
+    }
+    #walletBanner.warning {
+      display: block;
+      background: rgba(245,197,24,0.08);
+      border-bottom: 1px solid rgba(245,197,24,0.2);
+      color: var(--yellow);
+    }
+    #walletBanner.error {
+      display: block;
+      background: rgba(255,68,68,0.08);
+      border-bottom: 1px solid rgba(255,68,68,0.2);
+      color: var(--red);
+    }
+    #walletBanner.success {
+      display: block;
+      background: var(--green-dim);
+      border-bottom: 1px solid var(--green-border);
+      color: var(--green);
+    }
 
-/* VAULT SELECTOR */
-.vault-selector { padding:20px 16px; display:flex; flex-direction:column; gap:6px; }
-.vs-item {
-  display:flex; align-items:center; gap:12px; padding:14px 16px;
-  border:1px solid var(--line2); background:transparent; cursor:pointer;
-  transition:all var(--t); text-align:left; width:100%;
-}
-.vs-item:hover { border-color:var(--gold-bd); background:var(--gold-bg); }
-.vs-item.active-v { border-color:var(--gold-bd); background:var(--gold-bg); }
-.vs-item.active-stable { border-color:var(--lime-bd); background:var(--lime-bg); }
-.vs-item.active-boost  { border-color:rgba(255,179,0,0.3); background:rgba(255,179,0,0.05); }
-.vs-item.active-alpha  { border-color:var(--red-bd);  background:var(--red-bg); }
-.vs-color { width:3px; height:40px; border-radius:2px; flex-shrink:0; }
-.c-stable { background:var(--lime); }
-.c-boost  { background:var(--amber); }
-.c-alpha  { background:var(--red); }
-.vs-name { font-family:var(--display); font-size:16px; letter-spacing:2px; }
-.vs-apy { font-family:var(--mono); font-size:10px; letter-spacing:1px; margin-top:2px; }
-.c-stable-t { color:var(--lime); } .c-boost-t { color:var(--amber); } .c-alpha-t { color:var(--red); }
-.vs-risk { margin-left:auto; font-family:var(--mono); font-size:8px; letter-spacing:1px; color:var(--fog); }
+    /* MAIN LAYOUT */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+    }
+    @media (max-width: 768px) {
+      main { grid-template-columns: 1fr; padding: 24px 16px; }
+      nav { padding: 12px 16px; }
+    }
 
-/* LIVE STATS SIDEBAR */
-.live-stats { padding:16px; display:flex; flex-direction:column; gap:6px; }
-.ls-card { background:var(--surface); border:1px solid var(--line2); padding:14px 16px; }
-.ls-label { font-family:var(--mono); font-size:9px; letter-spacing:2px; color:var(--fog); margin-bottom:6px; }
-.ls-val { font-family:var(--display); font-size:22px; letter-spacing:2px; }
-.ls-sub { font-family:var(--mono); font-size:9px; color:var(--fog); margin-top:3px; }
-.ls-live { display:flex; align-items:center; gap:5px; font-family:var(--mono); font-size:8px; color:var(--lime); margin-top:4px; }
-.ls-pip { width:4px; height:4px; border-radius:50%; background:var(--lime); animation:pulse 1.5s infinite; }
+    /* VAULT SELECTOR */
+    .section-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .vault-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .vault-tab {
+      padding: 16px 12px;
+      border: 1px solid var(--border2);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--surface);
+    }
+    .vault-tab:hover { border-color: var(--dim); }
+    .vault-tab.active {
+      border-color: var(--green);
+      background: var(--green-dim);
+    }
+    .vault-tab-name {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .vault-tab.active .vault-tab-name { color: var(--green); }
+    .vault-tab-apy {
+      font-family: var(--mono);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .vault-tab-risk {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
 
-/* REBALANCE LOG */
-.rlog { padding:16px; }
-.rlog-title { font-family:var(--mono); font-size:9px; letter-spacing:2px; color:var(--fog); margin-bottom:12px; }
-.rlog-list { display:flex; flex-direction:column; gap:4px; max-height:240px; overflow-y:auto; }
-.rlog-list::-webkit-scrollbar { width:2px; } .rlog-list::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.2); }
-.rlog-item { font-family:var(--mono); font-size:9px; letter-spacing:0.8px; color:var(--fog); padding:6px 10px; border:1px solid var(--line2); background:rgba(255,255,255,0.01); display:flex; gap:10px; align-items:center; }
-.rlog-time { color:var(--gold-lo); white-space:nowrap; }
-.rlog-act  { color:var(--lime); }
-.rlog-proto { color:rgba(200,200,200,0.7); }
+    /* DEPOSIT FORM */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+    .input-group {
+      margin-bottom: 16px;
+    }
+    .input-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .input-wrap {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--border2);
+      border-radius: 4px;
+      overflow: hidden;
+      background: #050505;
+    }
+    .input-wrap:focus-within { border-color: var(--green); }
+    .input-prefix {
+      padding: 12px 14px;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--muted);
+      border-right: 1px solid var(--border2);
+    }
+    .input-wrap input {
+      flex: 1;
+      padding: 12px 14px;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 16px;
+    }
+    .input-max {
+      padding: 8px 14px;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--green);
+      cursor: pointer;
+      letter-spacing: 0.1em;
+    }
+    .quick-amounts {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .quick-btn {
+      padding: 5px 10px;
+      border: 1px solid var(--border2);
+      border-radius: 3px;
+      background: transparent;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .quick-btn:hover { border-color: var(--dim); color: var(--text); }
 
-/* MAIN DEPOSIT UI */
-.deposit-ui { padding:40px 48px; max-width:640px; }
-.dep-header { margin-bottom:36px; }
-.dep-title { font-family:var(--display); font-size:40px; letter-spacing:4px; margin-bottom:6px; }
-.dep-sub { font-family:var(--mono); font-size:10px; letter-spacing:1.5px; color:var(--fog); }
+    /* PROJECTION */
+    .projection {
+      border: 1px solid var(--border2);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .proj-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .proj-row:last-child { border-bottom: none; }
+    .proj-label { font-size: 12px; color: var(--muted); }
+    .proj-value {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text);
+    }
+    .proj-value.green { color: var(--green); }
 
-/* VAULT TABS */
-.vault-tabs { display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin-bottom:32px; }
-.vtab {
-  padding:16px 14px; text-align:left; border:1px solid var(--line); background:var(--lift);
-  cursor:pointer; transition:all var(--t); font-family:var(--mono); font-size:10px;
-  letter-spacing:1px; text-transform:uppercase; color:var(--fog); border-radius:4px;
-  display:flex; flex-direction:column; align-items:flex-start; gap:8px;
-}
-.vtab:hover { border-color:var(--gold-bd); transform:translateY(-2px); background:var(--surface); }
-.vtab.sel-stable { background:var(--lime-bg); color:var(--ink); border:1px solid var(--lime); box-shadow: 0 4px 20px rgba(57,217,138,0.15); }
-.vtab.sel-boost  { background:rgba(255,179,0,0.05); color:var(--ink); border:1px solid var(--amber); box-shadow: 0 4px 20px rgba(255,179,0,0.15); }
-.vtab.sel-alpha  { background:var(--red-bg);  color:var(--ink); border:1px solid var(--red); box-shadow: 0 4px 20px rgba(212,89,92,0.15); }
-.vtab-apy { font-family:var(--display); font-size:24px; letter-spacing:1px; display:flex; align-items:baseline; gap:4px; }
-.vtab-apy span:last-child { font-size:10px; color:var(--fog); font-family:var(--mono); }
+    /* ACTION BTN */
+    #depositBtn {
+      width: 100%;
+      padding: 16px;
+      background: var(--text);
+      color: var(--bg);
+      border: none;
+      border-radius: 6px;
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    #depositBtn:hover { opacity: 0.9; transform: translateY(-1px); }
+    #depositBtn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      transform: none;
+    }
+    #depositBtn.simulating {
+      background: var(--green);
+      animation: btnPulse 1s infinite;
+    }
+    @keyframes btnPulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
+    .deposit-note {
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
 
-/* FORM */
-.form-group { margin-bottom:24px; }
-.form-label { font-family:var(--mono); font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--fog); display:flex; justify-content:space-between; margin-bottom:10px; }
-.form-input-wrap { display:flex; border:1px solid var(--line); background:rgba(255,255,255,0.02); transition:border-color var(--t); }
-.form-input-wrap:focus-within { border-color:var(--gold-bd); }
-.form-pfx { padding:0 18px; font-family:var(--mono); font-size:14px; color:var(--gold); border-right:1px solid var(--line); display:flex; align-items:center; }
-.form-input { flex:1; background:transparent; border:none; outline:none; color:var(--ink); font-family:var(--mono); font-size:22px; padding:14px 18px; letter-spacing:1px; -moz-appearance:textfield; }
-.form-input::-webkit-inner-spin-button, .form-input::-webkit-outer-spin-button { -webkit-appearance:none; }
-.quick-btns { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
-.qbtn { padding:5px 12px; border:1px solid var(--line2); font-family:var(--mono); font-size:9px; letter-spacing:1.5px; color:var(--fog); cursor:pointer; background:transparent; transition:all var(--t); }
-.qbtn:hover { border-color:var(--gold-bd); color:var(--gold); transform:scale(1.03); filter:brightness(1.1); }
+    /* RIGHT PANEL */
+    .right-panel { display: flex; flex-direction: column; gap: 16px; }
 
-/* DURATION SLIDER */
-.slider { width:100%; cursor:pointer; accent-color:var(--gold); }
+    /* WALLET INFO CARD */
+    .wallet-card { }
+    .wallet-addr {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--green);
+      margin-bottom: 4px;
+      word-break: break-all;
+    }
+    .wallet-network {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+    }
+    .wallet-network.wrong { color: var(--yellow); }
 
-/* RESULTS PANEL */
-.results {
-  background:rgba(255,255,255,0.015); border:1px solid var(--line);
-  padding:24px; margin-bottom:28px;
-}
-.result-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--line2); }
-.result-row:last-child { border-bottom:none; padding-bottom:0; }
-.result-lbl { font-family:var(--mono); font-size:10px; letter-spacing:1.5px; color:var(--fog); }
-.result-val { font-family:var(--display); font-size:24px; letter-spacing:1px; color:var(--lime); }
-.result-val.gold { color:var(--gold); }
-.result-val.sm { font-size:16px; }
+    #switchNetworkBtn {
+      width: 100%;
+      margin-top: 12px;
+      padding: 10px;
+      background: transparent;
+      border: 1px solid var(--yellow);
+      border-radius: 4px;
+      color: var(--yellow);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: none;
+    }
+    #switchNetworkBtn:hover { background: rgba(245,197,24,0.08); }
 
-/* ACTION BTN */
-.dep-btn {
-  width:100%; padding:16px; font-family:var(--mono); font-size:11px;
-  letter-spacing:3px; text-transform:uppercase; cursor:pointer;
-  border:1px solid; background:transparent; font-weight:700;
-  transition:all var(--t); display:flex; align-items:center; justify-content:center; gap:10px;
-}
-.dep-btn-stable { color:var(--lime); border-color:var(--lime-bd); }
-.dep-btn-stable:hover { background:var(--lime); color:var(--void); transform:scale(1.02); filter:brightness(1.1); }
-.dep-btn-boost  { color:var(--amber); border-color:rgba(255,179,0,0.3); }
-.dep-btn-boost:hover  { background:var(--amber); color:var(--void); transform:scale(1.02); filter:brightness(1.1); }
-.dep-btn-alpha  { color:var(--red);  border-color:var(--red-bd); }
-.dep-btn-alpha:hover  { background:var(--red);  color:var(--void); transform:scale(1.02); filter:brightness(1.1); }
-.dep-note { margin-top:10px; font-family:var(--mono); font-size:9px; letter-spacing:0.8px; color:var(--mist); text-align:center; }
+    /* LIVE DATA */
+    .live-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+    }
+    .live-row:last-child { border-bottom: none; }
+    .live-key { color: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .live-val { font-family: var(--mono); font-size: 12px; color: var(--text); }
+    .live-val .badge {
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 2px;
+      margin-left: 6px;
+      background: var(--green-dim);
+      color: var(--green);
+      border: 1px solid var(--green-border);
+    }
 
-/* CHART AREA */
-.chart-area { padding:40px 48px; border-top:1px solid var(--line2); }
-.chart-hd { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:24px; }
-.chart-title { font-family:var(--display); font-size:22px; letter-spacing:3px; }
-.chart-sub { font-family:var(--mono); font-size:9px; letter-spacing:1.5px; color:var(--fog); margin-top:4px; }
-.chart-legend { display:flex; gap:16px; font-family:var(--mono); font-size:9px; letter-spacing:1.5px; }
-.leg-item { display:flex; align-items:center; gap:6px; cursor:pointer; transition:opacity var(--t); }
-.leg-dot { width:8px; height:8px; border-radius:50%; }
-canvas.chart-c { width:100%; height:180px; display:block; }
-
-/* TX FLOW MODAL */
-.modal-bg { position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.94); backdrop-filter:blur(14px); display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.3s; }
-.modal-bg.open { opacity:1; pointer-events:all; }
-.modal-box { background:var(--deep); border:1px solid var(--gold-bd); max-width:460px; width:90%; padding:44px; position:relative; transform:translateY(20px); transition:transform 0.35s var(--ease); }
-.modal-bg.open .modal-box { transform:translateY(0); }
-.modal-x { position:absolute; top:18px; right:18px; background:none; border:none; color:var(--fog); font-size:18px; cursor:pointer; width:32px; height:32px; display:flex; align-items:center; justify-content:center; transition:color var(--t); }
-.modal-x:hover { color:var(--ink); }
-.modal-vname { font-family:var(--display); font-size:28px; letter-spacing:3px; margin-bottom:4px; }
-.modal-vsub { font-family:var(--mono); font-size:10px; letter-spacing:1.5px; color:var(--fog); margin-bottom:36px; }
-.tx-steps { display:flex; flex-direction:column; gap:10px; }
-.tx-step { display:flex; align-items:center; gap:16px; padding:16px; border:1px solid var(--line); background:rgba(255,255,255,0.015); transition:all 0.3s; }
-.tx-step.active { border-color:var(--gold-bd); background:var(--gold-bg); }
-.tx-step.done { border-color:var(--lime-bd); background:var(--lime-bg); }
-.tx-n { width:34px; height:34px; border-radius:50%; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:11px; color:var(--fog); flex-shrink:0; transition:all 0.3s; }
-.tx-step.active .tx-n { border-color:var(--gold); color:var(--gold); animation:glow-g 1.2s infinite; }
-.tx-step.done .tx-n   { border-color:var(--lime); color:var(--lime); background:var(--lime-bg); }
-@keyframes glow-g { 0%,100% { box-shadow:0 0 0 0 rgba(255,255,255,0.2); } 50% { box-shadow:0 0 0 6px rgba(255,255,255,0.2); } }
-.tx-title { font-family:var(--display); font-size:15px; letter-spacing:2px; }
-.tx-desc  { font-family:var(--mono); font-size:10px; color:var(--fog); margin-top:3px; }
-.modal-ok { display:none; text-align:center; padding:16px 0; }
-.modal-ok.show { display:block; }
-.ok-icon { width:56px; height:56px; border-radius:50%; border:1px solid var(--lime-bd); background:var(--lime-bg); display:flex; align-items:center; justify-content:center; margin:0 auto 18px; font-size:22px; color:var(--lime); }
-.ok-title { font-family:var(--display); font-size:24px; letter-spacing:3px; color:var(--lime); margin-bottom:8px; }
-.ok-detail { font-family:var(--mono); font-size:11px; color:var(--fog); line-height:1.85; }
-.ok-hash { font-family:var(--mono); font-size:9px; color:var(--gold-lo); margin-top:12px; word-break:break-all; }
-</style>
+    /* SIMULATION MODAL */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.85);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 999;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .modal-overlay.show { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      padding: 32px;
+      width: 100%;
+      max-width: 420px;
+      margin: 0 16px;
+    }
+    .modal-title {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+    .sim-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      opacity: 0.3;
+      transition: opacity 0.3s;
+    }
+    .sim-step:last-child { border-bottom: none; }
+    .sim-step.active { opacity: 1; }
+    .sim-step.done { opacity: 0.6; }
+    .step-num {
+      width: 28px; height: 28px;
+      border: 1px solid var(--border2);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono);
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+    .sim-step.active .step-num { border-color: var(--green); color: var(--green); }
+    .sim-step.done .step-num { background: var(--green); color: var(--bg); border-color: var(--green); }
+    .step-text { font-size: 13px; }
+    .step-sub { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 2px; }
+    .modal-close {
+      width: 100%;
+      margin-top: 20px;
+      padding: 12px;
+      background: var(--green);
+      color: var(--bg);
+      border: none;
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      display: none;
+    }
+  </style>
 </head>
 <body>
 
-<!-- APP NAV -->
-<nav class="app-nav">
-  <a class="nav-brand" href="/">
-    <div class="nav-pulse"></div>
-    VAULTA
-  </a>
-  <div class="nav-testnet-badge">
-    <div class="nav-pulse"></div>
-    TESTNET · BASE SEPOLIA
-  </div>
-  <div style="display:flex; align-items:center; gap:24px;">
-    <a href="/" class="nav-back">← Back to site</a>
-    <div style="background:var(--lift); border:1px solid var(--line); border-radius:20px; padding:6px 14px; display:flex; align-items:center; gap:8px; font-family:var(--mono); font-size:10px; color:var(--ink); cursor:pointer; transition:all var(--t);" onmouseover="this.style.borderColor='var(--gold-bd)'" onmouseout="this.style.borderColor='var(--line)'">
-      <div style="width:6px;height:6px;border-radius:50%;background:var(--lime);box-shadow:0 0 6px var(--lime);"></div>
-      <span style="color:var(--fog)">Connected:</span> 0x1234...5678
+<nav>
+  <a href="/" class="nav-logo">VAULTA</a>
+  <div class="nav-right">
+    <div class="network-badge">
+      <span class="dot"></span>
+      BASE SEPOLIA
     </div>
+    <button id="connectBtn" onclick="handleConnect()">CONNECT WALLET</button>
   </div>
 </nav>
 
-<!-- APP LAYOUT -->
-<div class="app-layout">
+<div id="walletBanner"></div>
 
-  <!-- LEFT SIDEBAR: Vault Selector -->
-  <div class="sidebar-l">
-    <div class="panel-hd">
-      <div class="panel-hd-dot"></div>
-      SELECT VAULT
-    </div>
-    <div class="vault-selector">
-      <button class="vs-item active-stable" id="vs-stable" onclick="selectVault('stable', this)">
-        <div class="vs-color c-stable"></div>
-        <div>
-          <div class="vs-name">STABLE VAULT</div>
-          <div class="vs-apy c-stable-t" id="vs-apy-stable">11.2% Est. APY</div>
-        </div>
-        <div class="vs-risk">LOW</div>
-      </button>
-      <button class="vs-item" id="vs-boost" onclick="selectVault('boost', this)">
-        <div class="vs-color c-boost"></div>
-        <div>
-          <div class="vs-name">BOOST VAULT</div>
-          <div class="vs-apy c-boost-t" id="vs-apy-boost">18.7% Est. APY</div>
-        </div>
-        <div class="vs-risk">MED</div>
-      </button>
-      <button class="vs-item" id="vs-alpha" onclick="selectVault('alpha', this)">
-        <div class="vs-color c-alpha"></div>
-        <div>
-          <div class="vs-name">ALPHA VAULT</div>
-          <div class="vs-apy c-alpha-t" id="vs-apy-alpha">33.4% Est. APY</div>
-        </div>
-        <div class="vs-risk">HIGH</div>
-      </button>
-    </div>
-
-    <div style="padding:0 16px 8px;border-top:1px solid var(--line2)">
-      <div class="rlog">
-        <div class="rlog-title">AI REBALANCE LOG</div>
-        <div class="rlog-list" id="rlog"></div>
+<main>
+  <!-- LEFT: DEPOSIT -->
+  <div>
+    <div class="section-label">Select Vault</div>
+    <div class="vault-tabs">
+      <div class="vault-tab active" onclick="selectVault(0, this)">
+        <div class="vault-tab-name">STABLE VAULT</div>
+        <div class="vault-tab-apy">11.2%</div>
+        <div class="vault-tab-risk">Low Risk</div>
+      </div>
+      <div class="vault-tab" onclick="selectVault(1, this)">
+        <div class="vault-tab-name">BOOST VAULT</div>
+        <div class="vault-tab-apy">18.7%</div>
+        <div class="vault-tab-risk">Med Risk</div>
+      </div>
+      <div class="vault-tab" onclick="selectVault(2, this)">
+        <div class="vault-tab-name">ALPHA VAULT</div>
+        <div class="vault-tab-apy">33.4%</div>
+        <div class="vault-tab-risk">High Risk</div>
       </div>
     </div>
-  </div>
 
-  <!-- MAIN: Deposit + Chart -->
-  <div class="main-col">
-    <div class="deposit-ui">
-      <div class="dep-header">
-        <div class="dep-title" id="depTitle">STABLE VAULT</div>
-        <div class="dep-sub">// simulate_deposit · base-sepolia · no real funds at risk</div>
-      </div>
+    <div class="card">
+      <div class="card-title">// SIMULATE DEPOSIT · BASE SEPOLIA · NO REAL FUNDS</div>
 
-      <div class="vault-tabs" id="vaultTabs">
-        <button class="vtab sel-stable" onclick="selectVault('stable', null, this)" id="tab-stable">
-          <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
-            <span style="font-weight:700;">Stable</span>
-            <div style="color:var(--lime); font-size:14px;">✦</div>
-          </div>
-          <div class="vtab-apy c-stable-t"><span id="tab-apy-stable">11.2%</span> <span>APY</span></div>
-        </button>
-        <button class="vtab" onclick="selectVault('boost', null, this)" id="tab-boost">
-          <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
-            <span style="font-weight:700;">Boost</span>
-            <div style="color:var(--gold); font-size:14px;">✦✦</div>
-          </div>
-          <div class="vtab-apy c-boost-t"><span id="tab-apy-boost">18.7%</span> <span>APY</span></div>
-        </button>
-        <button class="vtab" onclick="selectVault('alpha', null, this)" id="tab-alpha">
-          <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
-            <span style="font-weight:700;">Alpha</span>
-            <div style="color:var(--red); font-size:14px;">✦✦✦</div>
-          </div>
-          <div class="vtab-apy c-alpha-t"><span id="tab-apy-alpha">33.4%</span> <span>APY</span></div>
-        </button>
-      </div>
-
-      <!-- AMOUNT -->
-      <div class="form-group">
-        <div class="form-label">
-          <span>Deposit Amount</span>
-          <span style="color:var(--gold)">USDC</span>
+      <div class="input-group">
+        <div class="input-label">DEPOSIT AMOUNT</div>
+        <div class="input-wrap">
+          <span class="input-prefix">USDC</span>
+          <input type="number" id="amountInput" placeholder="1000" min="0" oninput="updateProjection()">
+          <span class="input-max" onclick="document.getElementById('amountInput').value=10000;updateProjection()">MAX</span>
         </div>
-        <div class="form-input-wrap">
-          <div class="form-pfx">$</div>
-          <input class="form-input" id="amount" type="number" value="1000" min="1" oninput="calc()">
-          <button style="align-self:center; margin-right:12px; background:var(--gold-bg); border:1px solid var(--gold-bd); border-radius:3px; color:var(--gold); cursor:pointer; font-family:var(--mono); font-size:9px; font-weight:700; padding:6px 10px; transition:all 0.2s;" onmouseover="this.style.background='var(--gold)'; this.style.color='var(--void)'" onmouseout="this.style.background='var(--gold-bg)'; this.style.color='var(--gold)'" onclick="setAmt(250000)">MAX</button>
-        </div>
-        <div class="quick-btns">
-          <button class="qbtn" onclick="setAmt(100)">$100</button>
-          <button class="qbtn" onclick="setAmt(500)">$500</button>
-          <button class="qbtn" onclick="setAmt(1000)">$1K</button>
-          <button class="qbtn" onclick="setAmt(5000)">$5K</button>
-          <button class="qbtn" onclick="setAmt(10000)">$10K</button>
-          <button class="qbtn" onclick="setAmt(50000)">$50K</button>
+        <div class="quick-amounts">
+          <button class="quick-btn" onclick="setAmount(100)">$100</button>
+          <button class="quick-btn" onclick="setAmount(500)">$500</button>
+          <button class="quick-btn" onclick="setAmount(1000)">$1K</button>
+          <button class="quick-btn" onclick="setAmount(5000)">$5K</button>
+          <button class="quick-btn" onclick="setAmount(10000)">$10K</button>
         </div>
       </div>
 
-      <!-- DURATION -->
-      <div class="form-group">
-        <div class="form-label">
-          <span>Duration</span>
-          <span id="durLabel" style="color:var(--ink)">12 months</span>
+      <div class="projection">
+        <div class="proj-row">
+          <span class="proj-label">$vsUSD Received</span>
+          <span class="proj-value" id="vsUSD">1,000.00</span>
         </div>
-        <input class="slider" type="range" id="duration" min="1" max="36" value="12"
-          oninput="document.getElementById('durLabel').textContent=this.value+' month'+(this.value>1?'s':'');calc()">
-      </div>
-
-      <!-- RESULTS -->
-      <div class="results">
-        <div class="result-row">
-          <div class="result-lbl">$vsUSD Received</div>
-          <div class="result-val gold" id="rVsUSD">1,000.00</div>
+        <div class="proj-row">
+          <span class="proj-label">Projected Yield (12mo)</span>
+          <span class="proj-value green" id="projYield">+$112.00</span>
         </div>
-        <div class="result-row">
-          <div class="result-lbl">Projected Yield</div>
-          <div class="result-val" id="rYield">+$112.00</div>
+        <div class="proj-row">
+          <span class="proj-label">Total at Maturity</span>
+          <span class="proj-value" id="projTotal">$1,112.00</span>
         </div>
-        <div class="result-row">
-          <div class="result-lbl">Total Value at Maturity</div>
-          <div class="result-val sm" id="rTotal">$1,112.00</div>
-        </div>
-        <div class="result-row">
-          <div class="result-lbl">vs. Savings Account (4%)</div>
-          <div class="result-val sm" style="color:var(--gold)" id="rExtra">+$72.00 more</div>
+        <div class="proj-row">
+          <span class="proj-label">vs. Savings (4%)</span>
+          <span class="proj-value green" id="projVsSavings">+$72.00 more</span>
         </div>
       </div>
 
-      <!-- BUTTON -->
-      <button class="dep-btn dep-btn-stable" id="depBtn" onclick="openModal()">
-        <span class="nav-pulse"></span>
-        SIMULATE DEPOSIT ON TESTNET
-      </button>
-      <div class="dep-note">* Simulation only · No real USDC required · Base Sepolia testnet</div>
-    </div>
-
-    <!-- CHART -->
-    <div class="chart-area">
-      <div class="chart-hd">
-        <div>
-          <div class="chart-title">LIVE APY FEED</div>
-          <div class="chart-sub">// updates every 4s · base-sepolia</div>
-        </div>
-        <div class="chart-legend">
-          <div class="leg-item"><div class="leg-dot" style="background:var(--lime)"></div>STABLE</div>
-          <div class="leg-item"><div class="leg-dot" style="background:var(--gold)"></div>BOOST</div>
-          <div class="leg-item"><div class="leg-dot" style="background:var(--red)"></div>ALPHA</div>
-        </div>
-      </div>
-      <canvas class="chart-c" id="chart"></canvas>
+      <button id="depositBtn" onclick="handleDeposit()">SIMULATE DEPOSIT ON TESTNET</button>
+      <div class="deposit-note">* Simulation only · No real USDC required · Base Sepolia testnet</div>
     </div>
   </div>
 
-  <!-- RIGHT SIDEBAR: Live Stats -->
-  <div class="sidebar-r">
-    <div class="panel-hd">
-      <div class="panel-hd-dot"></div>
-      LIVE PROTOCOL DATA
-    </div>
-    <div class="live-stats">
-      <div class="ls-card">
-        <div class="ls-label">STABLE VAULT APY</div>
-        <div class="ls-val" style="color:var(--lime)" id="ls-s">11.2%</div>
-        <div class="ls-live"><div class="ls-pip"></div>LIVE</div>
-      </div>
-      <div class="ls-card">
-        <div class="ls-label">BOOST VAULT APY</div>
-        <div class="ls-val" style="color:var(--gold)" id="ls-b">18.7%</div>
-        <div class="ls-live"><div class="ls-pip"></div>LIVE</div>
-      </div>
-      <div class="ls-card">
-        <div class="ls-label">ALPHA VAULT APY</div>
-        <div class="ls-val" style="color:var(--red)" id="ls-a">33.4%</div>
-        <div class="ls-live"><div class="ls-pip"></div>LIVE</div>
-      </div>
-      <div class="ls-card">
-        <div class="ls-label">AI REBALANCES TODAY</div>
-        <div class="ls-val" style="color:var(--lime)" id="ls-rb">1,847</div>
-        <div class="ls-live"><div class="ls-pip"></div>LIVE</div>
-      </div>
-      <div class="ls-card">
-        <div class="ls-label">$vsUSD HOLDERS</div>
-        <div class="ls-val" style="color:var(--gold)">3,104</div>
-      </div>
-      <div class="ls-card">
-        <div class="ls-label">MORPHO TVL</div>
-        <div class="ls-val" style="color:var(--gold)" id="ls-tvl">$4.1M</div>
-        <div class="ls-sub">Base mainnet</div>
-      </div>
-      <div class="ls-card">
-        <div class="ls-label">x402 FLOWS (24H)</div>
-        <div class="ls-val" style="color:var(--sky)" id="ls-x402">218</div>
-        <div class="ls-live"><div class="ls-pip"></div>AGENTIC</div>
-      </div>
-      <div class="ls-card">
-        <div class="ls-label">NETWORK</div>
-        <div class="ls-val" style="font-size:14px;font-family:var(--mono);letter-spacing:1px;color:var(--lime)">BASE SEPOLIA</div>
-        <div class="ls-sub">Testnet · Chain ID 84532</div>
-      </div>
-    </div>
-  </div>
-</div>
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
 
-<!-- TX MODAL -->
-<div class="modal-bg" id="modal">
-  <div class="modal-box">
-    <button class="modal-x" onclick="closeModal()">✕</button>
-    <div class="modal-vname" id="mName">STABLE VAULT</div>
-    <div class="modal-vsub">// testnet simulation · base-sepolia · chain 84532</div>
-    <div id="mProgWrap" style="height:4px;width:100%;background:rgba(255,255,255,0.05);margin-bottom:24px;border-radius:2px;overflow:hidden;display:none;">
-      <div id="mProgBar" style="height:100%;width:0%;background:var(--lime);transition:width 0.4s var(--ease);box-shadow:0 0 10px var(--lime);"></div>
+    <!-- WALLET STATUS -->
+    <div class="card wallet-card" id="walletCard" style="display:none">
+      <div class="card-title">// WALLET</div>
+      <div class="wallet-addr" id="walletAddr"></div>
+      <div class="wallet-network" id="walletNetwork"></div>
+      <button id="switchNetworkBtn" onclick="switchToBaseSepolia()">⚡ SWITCH TO BASE SEPOLIA</button>
     </div>
-    <div class="tx-steps" id="txSteps">
-      <div class="tx-step" id="s1"><div class="tx-n">01</div><div><div class="tx-title">CONNECT WALLET</div><div class="tx-desc">Simulating wallet handshake with Base Sepolia...</div></div></div>
-      <div class="tx-step" id="s2"><div class="tx-n">02</div><div><div class="tx-title">APPROVE USDC</div><div class="tx-desc">ERC-20 approval (simulated gas: 0.0002 ETH)...</div></div></div>
-      <div class="tx-step" id="s3"><div class="tx-n">03</div><div><div class="tx-title">DEPOSIT & MINT $vsUSD</div><div class="tx-desc">Minting yield-bearing $vsUSD 1:1 ratio...</div></div></div>
-      <div class="tx-step" id="s4"><div class="tx-n">04</div><div><div class="tx-title">AI ROUTING CAPITAL</div><div class="tx-desc">Optimizer allocating to highest risk-adjusted yield...</div></div></div>
+
+    <!-- LIVE DATA -->
+    <div class="card">
+      <div class="card-title">// LIVE PROTOCOL DATA</div>
+      <div class="live-row">
+        <span class="live-key">STABLE APY</span>
+        <span class="live-val">11.2% <span class="badge">LIVE</span></span>
+      </div>
+      <div class="live-row">
+        <span class="live-key">BOOST APY</span>
+        <span class="live-val">18.7% <span class="badge">LIVE</span></span>
+      </div>
+      <div class="live-row">
+        <span class="live-key">ALPHA APY</span>
+        <span class="live-val">33.4% <span class="badge">LIVE</span></span>
+      </div>
+      <div class="live-row">
+        <span class="live-key">AI REBALANCES</span>
+        <span class="live-val" id="rebalanceCount">1,847</span>
+      </div>
+      <div class="live-row">
+        <span class="live-key">NETWORK</span>
+        <span class="live-val">BASE SEPOLIA</span>
+      </div>
+      <div class="live-row">
+        <span class="live-key">CHAIN ID</span>
+        <span class="live-val">84532</span>
+      </div>
     </div>
-    <div class="modal-ok" id="mOk">
-      <div class="ok-icon">✓</div>
-      <div class="ok-title">DEPOSIT SIMULATED</div>
-      <div class="ok-detail" id="mOkD">Loading...</div>
-      <div class="ok-hash" id="mOkH"></div>
+
+    <!-- BACK LINK -->
+    <a href="/" style="font-family:var(--mono);font-size:11px;color:var(--muted);text-decoration:none;text-align:center;display:block;">← Back to vaulta.works</a>
+  </div>
+</main>
+
+<!-- SIMULATION MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-title">// DEPOSIT SIMULATION · BASE SEPOLIA</div>
+    <div class="sim-step" id="step1">
+      <div class="step-num">01</div>
+      <div>
+        <div class="step-text">Connect Wallet</div>
+        <div class="step-sub">Handshake with Base Sepolia...</div>
+      </div>
     </div>
+    <div class="sim-step" id="step2">
+      <div class="step-num">02</div>
+      <div>
+        <div class="step-text">Approve USDC</div>
+        <div class="step-sub">ERC-20 approval (simulated gas: 0.0002 ETH)</div>
+      </div>
+    </div>
+    <div class="sim-step" id="step3">
+      <div class="step-num">03</div>
+      <div>
+        <div class="step-text">Deposit & Mint $vsUSD</div>
+        <div class="step-sub">Minting yield-bearing $vsUSD 1:1...</div>
+      </div>
+    </div>
+    <div class="sim-step" id="step4">
+      <div class="step-num">04</div>
+      <div>
+        <div class="step-text">AI Routing Capital</div>
+        <div class="step-sub">Optimizer allocating to best yield...</div>
+      </div>
+    </div>
+    <button class="modal-close" id="modalClose" onclick="closeModal()">✓ DEPOSIT SIMULATED — CLOSE</button>
   </div>
 </div>
 
 <script>
-/* ─── STATE ─── */
-const APY = { stable: 11.2, boost: 18.7, alpha: 33.4 };
-let vault = 'stable';
-let modalBusy = false;
-
-/* ─── VAULT SELECTION ─── */
-function selectVault(v, sidebarEl, tabEl) {
-  vault = v;
-
-  // sidebar
-  ['stable','boost','alpha'].forEach(x => {
-    const el = document.getElementById('vs-' + x);
-    if (el) { el.className = 'vs-item'; }
-  });
-  if (sidebarEl) sidebarEl.className = 'vs-item active-' + v;
-  else { const el = document.getElementById('vs-' + v); if (el) el.className = 'vs-item active-' + v; }
-
-  // tabs
-  ['stable','boost','alpha'].forEach(x => {
-    const el = document.getElementById('tab-' + x);
-    if (el) el.className = 'vtab';
-  });
-  if (tabEl) tabEl.className = 'vtab sel-' + v;
-  else { const el = document.getElementById('tab-' + v); if (el) el.className = 'vtab sel-' + v; }
-
-  // title
-  const names = { stable:'STABLE VAULT', boost:'BOOST VAULT', alpha:'ALPHA VAULT' };
-  document.getElementById('depTitle').textContent = names[v];
-
-  // button class
-  const btn = document.getElementById('depBtn');
-  btn.className = 'dep-btn dep-btn-' + v;
-
-  calc();
-}
-
-/* ─── CALC ─── */
-function setAmt(n) { document.getElementById('amount').value = n; calc(); }
-function calc() {
-  const amt = parseFloat(document.getElementById('amount').value) || 0;
-  const dur = parseInt(document.getElementById('duration').value) || 12;
-  const apy = APY[vault] / 100;
-  const yield_ = amt * apy * (dur / 12);
-  const savings = amt * 0.04 * (dur / 12);
-  const total = amt + yield_;
-  const extra = yield_ - savings;
-  const fmt = (n, prefix='') => prefix + n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
-  document.getElementById('rVsUSD').textContent = fmt(amt);
-  document.getElementById('rYield').textContent = '+$' + fmt(yield_);
-  document.getElementById('rTotal').textContent = '$' + fmt(total);
-  document.getElementById('rExtra').textContent = (extra>=0?'+':'') + '$' + fmt(extra) + ' more';
-}
-
-/* ─── LIVE CHART ─── */
-const chartData = { stable:[], boost:[], alpha:[] };
-for (let i=0;i<60;i++) {
-  chartData.stable.push(10.8 + Math.random()*0.8);
-  chartData.boost.push(17.5 + Math.random()*2.4);
-  chartData.alpha.push(30 + Math.random()*7);
-}
-
-function drawChart() {
-  const canvas = document.getElementById('chart');
-  if (!canvas) return;
-  const dpr = window.devicePixelRatio || 1;
-  const rect = canvas.getBoundingClientRect();
-  if (!rect.width) return;
-  canvas.width = rect.width * dpr;
-  canvas.height = rect.height * dpr;
-  const ctx = canvas.getContext('2d');
-  ctx.scale(dpr, dpr);
-  const W = rect.width, H = rect.height;
-  ctx.clearRect(0, 0, W, H);
-
-  // grid
-  ctx.strokeStyle = 'rgba(255,255,255,0.04)'; ctx.lineWidth = 1;
-  for (let i=0;i<=4;i++) { const y=(i/4)*H; ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
-
-  const draw = (data, color) => {
-    if (data.length < 2) return;
-    const minV=8, maxV=44;
-    ctx.beginPath(); ctx.strokeStyle=color; ctx.lineWidth=1.5;
-    data.forEach((v,i) => {
-      const x=(i/(data.length-1))*W, y=H-((v-minV)/(maxV-minV))*H;
-      i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
-    }); ctx.stroke();
-    ctx.beginPath();
-    data.forEach((v,i) => { const x=(i/(data.length-1))*W, y=H-((v-minV)/(maxV-minV))*H; i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
-    ctx.lineTo(W,H); ctx.lineTo(0,H); ctx.closePath();
-    const grad=ctx.createLinearGradient(0,0,0,H);
-    grad.addColorStop(0, color.replace('1)','0.08)')); grad.addColorStop(1, color.replace('1)','0)'));
-    ctx.fillStyle=grad; ctx.fill();
+  // ─── STATE ───────────────────────────────────────────
+  const BASE_SEPOLIA_CHAIN_ID = '0x14a34'; // 84532
+  const BASE_SEPOLIA_PARAMS = {
+    chainId: BASE_SEPOLIA_CHAIN_ID,
+    chainName: 'Base Sepolia',
+    nativeCurrency: { name: 'Ethereum', symbol: 'ETH', decimals: 18 },
+    rpcUrls: ['https://sepolia.base.org'],
+    blockExplorerUrls: ['https://sepolia-explorer.base.org']
   };
-  draw(chartData.stable, 'rgba(57,217,138,1)');
-  draw(chartData.boost,  'rgba(255,255,255,0.2)');
-  draw(chartData.alpha,  'rgba(212,89,92,1)');
-}
-setTimeout(drawChart, 100);
-window.addEventListener('resize', drawChart);
 
-/* ─── LIVE UPDATES ─── */
-const protos = ['Morpho','Aerodrome','Ondo Finance','Centrifuge','x402 Agent','AAVE v3'];
-const actions = ['REBALANCE','ALLOCATE','COMPOUND','ROUTE'];
-let rbCount = 1847;
-let x402c = 218;
+  let walletConnected = false;
+  let walletAddress = null;
+  let currentChainId = null;
+  let currentVaultAPY = 11.2;
+  const vaultAPYs = [11.2, 18.7, 33.4];
 
-function addLog() {
-  const log = document.getElementById('rlog');
-  const now = new Date().toTimeString().slice(0,8);
-  const act = actions[Math.floor(Math.random()*actions.length)];
-  const proto = protos[Math.floor(Math.random()*protos.length)];
-  const pct = (Math.random()*18+2).toFixed(1);
-  const item = document.createElement('div');
-  item.className = 'rlog-item';
-  item.innerHTML = `<span class="rlog-time">${now}</span><span class="rlog-act">${act}</span><span class="rlog-proto">${proto}</span><span style="margin-left:auto;color:var(--fog)">${pct}%</span>`;
-  log.insertBefore(item, log.firstChild);
-  if (log.children.length > 22) log.removeChild(log.lastChild);
-}
+  // ─── VAULT SELECT ─────────────────────────────────────
+  function selectVault(idx, el) {
+    document.querySelectorAll('.vault-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    currentVaultAPY = vaultAPYs[idx];
+    updateProjection();
+  }
 
-function liveUpdate() {
-  const s=(10.8+Math.random()*0.8).toFixed(1)+'%';
-  const b=(17.4+Math.random()*2.6).toFixed(1)+'%';
-  const a=(30+Math.random()*7).toFixed(1)+'%';
-  rbCount += Math.floor(Math.random()*4);
-  x402c += Math.floor(Math.random()*3);
-  document.getElementById('ls-s').textContent=s;
-  document.getElementById('ls-b').textContent=b;
-  document.getElementById('ls-a').textContent=a;
-  document.getElementById('ls-rb').textContent=rbCount.toLocaleString();
-  document.getElementById('ls-x402').textContent=x402c;
-  document.getElementById('vs-apy-stable').textContent=s+' Est. APY';
-  document.getElementById('vs-apy-boost').textContent=b+' Est. APY';
-  document.getElementById('vs-apy-alpha').textContent=a+' Est. APY';
-  document.getElementById('tab-apy-stable').textContent=(10.8+Math.random()*0.8).toFixed(1)+'%';
-  document.getElementById('tab-apy-boost').textContent=(17.4+Math.random()*2.6).toFixed(1)+'%';
-  document.getElementById('tab-apy-alpha').textContent=(30+Math.random()*7).toFixed(1)+'%';
-  chartData.stable.push(parseFloat(s)); chartData.stable.shift();
-  chartData.boost.push(parseFloat(b)); chartData.boost.shift();
-  chartData.alpha.push(parseFloat(a)); chartData.alpha.shift();
-  if (Math.random()>0.35) addLog();
-  drawChart();
-}
+  // ─── PROJECTION ──────────────────────────────────────
+  function setAmount(val) {
+    document.getElementById('amountInput').value = val;
+    updateProjection();
+  }
 
-for (let i=0;i<8;i++) addLog();
-setInterval(liveUpdate, 4000);
+  function updateProjection() {
+    const amt = parseFloat(document.getElementById('amountInput').value) || 1000;
+    const yield12 = amt * (currentVaultAPY / 100);
+    const total = amt + yield12;
+    const savingsYield = amt * 0.04;
+    const diff = yield12 - savingsYield;
 
-/* ─── MODAL ─── */
-function openModal() {
-  if (modalBusy) return;
-  modalBusy = true;
-  const names = { stable:'STABLE VAULT', boost:'BOOST VAULT', alpha:'ALPHA VAULT' };
-  document.getElementById('mName').textContent = names[vault];
-  document.getElementById('txSteps').style.display = 'flex';
-  document.getElementById('mProgWrap').style.display = 'block';
-  document.getElementById('mProgBar').style.width = '0%';
-  document.getElementById('mOk').className = 'modal-ok';
-  ['s1','s2','s3','s4'].forEach(id => document.getElementById(id).className = 'tx-step');
-  document.getElementById('modal').classList.add('open');
+    document.getElementById('vsUSD').textContent = fmt(amt);
+    document.getElementById('projYield').textContent = '+$' + fmt(yield12);
+    document.getElementById('projTotal').textContent = '$' + fmt(total);
+    document.getElementById('projVsSavings').textContent = '+$' + fmt(diff) + ' more';
+  }
 
-  const aTimes = [80, 1000, 2100, 3200];
-  const dTimes = [900, 2000, 3100, 4300];
-  const progW  = ['10%', '40%', '75%', '100%'];
-  ['s1','s2','s3','s4'].forEach((id, i) => {
-    setTimeout(() => { 
-      document.getElementById(id).className = 'tx-step active'; 
-      document.getElementById('mProgBar').style.width = progW[i];
-    }, aTimes[i]);
-    setTimeout(() => document.getElementById(id).className = 'tx-step done', dTimes[i]);
-  });
+  function fmt(n) {
+    return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
 
-  setTimeout(() => {
-    document.getElementById('txSteps').style.display = 'none';
-    document.getElementById('mProgWrap').style.display = 'none';
-    const amt = parseFloat(document.getElementById('amount').value) || 1000;
-    const apy = APY[vault];
-    const hash = '0x' + [...Array(40)].map(() => Math.floor(Math.random()*16).toString(16)).join('');
-    document.getElementById('mOkD').innerHTML =
-      `<strong style="color:var(--ink)">${amt.toLocaleString()} USDC</strong> deposited into ${names[vault]}<br>` +
-      `<strong style="color:var(--ink)">${amt.toLocaleString()} $vsUSD</strong> minted — earning <strong style="color:var(--lime)">${apy}% Est. APY</strong>`;
-    document.getElementById('mOkH').textContent = 'TX: ' + hash.slice(0, 44) + '…';
-    document.getElementById('mOk').className = 'modal-ok show';
-  }, 4700);
-}
+  // ─── WALLET CONNECT ───────────────────────────────────
+  async function handleConnect() {
+    if (!window.ethereum) {
+      showBanner('error', '⚠ No wallet detected. Please install MetaMask or a Web3 wallet.');
+      return;
+    }
 
-function closeModal() {
-  document.getElementById('modal').classList.remove('open');
-  setTimeout(() => { modalBusy = false; }, 350);
-}
+    if (walletConnected) {
+      // Disconnect (reset state)
+      walletConnected = false;
+      walletAddress = null;
+      document.getElementById('connectBtn').textContent = 'CONNECT WALLET';
+      document.getElementById('connectBtn').classList.remove('connected');
+      document.getElementById('walletCard').style.display = 'none';
+      hideBanner();
+      return;
+    }
 
-const names = { stable:'STABLE VAULT', boost:'BOOST VAULT', alpha:'ALPHA VAULT' };
-document.getElementById('modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+    try {
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      walletAddress = accounts[0];
+      walletConnected = true;
+
+      const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+      currentChainId = chainId;
+
+      updateWalletUI();
+
+      // Check if on Base Sepolia
+      if (chainId !== BASE_SEPOLIA_CHAIN_ID) {
+        showBanner('warning', '⚠ Wrong network. Please switch to Base Sepolia (Chain ID: 84532).');
+        document.getElementById('switchNetworkBtn').style.display = 'block';
+        document.getElementById('walletNetwork').className = 'wallet-network wrong';
+        document.getElementById('walletNetwork').textContent = 'Wrong Network — Switch to Base Sepolia';
+      } else {
+        showBanner('success', '✓ Connected to Base Sepolia. Ready to simulate deposits.');
+        document.getElementById('switchNetworkBtn').style.display = 'none';
+        document.getElementById('walletNetwork').className = 'wallet-network';
+        document.getElementById('walletNetwork').textContent = 'Base Sepolia · Chain 84532 ✓';
+      }
+
+    } catch (err) {
+      if (err.code === 4001) {
+        showBanner('error', '✗ Connection rejected by user.');
+      } else {
+        showBanner('error', '✗ Connection failed: ' + err.message);
+      }
+    }
+  }
+
+  function updateWalletUI() {
+    const btn = document.getElementById('connectBtn');
+    const short = walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4);
+    btn.textContent = short;
+    btn.classList.add('connected');
+
+    document.getElementById('walletCard').style.display = 'block';
+    document.getElementById('walletAddr').textContent = walletAddress;
+  }
+
+  // ─── SWITCH NETWORK ───────────────────────────────────
+  async function switchToBaseSepolia() {
+    if (!window.ethereum) return;
+    try {
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: BASE_SEPOLIA_CHAIN_ID }]
+      });
+    } catch (err) {
+      // Chain not added yet — add it
+      if (err.code === 4902) {
+        try {
+          await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [BASE_SEPOLIA_PARAMS]
+          });
+        } catch (addErr) {
+          showBanner('error', '✗ Failed to add Base Sepolia: ' + addErr.message);
+        }
+      }
+    }
+  }
+
+  // ─── CHAIN / ACCOUNT LISTENERS ───────────────────────
+  if (window.ethereum) {
+    window.ethereum.on('accountsChanged', (accounts) => {
+      if (accounts.length === 0) {
+        walletConnected = false;
+        walletAddress = null;
+        document.getElementById('connectBtn').textContent = 'CONNECT WALLET';
+        document.getElementById('connectBtn').classList.remove('connected');
+        document.getElementById('walletCard').style.display = 'none';
+        hideBanner();
+      } else {
+        walletAddress = accounts[0];
+        updateWalletUI();
+      }
+    });
+
+    window.ethereum.on('chainChanged', (chainId) => {
+      currentChainId = chainId;
+      if (chainId === BASE_SEPOLIA_CHAIN_ID) {
+        showBanner('success', '✓ Switched to Base Sepolia. Ready to simulate deposits.');
+        document.getElementById('switchNetworkBtn').style.display = 'none';
+        if (document.getElementById('walletNetwork')) {
+          document.getElementById('walletNetwork').className = 'wallet-network';
+          document.getElementById('walletNetwork').textContent = 'Base Sepolia · Chain 84532 ✓';
+        }
+      } else {
+        showBanner('warning', '⚠ Wrong network. Switch to Base Sepolia to continue.');
+        document.getElementById('switchNetworkBtn').style.display = 'block';
+        if (document.getElementById('walletNetwork')) {
+          document.getElementById('walletNetwork').className = 'wallet-network wrong';
+          document.getElementById('walletNetwork').textContent = 'Wrong Network — Switch to Base Sepolia';
+        }
+      }
+    });
+  }
+
+  // ─── DEPOSIT SIMULATION ───────────────────────────────
+  function handleDeposit() {
+    document.getElementById('modalOverlay').classList.add('show');
+    runSimulation();
+  }
+
+  function runSimulation() {
+    const steps = ['step1','step2','step3','step4'];
+    let i = 0;
+    steps.forEach(s => {
+      document.getElementById(s).classList.remove('active','done');
+    });
+
+    function next() {
+      if (i < steps.length) {
+        if (i > 0) document.getElementById(steps[i-1]).classList.remove('active');
+        if (i > 0) document.getElementById(steps[i-1]).classList.add('done');
+        document.getElementById(steps[i]).classList.add('active');
+        i++;
+        setTimeout(next, 900);
+      } else {
+        document.getElementById(steps[steps.length-1]).classList.remove('active');
+        document.getElementById(steps[steps.length-1]).classList.add('done');
+        document.getElementById('modalClose').style.display = 'block';
+      }
+    }
+    next();
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('show');
+    document.getElementById('modalClose').style.display = 'none';
+  }
+
+  // ─── BANNER ───────────────────────────────────────────
+  function showBanner(type, msg) {
+    const b = document.getElementById('walletBanner');
+    b.className = type;
+    b.textContent = msg;
+  }
+  function hideBanner() {
+    const b = document.getElementById('walletBanner');
+    b.className = '';
+    b.style.display = 'none';
+  }
+
+  // ─── LIVE COUNTER ANIMATION ───────────────────────────
+  setInterval(() => {
+    const el = document.getElementById('rebalanceCount');
+    if (el) {
+      const n = parseInt(el.textContent.replace(',','')) + Math.floor(Math.random() * 2);
+      el.textContent = n.toLocaleString();
+    }
+  }, 4000);
+
+  updateProjection();
 </script>
 </body>
 </html>
