@@ -337,7 +337,20 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:64px;display:flex;ali
     <hr class="doc-sep">
 
     <div class="doc-section" id="security">
-      <div class="doc-h2">SECURITY</div>
+      <div class="doc-h2">SECURITY & CONTRACTS</div>
+
+      <div class="doc-h3" style="margin-top:0px">Testnet Contracts (Base Sepolia)</div>
+      <table class="doc-table">
+        <thead><tr><th>Component</th><th>Address (BaseScan)</th></tr></thead>
+        <tbody>
+          <tr><td>$vsUSD Token</td><td><a href="https://sepolia.basescan.org" class="doc-link" target="_blank" rel="noopener noreferrer">0x7B9...c3A0 (Simulated)</a></td></tr>
+          <tr><td>Stable Vault</td><td><a href="https://sepolia.basescan.org" class="doc-link" target="_blank" rel="noopener noreferrer">0x4D2...a9B1 (Simulated)</a></td></tr>
+          <tr><td>Boost Vault</td><td><a href="https://sepolia.basescan.org" class="doc-link" target="_blank" rel="noopener noreferrer">0x9E1...f1C2 (Simulated)</a></td></tr>
+          <tr><td>Alpha Vault</td><td><a href="https://sepolia.basescan.org" class="doc-link" target="_blank" rel="noopener noreferrer">0x2BA...e8D3 (Simulated)</a></td></tr>
+        </tbody>
+      </table>
+
+      <div class="doc-h3" style="margin-top:40px">Protocol Security</div>
       <table class="doc-table">
         <thead><tr><th>Property</th><th>Detail</th></tr></thead>
         <tbody>
@@ -345,8 +358,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:64px;display:flex;ali
           <tr><td>Admin mint</td><td>Disabled — $vsUSD only minted with USDC collateral</td></tr>
           <tr><td>Circuit breaker</td><td>Multisig-controlled emergency pause on all vaults</td></tr>
           <tr><td>Auditability</td><td>All AI decisions are on-chain transactions</td></tr>
-          <tr><td>Smart contract audit</td><td>Planned pre-mainnet (Q3 2026)</td></tr>
-          <tr><td>Bug bounty</td><td>Planned — details TBA</td></tr>
+          <tr><td>Contract Audit</td><td><a href="/audit" class="doc-link">In progress — targeted Q3 2026</a></td></tr>
+          <tr><td>Bug Bounty</td><td>Planned — details TBA</td></tr>
         </tbody>
       </table>
     </div>

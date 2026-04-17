@@ -260,8 +260,17 @@ body::after {
 }
 .hero-cta {
   margin-top: 44px; display: flex; align-items: center; gap: 14px;
-  animation: fadeUp 0.8s 0.45s var(--ease) both; flex-wrap: wrap;
+  animation: fadeUp 0.8s 0.45s var(--ease) both; flex-wrap: wrap; margin-bottom: 24px;
 }
+.hero-waitlist {
+  animation: fadeUp 0.8s 0.5s var(--ease) both;
+}
+.hw-label { font-family: var(--mono); font-size: 10px; color: var(--gold-lo); letter-spacing: 2px; margin-bottom: 12px; text-transform: uppercase; }
+.hw-form { display: flex; gap: 8px; flex-wrap: wrap; }
+.hw-input { background: rgba(255,255,255,0.03); border: 1px solid var(--line); padding: 12px 16px; border-radius: 4px; color: var(--ink); font-family: var(--sans); font-size: 13px; width: 100%; max-width: 280px; outline: none; transition: border-color var(--t); }
+.hw-input:focus { border-color: rgba(255,255,255,0.3); }
+.hw-submit { background: var(--gold-bg); border: 1px solid var(--gold-bd); color: var(--gold); padding: 12px 24px; border-radius: 4px; font-family: var(--mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all var(--t); }
+.hw-submit:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); }
 .btn-primary-lg {
   background: var(--gold); color: var(--void);
   padding: 14px 32px; font-size: 11px;
@@ -340,9 +349,9 @@ body::after {
 .h-stat-live {
   position: absolute; top: 8px; right: 10px;
   font-family: var(--mono); font-size: 8px; letter-spacing: 1px;
-  color: var(--lime); display: flex; align-items: center; gap: 4px;
+  color: var(--gold-lo); display: flex; align-items: center; gap: 4px;
 }
-.live-pip { width: 4px; height: 4px; border-radius: 50%; background: var(--lime); animation: pulse 1.5s infinite; }
+.live-pip { width: 4px; height: 4px; border-radius: 50%; background: var(--amber); animation: pulse 1.5s infinite; }
 
 @media (max-width: 960px) {
   .hero { padding: 140px 24px 80px; }
@@ -514,7 +523,7 @@ body::after {
 
 .vault-name { font-family: var(--display); font-size: 32px; letter-spacing: 3px; margin-bottom: 12px; }
 .vault-apy  { 
-  font-family: var(--display); font-size: 64px; font-weight: 700; line-height: 1; letter-spacing: 1px; 
+  font-family: var(--display); font-size: 48px; font-weight: 700; line-height: 1; letter-spacing: 1px; 
   position: relative; overflow: hidden; display: inline-block; padding-right: 4px;
 }
 .vault-apy::after {
@@ -929,14 +938,17 @@ footer {
         Deposit USDC. Receive <strong>$vsUSD</strong> — a yield-bearing stablecoin that allocates autonomously across lending, real-world assets, perp funding, and x402 agentic flows on Base.
       </p>
       <div class="hero-cta">
-        <a href="/app" class="btn-lime" style="font-size:11px;padding:13px 28px;letter-spacing:2.5px">
-          <div class="btn-lime-pulse"></div>
-          Try Testnet Demo
-        </a>
-        <button class="btn-primary-lg" onclick="openModal('STABLE','Stable Vault')">
+        <a href="/app" class="btn-primary-lg" style="letter-spacing:2px">
           Activate Capital →
-        </button>
+        </a>
         <a href="#how" class="btn-ghost" style="font-size:11px">How it works</a>
+      </div>
+      <div class="hero-waitlist" style="animation: fadeUp 0.8s 0.5s var(--ease) both;">
+        <div style="font-family: var(--mono); font-size: 10px; color: var(--gold-lo); letter-spacing: 2px; margin-bottom: 12px; text-transform: uppercase;">Get notified when mainnet launches:</div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <input type="email" placeholder="Email address..." style="background: rgba(255,255,255,0.03); border: 1px solid var(--line); padding: 12px 16px; border-radius: 4px; color: var(--ink); font-family: var(--sans); font-size: 13px; width: 100%; max-width: 280px; outline: none; transition: border-color var(--t);">
+          <button style="background: var(--gold-bg); border: 1px solid var(--gold-bd); color: var(--gold); padding: 12px 24px; border-radius: 4px; font-family: var(--mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all var(--t);">Notify Me</button>
+        </div>
       </div>
     </div>
 
@@ -970,12 +982,12 @@ footer {
         <div class="h-stat">
           <div class="h-stat-val t-gold" id="sTvl">$8.2B</div>
           <div class="h-stat-lbl">Base TVL</div>
-          <div class="h-stat-live"><div class="live-pip"></div>LIVE</div>
+          <div class="h-stat-live"><div class="live-pip" style="background:var(--amber)"></div><span style="color:var(--gold-lo)">TESTNET SIMULATION</span></div>
         </div>
         <div class="h-stat">
           <div class="h-stat-val" style="color:var(--lime)" id="sRebal">1,847</div>
           <div class="h-stat-lbl">AI Rebalances</div>
-          <div class="h-stat-live"><div class="live-pip"></div>TODAY</div>
+          <div class="h-stat-live"><div class="live-pip" style="background:var(--amber)"></div><span style="color:var(--gold-lo)">TESTNET SIMULATION</span></div>
         </div>
         <div class="h-stat">
           <div class="h-stat-val t-gold">$vsUSD</div>
@@ -1128,8 +1140,8 @@ footer {
       <div class="vault v-stable">
         <div class="vault-risk">Low Risk · Stable</div>
         <div class="vault-name">STABLE VAULT</div>
-        <div class="vault-apy">11.2<span style="font-size:30px">%</span></div>
-        <div class="vault-apy-sub">Est. APY · Auto-Compounding</div>
+        <div class="vault-apy" style="font-size:48px">8&ndash;14<span style="font-size:30px">%*</span></div>
+        <div class="vault-apy-sub">Expected APY Range</div>
         <div class="vault-desc">100% stablecoin exposure deployed across Morpho lending markets and Aerodrome USDC/USDT LP positions. Capital-preserving with consistent, risk-calibrated yield.</div>
         <div class="vault-protos">
           <span class="vault-proto">Morpho</span>
@@ -1141,15 +1153,15 @@ footer {
           <div class="vault-bar-meta"><span>TVL CAPACITY</span><span>$1.24M / $5M</span></div>
           <div class="vault-bar-track"><div class="vault-bar-fill" style="width:0" data-target="24.8"></div></div>
         </div>
-        <button class="vault-action" onclick="openModal('STABLE','Stable Vault')">Select Vault →</button>
+        <a href="/app" class="vault-action" style="display:block;text-decoration:none;">Select Vault →</a>
       </div>
 
       <!-- BOOST -->
       <div class="vault v-boost">
         <div class="vault-risk">Medium Risk · Diversified</div>
         <div class="vault-name">BOOST VAULT</div>
-        <div class="vault-apy">18.7<span style="font-size:30px">%</span></div>
-        <div class="vault-apy-sub">Est. APY · AI-Rebalanced</div>
+        <div class="vault-apy" style="font-size:48px">14&ndash;22<span style="font-size:30px">%*</span></div>
+        <div class="vault-apy-sub">Expected APY Range</div>
         <div class="vault-desc">Blends DeFi yields with RWA income via Ondo Finance tokenized T-bills and Centrifuge private credit. AI continuously shifts weight toward the highest risk-adjusted opportunity.</div>
         <div class="vault-protos">
           <span class="vault-proto">Ondo Finance</span>
@@ -1161,15 +1173,15 @@ footer {
           <div class="vault-bar-meta"><span>TVL CAPACITY</span><span>$680K / $10M</span></div>
           <div class="vault-bar-track"><div class="vault-bar-fill" style="width:0" data-target="6.8"></div></div>
         </div>
-        <button class="vault-action" onclick="openModal('BOOST','Boost Vault')">Select Vault →</button>
+        <a href="/app" class="vault-action" style="display:block;text-decoration:none;">Select Vault →</a>
       </div>
 
       <!-- ALPHA -->
       <div class="vault v-alpha">
         <div class="vault-risk">High Risk · Alpha-Seeking</div>
         <div class="vault-name">ALPHA VAULT</div>
-        <div class="vault-apy">33.4<span style="font-size:30px">%</span></div>
-        <div class="vault-apy-sub">Est. APY · Perp Funding + x402</div>
+        <div class="vault-apy" style="font-size:48px">25&ndash;40<span style="font-size:30px">%*</span></div>
+        <div class="vault-apy-sub">Expected APY Range</div>
         <div class="vault-desc">Captures perp funding rates via delta-neutral strategies, BTCFi yield layers, and x402 agentic payment flows. Highest APY, monitored continuously by the AI risk engine.</div>
         <div class="vault-protos">
           <span class="vault-proto">Perp Funding</span>
@@ -1181,9 +1193,23 @@ footer {
           <div class="vault-bar-meta"><span>TVL CAPACITY</span><span>$210K / $5M</span></div>
           <div class="vault-bar-track"><div class="vault-bar-fill" style="width:0" data-target="4.2"></div></div>
         </div>
-        <button class="vault-action" onclick="openModal('ALPHA','Alpha Vault')">Select Vault →</button>
+        <a href="/app" class="vault-action" style="display:block;text-decoration:none;">Select Vault →</a>
       </div>
 
+    </div>
+    <div style="margin-top: 32px; font-style: italic; font-size: 12px; color: var(--fog); text-align: center;">* APY figures are estimates and not guaranteed. DeFi involves smart contract and liquidity risks.</div>
+  </div>
+</section>
+
+<!-- CORE CONTRIBUTORS -->
+<section class="section dark" id="team">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">ABOUT</div>
+      <h2 class="section-h2">CORE <span class="t-gold">CONTRIBUTORS</span></h2>
+    </div>
+    <div class="reveal reveal-d1" style="max-width: 800px; font-size: 16px; color: var(--fog); line-height: 1.8; font-weight: 300;">
+      <p>Vaulta is built by a distributed team of DeFi-native developers, on-chain researchers, and AI engineers. We've collectively shipped protocols, contributed to open-source infrastructure, and managed on-chain capital across multiple market cycles. We build in public, but prefer to let the protocol speak for itself.</p>
     </div>
   </div>
 </section>
@@ -1350,7 +1376,7 @@ footer {
         <div class="btn-lime-pulse"></div>
         Launch Testnet Demo
       </a>
-      <button class="btn-primary-lg" onclick="openModal('STABLE','Stable Vault')">Activate Capital →</button>
+      <a href="/app" class="btn-primary-lg" style="text-decoration:none;letter-spacing:2px">Activate Capital →</a>
       <a href="/docs" class="btn-ghost" style="font-size:11px">Read Docs</a>
     </div>
   </div>
@@ -1365,8 +1391,8 @@ footer {
   <ul class="footer-links">
     <li><a href="https://x.com/vaultaworks" target="_blank" rel="noopener">X (Twitter)</a></li>
     <li><a href="/docs">Docs</a></li>
-    <li><a href="https://github.com/vaultaworks" target="_blank" rel="noopener">GitHub</a></li>
-    <li><a href="#">Audit</a></li>
+    <li><a href="https://github.com/vaultaworks/vaulta" target="_blank" rel="noopener">GitHub</a></li>
+    <li><a href="/audit">Audit</a></li>
   </ul>
   <div class="footer-copy">© 2026 Vaulta Protocol · MIT License</div>
 </footer>

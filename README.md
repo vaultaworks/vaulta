@@ -101,7 +101,7 @@ npx serve .
 | Phase | Timeline | Status |
 |-------|----------|--------|
 | Testnet (Base Sepolia) | Q2 2026 | ✅ Live |
-| Smart Contract Audit | Q2–Q3 2026 | 🔄 In Progress |
+| Smart Contract Audit | Q2–Q3 2026 | 🔄 [In Progress](/audit) |
 | Mainnet — Stable Vault | Q3 2026 | ⏳ Upcoming |
 | Boost Vault + AI Dashboard | Q4 2026 | ⏳ Upcoming |
 | Alpha Vault + x402 + DAO | Q1 2027 | ⏳ Planned |
