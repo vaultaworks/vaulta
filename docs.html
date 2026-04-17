@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VAULTA — Documentation</title>
+<meta name="description" content="Vaulta documentation. Overview of the protocol, AI engine, and vault products on Base.">
+<meta property="og:title" content="VAULTA — Documentation">
+<meta property="og:description" content="Vaulta documentation. Overview of the protocol, AI engine, and vault products on Base.">
+<meta property="og:image" content="https://vaulta.works/og-image.png">
+<meta property="og:url" content="https://vaulta.works/docs">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="VAULTA — Documentation">
+<meta name="twitter:description" content="Vaulta documentation. Overview of the protocol, AI engine, and vault products on Base.">
+<meta name="twitter:image" content="https://vaulta.works/og-image.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -95,8 +106,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:64px;display:flex;ali
 .vp-b{color:var(--amber);border-color:rgba(255,179,0,0.3);background:rgba(255,179,0,0.05);}
 .vp-a{color:var(--red);border-color:var(--red-bd);background:var(--red-bg);}
 
+.mobile-nav-toggle { display: none; margin-bottom: 24px; background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 12px 16px; cursor: pointer; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--gold-lo); }
+.mobile-nav-menu { display: none; margin-bottom: 32px; background: var(--deep); border: 1px solid var(--line); border-radius: 4px; padding: 16px 0; }
+.mobile-nav-menu .sb-section-title { margin-top: 16px; }
+.mobile-nav-menu .sb-section-title:first-child { margin-top: 0; }
+.mobile-nav-menu .sb-link { padding: 10px 32px; }
+
 @media(max-width:960px){.docs-layout{grid-template-columns:220px 1fr;}}
-@media(max-width:768px){.docs-layout{grid-template-columns:1fr;}.docs-sidebar{display:none;}.docs-main{padding:32px 24px;}}
+@media(max-width:768px){.docs-layout{grid-template-columns:1fr;}.docs-sidebar{display:none;}.docs-main{padding:32px 24px;}.mobile-nav-toggle{display:block;}}
 </style>
 </head>
 <body>
@@ -137,6 +154,28 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:64px;display:flex;ali
 
   <!-- MAIN CONTENT -->
   <div class="docs-main">
+    <button class="mobile-nav-toggle" onclick="document.getElementById('mobMenu').style.display = document.getElementById('mobMenu').style.display === 'block' ? 'none' : 'block'">≡ Documentation Menu</button>
+    <div class="mobile-nav-menu" id="mobMenu">
+      <div class="sb-section-title">Getting Started</div>
+      <a href="#overview" class="sb-link active" onclick="document.getElementById('mobMenu').style.display='none'">Overview</a>
+      <a href="#how" class="sb-link" onclick="document.getElementById('mobMenu').style.display='none'">How It Works</a>
+      <a href="#testnet" class="sb-link" onclick="document.getElementById('mobMenu').style.display='none'">Testnet Guide</a>
+
+      <div class="sb-section-title">Vaults</div>
+      <a href="#stable" class="sb-link" onclick="document.getElementById('mobMenu').style.display='none'">Stable Vault</a>
+      <a href="#boost" class="sb-link" onclick="document.getElementById('mobMenu').style.display='none'">Boost Vault</a>
+      <a href="#alpha" class="sb-link" onclick="document.getElementById('mobMenu').style.display='none'">Alpha Vault</a>
+
+      <div class="sb-section-title">Protocol</div>
+      <a href="#vsusd" class="sb-link" onclick="document.getElementById('mobMenu').style.display='none'">$vsUSD Token</a>
+      <a href="#ai" class="sb-link" onclick="document.getElementById('mobMenu').style.display='none'">AI Optimizer</a>
+      <a href="#security" class="sb-link" onclick="document.getElementById('mobMenu').style.display='none'">Security</a>
+      <a href="#integrations" class="sb-link" onclick="document.getElementById('mobMenu').style.display='none'">Integrations</a>
+
+      <div class="sb-section-title">Resources</div>
+      <a href="#faq" class="sb-link" onclick="document.getElementById('mobMenu').style.display='none'">FAQ</a>
+      <a href="#roadmap" class="sb-link" onclick="document.getElementById('mobMenu').style.display='none'">Roadmap</a>
+    </div>
 
     <div class="doc-section" id="overview">
       <div class="doc-h1">DOCUMENTATION</div>

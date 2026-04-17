@@ -4,6 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VAULTA — App</title>
+  <meta name="description" content="Simulate Vaulta deposits on Base Sepolia testnet.">
+  <meta property="og:title" content="VAULTA — App">
+  <meta property="og:description" content="Simulate Vaulta deposits on Base Sepolia testnet.">
+  <meta property="og:image" content="https://vaulta.works/og-image.png">
+  <meta property="og:url" content="https://vaulta.works/app">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="VAULTA — App">
+  <meta name="twitter:description" content="Simulate Vaulta deposits on Base Sepolia testnet.">
+  <meta name="twitter:image" content="https://vaulta.works/og-image.png">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
@@ -741,6 +752,32 @@
 
   // ─── CHAIN / ACCOUNT LISTENERS ───────────────────────
   if (window.ethereum) {
+    // Auto-reconnect if already permitted
+    window.ethereum.request({ method: 'eth_accounts' }).then(accounts => {
+      if (accounts.length > 0) {
+        walletAddress = accounts[0];
+        walletConnected = true;
+        window.ethereum.request({ method: 'eth_chainId' }).then(chainId => {
+          currentChainId = chainId;
+          updateWalletUI();
+          if (chainId !== BASE_SEPOLIA_CHAIN_ID) {
+            showBanner('warning', '⚠ Wrong network. Please switch to Base Sepolia (Chain ID: 84532).');
+            document.getElementById('switchNetworkBtn').style.display = 'block';
+            if (document.getElementById('walletNetwork')) {
+              document.getElementById('walletNetwork').className = 'wallet-network wrong';
+              document.getElementById('walletNetwork').textContent = 'Wrong Network — Switch to Base Sepolia';
+            }
+          } else {
+            document.getElementById('switchNetworkBtn').style.display = 'none';
+            if (document.getElementById('walletNetwork')) {
+              document.getElementById('walletNetwork').className = 'wallet-network';
+              document.getElementById('walletNetwork').textContent = 'Base Sepolia · Chain 84532 ✓';
+            }
+          }
+        });
+      }
+    }).catch(console.error);
+
     window.ethereum.on('accountsChanged', (accounts) => {
       if (accounts.length === 0) {
         walletConnected = false;
