@@ -19,13 +19,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --void: #000000; --deep: #080808; --surface: #111111; --lift: #1a1a1a;
+  --void: #0a0a0f; --deep: #0f0f1a; --surface: rgba(15,15,26,0.8); --lift: #1a1a1a;
   --glass: rgba(255,255,255,0.04); --line: rgba(255,255,255,0.1); --line2: rgba(255,255,255,0.05);
-  --gold: #ffffff; --gold-hi: #ffffff; --gold-lo: rgba(255,255,255,0.4);
+  --sol-purple: #9945FF; --sol-green: #14F195; --sol-grad: linear-gradient(90deg, #9945FF, #14F195); --gold: #ffffff; --gold-hi: #ffffff; --gold-lo: rgba(255,255,255,0.4);
   --gold-bg: rgba(255,255,255,0.06); --gold-bd: rgba(255,255,255,0.15);
-  --lime: #39d98a; --lime-lo: rgba(57,217,138,0.45);
+  --lime: #14F195; --lime-lo: rgba(57,217,138,0.45);
   --lime-bg: rgba(57,217,138,0.06); --lime-bd: rgba(57,217,138,0.2);
-  --sky: #aaaaaa; --red: #d4595c;
+  --sky: #aaaaaa; --red: #9945FF;
   --red-bg: rgba(212,89,92,0.05); --red-bd: rgba(212,89,92,0.25);
   --ink: #f0f0f0; --fog: rgba(240,240,240,0.45); --mist: rgba(240,240,240,0.2); --ghost: rgba(240,240,240,0.1);
   --sans: 'DM Sans', sans-serif; --mono: 'Space Mono', monospace; --display: 'Bebas Neue', sans-serif;
@@ -178,7 +178,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:64px;display:flex;ali
     </div>
 
     <div class="doc-section" id="overview">
-      <div class="doc-h1">DOCUMENTATION</div>
+      <div class="doc-h1" style="background: var(--sol-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;">DOCUMENTATION</div>
       <p class="doc-lead">Vaulta is an AI-driven, autonomous yield infrastructure protocol built on Base. This documentation covers the protocol architecture, vault products, $vsUSD token mechanics, and the AI optimizer engine.</p>
       <div class="callout safe">
         <div class="callout-icon">✓</div>
@@ -445,3 +445,4 @@ sections.forEach(s => obs.observe(s));
 </script>
 </body>
 </html>
+
