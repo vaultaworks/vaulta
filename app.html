@@ -4,15 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VAULTA — App</title>
-  <meta name="description" content="Simulate Vaulta deposits on Base Sepolia testnet.">
+  <meta name="description" content="Simulate Vaulta deposits on Solana Mainnet MAINNET.">
   <meta property="og:title" content="VAULTA — App">
-  <meta property="og:description" content="Simulate Vaulta deposits on Base Sepolia testnet.">
+  <meta property="og:description" content="Simulate Vaulta deposits on Solana Mainnet MAINNET.">
   <meta property="og:image" content="https://vaulta.works/og-image.jpg">
   <meta property="og:url" content="https://vaulta.works/app">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="VAULTA — App">
-  <meta name="twitter:description" content="Simulate Vaulta deposits on Base Sepolia testnet.">
+  <meta name="twitter:description" content="Simulate Vaulta deposits on Solana Mainnet MAINNET.">
   <meta name="twitter:image" content="https://vaulta.works/og-image.jpg">
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -456,6 +456,47 @@
       cursor: pointer;
       display: none;
     }
+    
+    /* WALLET SELECT MODAL */
+    .wallet-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .wallet-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.02);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .wallet-option:hover {
+      border-color: var(--green);
+      background: var(--green-dim);
+    }
+    .wallet-option-name {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .wallet-option-status {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+    }
+    .modal-x {
+      position: absolute; top: 18px; right: 18px;
+      background: none; border: none; color: var(--muted);
+      font-size: 18px; cursor: pointer; width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      transition: color 0.2s;
+    }
+    .modal-x:hover { color: var(--text); }
   </style>
 </head>
 <body>
@@ -465,7 +506,7 @@
   <div class="nav-right">
     <div class="network-badge">
       <span class="dot"></span>
-      BASE SEPOLIA
+      Solana Mainnet
     </div>
     <button id="connectBtn" onclick="handleConnect()">CONNECT WALLET</button>
   </div>
@@ -496,7 +537,7 @@
     </div>
 
     <div class="card">
-      <div class="card-title">// SIMULATE DEPOSIT · BASE SEPOLIA · NO REAL FUNDS</div>
+      <div class="card-title">// SIMULATE DEPOSIT · Solana Mainnet · NO REAL FUNDS</div>
 
       <div class="input-group">
         <div class="input-label">DEPOSIT AMOUNT</div>
@@ -533,8 +574,8 @@
         </div>
       </div>
 
-      <button id="depositBtn" onclick="handleDeposit()">SIMULATE DEPOSIT ON TESTNET</button>
-      <div class="deposit-note">* Simulation only · No real USDC required · Base Sepolia testnet</div>
+      <button id="depositBtn" onclick="handleDeposit()">SIMULATE DEPOSIT ON MAINNET</button>
+      <div class="deposit-note">* Simulation only · No real USDC required · Solana Mainnet MAINNET</div>
     </div>
   </div>
 
@@ -546,7 +587,7 @@
       <div class="card-title">// WALLET</div>
       <div class="wallet-addr" id="walletAddr"></div>
       <div class="wallet-network" id="walletNetwork"></div>
-      <button id="switchNetworkBtn" onclick="switchToBaseSepolia()">⚡ SWITCH TO BASE SEPOLIA</button>
+      <button id="switchNetworkBtn" onclick="switchToBaseMainnet()">⚡ SWITCH TO Solana Mainnet</button>
     </div>
 
     <!-- LIVE DATA -->
@@ -570,7 +611,7 @@
       </div>
       <div class="live-row">
         <span class="live-key">NETWORK</span>
-        <span class="live-val">BASE SEPOLIA</span>
+        <span class="live-val">Solana Mainnet</span>
       </div>
       <div class="live-row">
         <span class="live-key">CHAIN ID</span>
@@ -586,19 +627,19 @@
 <!-- SIMULATION MODAL -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
-    <div class="modal-title">// DEPOSIT SIMULATION · BASE SEPOLIA</div>
+    <div class="modal-title">// DEPOSIT SIMULATION · SOLANA MAINNET</div>
     <div class="sim-step" id="step1">
       <div class="step-num">01</div>
       <div>
         <div class="step-text">Connect Wallet</div>
-        <div class="step-sub">Handshake with Base Sepolia...</div>
+        <div class="step-sub">Handshake with Solana Mainnet...</div>
       </div>
     </div>
     <div class="sim-step" id="step2">
       <div class="step-num">02</div>
       <div>
         <div class="step-text">Approve USDC</div>
-        <div class="step-sub">ERC-20 approval (simulated gas: 0.0002 ETH)</div>
+        <div class="step-sub">Token program approval (simulated fee: 0.00001 SOL)</div>
       </div>
     </div>
     <div class="sim-step" id="step3">
@@ -619,15 +660,37 @@
   </div>
 </div>
 
+<!-- WALLET CONNECT MODAL -->
+<div class="modal-overlay" id="walletModalOverlay">
+  <div class="modal" style="position: relative;">
+    <button class="modal-x" onclick="closeWalletModal()">×</button>
+    <div class="modal-title">// CONNECT SOLANA WALLET</div>
+    <div class="wallet-options">
+      <div class="wallet-option" onclick="simulateWalletConnect('Phantom')">
+        <div class="wallet-option-name">Phantom</div>
+        <div class="wallet-option-status" id="status-Phantom">Detected</div>
+      </div>
+      <div class="wallet-option" onclick="simulateWalletConnect('Solflare')">
+        <div class="wallet-option-name">Solflare</div>
+        <div class="wallet-option-status" id="status-Solflare"></div>
+      </div>
+      <div class="wallet-option" onclick="simulateWalletConnect('Backpack')">
+        <div class="wallet-option-name">Backpack</div>
+        <div class="wallet-option-status" id="status-Backpack"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   // ─── STATE ───────────────────────────────────────────
-  const BASE_SEPOLIA_CHAIN_ID = '0x14a34'; // 84532
-  const BASE_SEPOLIA_PARAMS = {
-    chainId: BASE_SEPOLIA_CHAIN_ID,
-    chainName: 'Base Sepolia',
+  const BASE_Mainnet_CHAIN_ID = '0x14a34'; // 84532
+  const BASE_Mainnet_PARAMS = {
+    chainId: BASE_Mainnet_CHAIN_ID,
+    chainName: 'Solana Mainnet',
     nativeCurrency: { name: 'Ethereum', symbol: 'ETH', decimals: 18 },
-    rpcUrls: ['https://sepolia.base.org'],
-    blockExplorerUrls: ['https://sepolia-explorer.base.org']
+    rpcUrls: ['https://Mainnet.Solana.org'],
+    blockExplorerUrls: ['https://Mainnet-explorer.Solana.org']
   };
 
   let walletConnected = false;
@@ -668,12 +731,7 @@
   }
 
   // ─── WALLET CONNECT ───────────────────────────────────
-  async function handleConnect() {
-    if (!window.ethereum) {
-      showBanner('error', '⚠ No wallet detected. Please install MetaMask or a Web3 wallet.');
-      return;
-    }
-
+  function handleConnect() {
     if (walletConnected) {
       // Disconnect (reset state)
       walletConnected = false;
@@ -684,42 +742,47 @@
       hideBanner();
       return;
     }
+    
+    // Open modal to select wallet
+    document.getElementById('walletModalOverlay').classList.add('show');
+  }
 
-    try {
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      walletAddress = accounts[0];
+  function closeWalletModal() {
+    document.getElementById('walletModalOverlay').classList.remove('show');
+  }
+
+  function simulateWalletConnect(walletName) {
+    const statusEl = document.getElementById('status-' + walletName);
+    const originalText = statusEl.textContent;
+    statusEl.textContent = 'Connecting...';
+    
+    setTimeout(() => {
+      // Generate a random Solana-like address
+      const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+      let addr = '';
+      for (let i = 0; i < 44; i++) {
+        addr += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      
+      walletAddress = addr;
       walletConnected = true;
-
-      const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-      currentChainId = chainId;
-
+      currentChainId = 'solana-mainnet';
+      
       updateWalletUI();
-
-      // Check if on Base Sepolia
-      if (chainId !== BASE_SEPOLIA_CHAIN_ID) {
-        showBanner('warning', '⚠ Wrong network. Please switch to Base Sepolia (Chain ID: 84532).');
-        document.getElementById('switchNetworkBtn').style.display = 'block';
-        document.getElementById('walletNetwork').className = 'wallet-network wrong';
-        document.getElementById('walletNetwork').textContent = 'Wrong Network — Switch to Base Sepolia';
-      } else {
-        showBanner('success', '✓ Connected to Base Sepolia. Ready to simulate deposits.');
-        document.getElementById('switchNetworkBtn').style.display = 'none';
-        document.getElementById('walletNetwork').className = 'wallet-network';
-        document.getElementById('walletNetwork').textContent = 'Base Sepolia · Chain 84532 ✓';
-      }
-
-    } catch (err) {
-      if (err.code === 4001) {
-        showBanner('error', '✗ Connection rejected by user.');
-      } else {
-        showBanner('error', '✗ Connection failed: ' + err.message);
-      }
-    }
+      closeWalletModal();
+      
+      showBanner('success', '✓ Connected to Solana Mainnet via ' + walletName + '. Ready to simulate deposits.');
+      document.getElementById('switchNetworkBtn').style.display = 'none';
+      document.getElementById('walletNetwork').className = 'wallet-network';
+      document.getElementById('walletNetwork').textContent = 'Solana Mainnet ✓';
+      
+      statusEl.textContent = originalText; // Reset for next time
+    }, 800);
   }
 
   function updateWalletUI() {
     const btn = document.getElementById('connectBtn');
-    const short = walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4);
+    const short = walletAddress.slice(0, 4) + '...' + walletAddress.slice(-4);
     btn.textContent = short;
     btn.classList.add('connected');
 
@@ -728,88 +791,12 @@
   }
 
   // ─── SWITCH NETWORK ───────────────────────────────────
-  async function switchToBaseSepolia() {
-    if (!window.ethereum) return;
-    try {
-      await window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: BASE_SEPOLIA_CHAIN_ID }]
-      });
-    } catch (err) {
-      // Chain not added yet — add it
-      if (err.code === 4902) {
-        try {
-          await window.ethereum.request({
-            method: 'wallet_addEthereumChain',
-            params: [BASE_SEPOLIA_PARAMS]
-          });
-        } catch (addErr) {
-          showBanner('error', '✗ Failed to add Base Sepolia: ' + addErr.message);
-        }
-      }
-    }
-  }
-
-  // ─── CHAIN / ACCOUNT LISTENERS ───────────────────────
-  if (window.ethereum) {
-    // Auto-reconnect if already permitted
-    window.ethereum.request({ method: 'eth_accounts' }).then(accounts => {
-      if (accounts.length > 0) {
-        walletAddress = accounts[0];
-        walletConnected = true;
-        window.ethereum.request({ method: 'eth_chainId' }).then(chainId => {
-          currentChainId = chainId;
-          updateWalletUI();
-          if (chainId !== BASE_SEPOLIA_CHAIN_ID) {
-            showBanner('warning', '⚠ Wrong network. Please switch to Base Sepolia (Chain ID: 84532).');
-            document.getElementById('switchNetworkBtn').style.display = 'block';
-            if (document.getElementById('walletNetwork')) {
-              document.getElementById('walletNetwork').className = 'wallet-network wrong';
-              document.getElementById('walletNetwork').textContent = 'Wrong Network — Switch to Base Sepolia';
-            }
-          } else {
-            document.getElementById('switchNetworkBtn').style.display = 'none';
-            if (document.getElementById('walletNetwork')) {
-              document.getElementById('walletNetwork').className = 'wallet-network';
-              document.getElementById('walletNetwork').textContent = 'Base Sepolia · Chain 84532 ✓';
-            }
-          }
-        });
-      }
-    }).catch(console.error);
-
-    window.ethereum.on('accountsChanged', (accounts) => {
-      if (accounts.length === 0) {
-        walletConnected = false;
-        walletAddress = null;
-        document.getElementById('connectBtn').textContent = 'CONNECT WALLET';
-        document.getElementById('connectBtn').classList.remove('connected');
-        document.getElementById('walletCard').style.display = 'none';
-        hideBanner();
-      } else {
-        walletAddress = accounts[0];
-        updateWalletUI();
-      }
-    });
-
-    window.ethereum.on('chainChanged', (chainId) => {
-      currentChainId = chainId;
-      if (chainId === BASE_SEPOLIA_CHAIN_ID) {
-        showBanner('success', '✓ Switched to Base Sepolia. Ready to simulate deposits.');
-        document.getElementById('switchNetworkBtn').style.display = 'none';
-        if (document.getElementById('walletNetwork')) {
-          document.getElementById('walletNetwork').className = 'wallet-network';
-          document.getElementById('walletNetwork').textContent = 'Base Sepolia · Chain 84532 ✓';
-        }
-      } else {
-        showBanner('warning', '⚠ Wrong network. Switch to Base Sepolia to continue.');
-        document.getElementById('switchNetworkBtn').style.display = 'block';
-        if (document.getElementById('walletNetwork')) {
-          document.getElementById('walletNetwork').className = 'wallet-network wrong';
-          document.getElementById('walletNetwork').textContent = 'Wrong Network — Switch to Base Sepolia';
-        }
-      }
-    });
+  function switchToBaseMainnet() {
+    // Simulated network switch
+    showBanner('success', '✓ Switched to Solana Mainnet. Ready to simulate deposits.');
+    document.getElementById('switchNetworkBtn').style.display = 'none';
+    document.getElementById('walletNetwork').className = 'wallet-network';
+    document.getElementById('walletNetwork').textContent = 'Solana Mainnet ✓';
   }
 
   // ─── DEPOSIT SIMULATION ───────────────────────────────
@@ -871,4 +858,5 @@
 </script>
 </body>
 </html>
+
 

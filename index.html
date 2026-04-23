@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VAULTA — Autonomous Yield Infrastructure on Base</title>
-<meta name="description" content="Deposit USDC. Receive $vsUSD. AI compounds your capital across the highest-yield protocols on Base — non-custodial, 24/7, fully on-chain.">
+<title>VAULTA — Autonomous Yield Infrastructure on Solana</title>
+<meta name="description" content="Deposit USDC. Receive $vsUSD. AI compounds your capital across the highest-yield protocols on Solana — non-custodial, 24/7, fully on-chain.">
 <meta property="og:title" content="VAULTA — Autonomous Yield Infrastructure">
-<meta property="og:description" content="AI-driven yield protocol on Base. Deposit USDC, receive $vsUSD.">
+<meta property="og:description" content="AI-driven yield protocol on Solana. Deposit USDC, receive $vsUSD.">
 <meta property="og:image" content="https://vaulta.works/og-image.jpg">
 <meta property="og:url" content="https://vaulta.works">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="VAULTA — Autonomous Yield Infrastructure">
-<meta name="twitter:description" content="AI-driven yield protocol on Base. Deposit USDC, receive $vsUSD.">
+<meta name="twitter:description" content="AI-driven yield protocol on Solana. Deposit USDC, receive $vsUSD.">
 <meta name="twitter:image" content="https://vaulta.works/og-image.jpg">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,7 +20,7 @@
 <style>
 /* ─────────────────────────────────────────────
    VAULTA — Design System
-   Chain: Base · Token: $vsUSD · Build: 2026
+   Chain: Solana · Token: $vsUSD · Build: 2026
 ───────────────────────────────────────────── */
 :root {
   --void:    #0a0a0f;
@@ -822,6 +822,24 @@ footer {
 .modal-ok-hash { font-size: 9px; color: var(--gold-lo); font-family: var(--mono); margin-top: 12px; word-break: break-all; }
 
 /* ═══════════════════════════════════
+   DEPOSIT INPUT FORM
+═══════════════════════════════════ */
+.deposit-input-form { display: none; flex-direction: column; gap: 20px; }
+.deposit-input-form.show { display: flex; }
+.vault-tabs-sm { display: flex; gap: 8px; margin-bottom: 16px; }
+.vt-sm { flex: 1; text-align: center; padding: 12px; border: 1px solid var(--line); border-radius: 4px; font-family: var(--mono); font-size: 10px; color: var(--fog); cursor: pointer; transition: all var(--t); letter-spacing: 1px; }
+.vt-sm.active { border-color: var(--sol-green); color: var(--sol-green); background: rgba(20,241,149,0.08); }
+.amt-input-wrap { display: flex; align-items: center; border: 1px solid var(--line); border-radius: 4px; background: rgba(0,0,0,0.4); padding: 0 16px; transition: border-color var(--t); }
+.amt-input-wrap:focus-within { border-color: var(--sol-purple); }
+.amt-input { flex: 1; background: transparent; border: none; color: var(--ink); font-family: var(--mono); font-size: 20px; padding: 16px 0; outline: none; }
+.amt-currency { font-family: var(--mono); font-size: 12px; color: var(--fog); margin-left: 12px; }
+.amt-quick { display: flex; gap: 8px; margin-top: 12px; }
+.btn-q { padding: 6px 12px; border: 1px solid var(--line); border-radius: 4px; background: transparent; color: var(--fog); font-family: var(--mono); font-size: 10px; cursor: pointer; transition: all var(--t); }
+.btn-q:hover { border-color: var(--gold-lo); color: var(--ink); }
+.btn-simulate { width: 100%; padding: 16px; background: var(--sol-grad); color: var(--void); border: none; border-radius: 4px; font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: transform var(--t); }
+.btn-simulate:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 0 15px rgba(153,69,255,0.4); }
+
+/* ═══════════════════════════════════
    MOBILE AUDIT / RESPONSIVE FIXES
 ═══════════════════════════════════ */
 @media (max-width: 768px) {
@@ -866,7 +884,7 @@ footer {
   <div class="nav-actions">
     <a href="/app" class="btn-lime">
       <div class="btn-lime-pulse"></div>
-      Open App
+      CONNECT WALLET
     </a>
     <a href="/docs" class="btn-gold">Docs →</a>
   </div>
@@ -878,26 +896,26 @@ footer {
     <div class="t-item">STABLE VAULT <span class="t-up">&nbsp;+11.2% APY</span></div><span class="t-dot">·</span>
     <div class="t-item">BOOST VAULT <span class="t-up">&nbsp;+18.7% APY</span></div><span class="t-dot">·</span>
     <div class="t-item">ALPHA VAULT <span class="t-up">&nbsp;+33.4% APY</span></div><span class="t-dot">·</span>
-    <div class="t-item">BASE TVL <span class="t-hi">&nbsp;$8.2B</span></div><span class="t-dot">·</span>
+    <div class="t-item">Solana TVL <span class="t-hi">&nbsp;$8.2B</span></div><span class="t-dot">·</span>
     <div class="t-item">$vsUSD HOLDERS <span>&nbsp;3,104</span></div><span class="t-dot">·</span>
     <div class="t-item">AI REBALANCES <span class="t-up">&nbsp;1,847 TODAY</span></div><span class="t-dot">·</span>
     <div class="t-item">MORPHO <span class="t-up">&nbsp;LIVE</span></div><span class="t-dot">·</span>
     <div class="t-item">AERODROME <span class="t-up">&nbsp;LIVE</span></div><span class="t-dot">·</span>
     <div class="t-item">x402 PROTOCOL <span class="t-hi">&nbsp;INTEGRATED</span></div><span class="t-dot">·</span>
     <div class="t-item">ONDO FINANCE <span class="t-up">&nbsp;LIVE</span></div><span class="t-dot">·</span>
-    <div class="t-item">TESTNET <span class="t-up">&nbsp;BASE SEPOLIA</span></div><span class="t-dot">·</span>
+    <div class="t-item">MAINNET <span class="t-up">&nbsp;Solana Mainnet</span></div><span class="t-dot">·</span>
     <!-- duplicate for loop -->
     <div class="t-item">STABLE VAULT <span class="t-up">&nbsp;+11.2% APY</span></div><span class="t-dot">·</span>
     <div class="t-item">BOOST VAULT <span class="t-up">&nbsp;+18.7% APY</span></div><span class="t-dot">·</span>
     <div class="t-item">ALPHA VAULT <span class="t-up">&nbsp;+33.4% APY</span></div><span class="t-dot">·</span>
-    <div class="t-item">BASE TVL <span class="t-hi">&nbsp;$8.2B</span></div><span class="t-dot">·</span>
+    <div class="t-item">Solana TVL <span class="t-hi">&nbsp;$8.2B</span></div><span class="t-dot">·</span>
     <div class="t-item">$vsUSD HOLDERS <span>&nbsp;3,104</span></div><span class="t-dot">·</span>
     <div class="t-item">AI REBALANCES <span class="t-up">&nbsp;1,847 TODAY</span></div><span class="t-dot">·</span>
     <div class="t-item">MORPHO <span class="t-up">&nbsp;LIVE</span></div><span class="t-dot">·</span>
     <div class="t-item">AERODROME <span class="t-up">&nbsp;LIVE</span></div><span class="t-dot">·</span>
     <div class="t-item">x402 PROTOCOL <span class="t-hi">&nbsp;INTEGRATED</span></div><span class="t-dot">·</span>
     <div class="t-item">ONDO FINANCE <span class="t-up">&nbsp;LIVE</span></div><span class="t-dot">·</span>
-    <div class="t-item">TESTNET <span class="t-up">&nbsp;BASE SEPOLIA</span></div><span class="t-dot">·</span>
+    <div class="t-item">MAINNET <span class="t-up">&nbsp;Solana Mainnet</span></div><span class="t-dot">·</span>
   </div>
 </div>
 
@@ -927,7 +945,7 @@ footer {
     <div class="hero-left">
       <div class="hero-eyebrow">
         <span class="nav-pulse"></span>
-        Autonomous Yield · Built on Base · Audited
+        Autonomous Yield · Built on Solana · Audited
       </div>
       <h1 class="hero-title t-display" style="background: var(--sol-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
         YOUR<br>
@@ -936,7 +954,7 @@ footer {
         SLEEPS
       </h1>
       <p class="hero-desc">
-        Deposit USDC. Receive <strong>$vsUSD</strong> — a yield-bearing stablecoin that allocates autonomously across lending, real-world assets, perp funding, and x402 agentic flows on Base.
+        Deposit USDC. Receive <strong>$vsUSD</strong> — a yield-bearing stablecoin that allocates autonomously across lending, real-world assets, perp funding, and x402 agentic flows on Solana.
       </p>
       <div class="hero-cta">
         <a href="/app" class="btn-primary-lg" style="letter-spacing:2px">
@@ -963,7 +981,7 @@ footer {
           <div class="term-title">vaulta_ai_optimizer.live</div>
         </div>
         <div class="terminal-body">
-          <div class="term-line"><span class="term-comment">// AI Optimizer · Base · live feed</span></div>
+          <div class="term-line"><span class="term-comment">// AI Optimizer · Solana · live feed</span></div>
           <div class="term-line"><span class="term-prompt">$&nbsp;</span><span class="term-cmd">vaulta status --realtime</span></div>
           <div class="term-sep"></div>
           <div class="term-line"><span class="term-key">stable_vault.apy</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="term-val-g" id="tStable">11.2%</span></div>
@@ -974,7 +992,7 @@ footer {
           <div class="term-line"><span class="term-key">morpho.tvl</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="term-val-y">$4.1M</span></div>
           <div class="term-line"><span class="term-key">x402.flows_24h</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="term-val-g" id="tX402">218</span></div>
           <div class="term-sep"></div>
-          <div class="term-line"><span class="term-key">network</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="term-val-g">base-sepolia (testnet)</span></div>
+          <div class="term-line"><span class="term-key">network</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="term-val-g">solana-mainnet (MAINNET)</span></div>
           <div class="term-line"><span class="term-key">last_rebalance</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="term-val-y" id="tLastRb">4s ago</span></div>
           <div class="term-line"><span class="term-prompt">$&nbsp;</span><span class="term-blink">█</span></div>
         </div>
@@ -982,13 +1000,13 @@ footer {
       <div class="hero-stats">
         <div class="h-stat">
           <div class="h-stat-val t-gold" id="sTvl">$8.2B</div>
-          <div class="h-stat-lbl">Base TVL</div>
-          <div class="h-stat-live"><div class="live-pip" style="background:var(--amber)"></div><span style="color:var(--gold-lo)">TESTNET SIMULATION</span></div>
+          <div class="h-stat-lbl">Solana TVL</div>
+          <div class="h-stat-live"><div class="live-pip" style="background:var(--amber)"></div><span style="color:var(--gold-lo)">MAINNET SIMULATION</span></div>
         </div>
         <div class="h-stat">
           <div class="h-stat-val" style="color:var(--lime)" id="sRebal">1,847</div>
           <div class="h-stat-lbl">AI Rebalances</div>
-          <div class="h-stat-live"><div class="live-pip" style="background:var(--amber)"></div><span style="color:var(--gold-lo)">TESTNET SIMULATION</span></div>
+          <div class="h-stat-live"><div class="live-pip" style="background:var(--amber)"></div><span style="color:var(--gold-lo)">MAINNET SIMULATION</span></div>
         </div>
         <div class="h-stat">
           <div class="h-stat-val t-gold">$vsUSD</div>
@@ -1046,7 +1064,7 @@ footer {
         <path d="M7 4.5h4M4.5 7v4M13.5 7v4M7 13.5h4"/>
       </svg>
     </div>
-    <div class="trust-text">Built on Base</div>
+    <div class="trust-text">Built on Solana</div>
   </div>
   <div class="trust-item">
     <div class="trust-icon">
@@ -1070,7 +1088,7 @@ footer {
         <path d="M3 5h12v10H3z"/><path d="M3 8h12"/>
       </svg>
     </div>
-    <div class="trust-text">Testnet Live Now</div>
+    <div class="trust-text">MAINNET Live Now</div>
   </div>
 </div>
 
@@ -1109,7 +1127,7 @@ footer {
           </svg>
         </div>
         <div class="flow-node-title">AI ROUTES</div>
-        <div class="flow-node-desc">AI engine evaluates risk-adjusted APY across all active Base protocols, then deploys capital to the optimal mix.</div>
+        <div class="flow-node-desc">AI engine evaluates risk-adjusted APY across all active Solana protocols, then deploys capital to the optimal mix.</div>
       </div>
       <div class="flow-arr"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
       <div class="flow-node">
@@ -1148,7 +1166,7 @@ footer {
           <span class="vault-proto">Morpho</span>
           <span class="vault-proto">Aerodrome</span>
           <span class="vault-proto">USDC/USDT</span>
-          <span class="vault-proto">Base</span>
+          <span class="vault-proto">Solana</span>
         </div>
         <div class="vault-bar-wrap">
           <div class="vault-bar-meta"><span>TVL CAPACITY</span><span>$1.24M / $5M</span></div>
@@ -1262,7 +1280,7 @@ footer {
           </div>
           <div>
             <div class="ai-feat-title">x402 Agentic Commerce</div>
-            <div class="ai-feat-desc">Routes idle capital into x402 agentic payment flows — the S-tier 2026 narrative enabling autonomous AI-to-AI microtransactions on Base.</div>
+            <div class="ai-feat-desc">Routes idle capital into x402 agentic payment flows — the S-tier 2026 narrative enabling autonomous AI-to-AI microtransactions on Solana.</div>
           </div>
         </div>
         <div class="ai-feat">
@@ -1289,7 +1307,7 @@ footer {
     <div class="thesis-split">
       <div class="thesis-body reveal">
         <p>The majority of on-chain capital sits idle or is fragmented across protocols that demand <strong>constant attention, technical expertise, and manual rebalancing</strong> that most participants simply cannot sustain.</p>
-        <p>Vaulta abstracts this complexity. An AI-driven allocation engine continuously evaluates risk-adjusted opportunities across Base — routing capital into <strong>lending, RWA, perp funding, and x402 agentic commerce</strong> without requiring any action after the initial deposit.</p>
+        <p>Vaulta abstracts this complexity. An AI-driven allocation engine continuously evaluates risk-adjusted opportunities across Solana — routing capital into <strong>lending, RWA, perp funding, and x402 agentic commerce</strong> without requiring any action after the initial deposit.</p>
         <p>The 2026–2027 on-chain narrative is clear: <strong>Agentic Commerce, AI Finance, and RWA</strong> are the three highest-conviction growth vectors. Vaulta is the only yield protocol positioned at the intersection of all three.</p>
       </div>
       <div class="pillars reveal reveal-d2">
@@ -1324,9 +1342,9 @@ footer {
       <div class="rm-card active reveal">
         <div class="rm-num">01</div>
         <div class="rm-phase">Phase 1 · Q2 2026 · NOW</div>
-        <div class="rm-title">TESTNET</div>
+        <div class="rm-title">MAINNET</div>
         <ul class="rm-items">
-          <li>Testnet live on Base Sepolia</li>
+          <li>MAINNET live on Solana Mainnet</li>
           <li>Deposit simulator active</li>
           <li>AI optimizer v1 deployed</li>
           <li>Smart contract audit initiated</li>
@@ -1370,12 +1388,12 @@ footer {
       <span class="t-outline">TODAY</span>
     </h2>
     <p class="cta-sub reveal reveal-d1">
-      Simulate real deposits on Base Sepolia. Zero risk. Full protocol experience — before mainnet.
+      Simulate real deposits on Solana Mainnet. Zero risk. Full protocol experience — before mainnet.
     </p>
     <div class="cta-btns reveal reveal-d2">
       <a href="/app" class="btn-lime" style="font-size:11px;padding:14px 32px;letter-spacing:2.5px">
         <div class="btn-lime-pulse"></div>
-        Launch Testnet Demo
+        Launch MAINNET Demo
       </a>
       <a href="/app" class="btn-primary-lg" style="text-decoration:none;letter-spacing:2px">Activate Capital →</a>
       <a href="/docs" class="btn-ghost" style="font-size:11px">Read Docs</a>
@@ -1387,7 +1405,7 @@ footer {
 <footer>
   <div>
     <div class="footer-brand">VAULTA</div>
-    <div class="footer-sub">Autonomous Yield Infrastructure · On Base</div>
+    <div class="footer-sub">Autonomous Yield Infrastructure · On Solana</div>
   </div>
   <ul class="footer-links">
     <li><a href="https://x.com/vaultaworks" target="_blank" rel="noopener">X (Twitter)</a></li>
@@ -1402,8 +1420,8 @@ footer {
 <div class="status-badge-fixed" onclick="document.getElementById('vaults').scrollIntoView({behavior:'smooth'})">
   <div class="sbf-dot"></div>
   <div>
-    <div class="sbf-main">TESTNET — LIVE</div>
-    <div class="sbf-sub">Base Sepolia · No real funds</div>
+    <div class="sbf-main">MAINNET — LIVE</div>
+    <div class="sbf-sub">Solana Mainnet · No real funds</div>
   </div>
 </div>
 
@@ -1412,20 +1430,42 @@ footer {
   <div class="modal-box">
     <button class="modal-x" onclick="closeModal()">✕</button>
     <div class="modal-vname" id="mVaultName">STABLE VAULT</div>
-    <div class="modal-vsub">// simulate_deposit · base-sepolia · testnet only</div>
-    <div class="tx-steps" id="txSteps">
+    <div class="modal-vsub">// simulate_deposit · solana-mainnet · MAINNET only</div>
+        <div class="deposit-input-form show" id="dInputForm">
+      <div class="vault-tabs-sm">
+        <div class="vt-sm active" onclick="setModalVault('STABLE', this)">STABLE</div>
+        <div class="vt-sm" onclick="setModalVault('BOOST', this)">BOOST</div>
+        <div class="vt-sm" onclick="setModalVault('ALPHA', this)">ALPHA</div>
+      </div>
+      <div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--fog);margin-bottom:8px;letter-spacing:1px;">DEPOSIT AMOUNT</div>
+        <div class="amt-input-wrap">
+          <input type="number" id="mAmount" class="amt-input" placeholder="1000" min="0" value="1000">
+          <span class="amt-currency">USDC</span>
+        </div>
+        <div class="amt-quick">
+          <button class="btn-q" onclick="document.getElementById('mAmount').value=100">$100</button>
+          <button class="btn-q" onclick="document.getElementById('mAmount').value=1000">$1K</button>
+          <button class="btn-q" onclick="document.getElementById('mAmount').value=5000">$5K</button>
+          <button class="btn-q" onclick="document.getElementById('mAmount').value=10000">MAX</button>
+        </div>
+      </div>
+      <button class="btn-simulate" onclick="startSim()">SIMULATE DEPOSIT</button>
+    </div>
+
+    <div class="tx-steps" id="txSteps" style="display:none;">
       <div class="tx-step" id="ms1">
         <div class="tx-step-n">01</div>
         <div class="tx-step-info">
           <div class="tx-step-title">CONNECT WALLET</div>
-          <div class="tx-step-desc">Simulating wallet connection to Base Sepolia...</div>
+          <div class="tx-step-desc">Simulating wallet connection to Solana Mainnet...</div>
         </div>
       </div>
       <div class="tx-step" id="ms2">
         <div class="tx-step-n">02</div>
         <div class="tx-step-info">
           <div class="tx-step-title">APPROVE USDC</div>
-          <div class="tx-step-desc">ERC-20 approval transaction (simulated)...</div>
+          <div class="tx-step-desc">Token program approval (simulated)...</div>
         </div>
       </div>
       <div class="tx-step" id="ms3">
@@ -1446,7 +1486,7 @@ footer {
     <div class="modal-ok" id="mOk">
       <div class="modal-ok-icon">✓</div>
       <div class="modal-ok-title">DEPOSIT SIMULATED</div>
-      <div class="modal-ok-detail" id="mOkDetail">Your testnet deposit has been processed.</div>
+      <div class="modal-ok-detail" id="mOkDetail">Your MAINNET deposit has been processed.</div>
       <div class="modal-ok-hash" id="mOkHash"></div>
     </div>
   </div>
@@ -1516,14 +1556,39 @@ setInterval(updateTerminal, 3800);
 const vaultAPY = { STABLE: 11.2, BOOST: 18.7, ALPHA: 33.4 };
 let modalOpen = false;
 
+let currentModalVault = 'STABLE';
+
 function openModal(vaultKey, vaultName) {
   if (modalOpen) return;
   modalOpen = true;
+  currentModalVault = vaultKey;
   document.getElementById('mVaultName').textContent = vaultName.toUpperCase();
-  document.getElementById('txSteps').style.display = 'flex';
+  
+  // reset form
+  document.getElementById('dInputForm').classList.add('show');
+  document.getElementById('txSteps').style.display = 'none';
   document.getElementById('mOk').className = 'modal-ok';
-  ['ms1','ms2','ms3','ms4'].forEach(id => document.getElementById(id).className = 'tx-step');
+  
+  // update tabs
+  document.querySelectorAll('.vt-sm').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.vt-sm').forEach(t => {
+    if(t.textContent === vaultKey) t.classList.add('active');
+  });
+  
   document.getElementById('modal').classList.add('open');
+}
+
+function setModalVault(vk, el) {
+  currentModalVault = vk;
+  document.querySelectorAll('.vt-sm').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('mVaultName').textContent = vk + ' VAULT';
+}
+
+function startSim() {
+  document.getElementById('dInputForm').classList.remove('show');
+  document.getElementById('txSteps').style.display = 'flex';
+  ['ms1','ms2','ms3','ms4'].forEach(id => document.getElementById(id).className = 'tx-step');
 
   const steps = ['ms1','ms2','ms3','ms4'];
   const activeTimes = [100, 1000, 2100, 3200];
@@ -1536,11 +1601,13 @@ function openModal(vaultKey, vaultName) {
 
   setTimeout(() => {
     document.getElementById('txSteps').style.display = 'none';
-    const apy = vaultAPY[vaultKey] || 11.2;
+    const apy = vaultAPY[currentModalVault] || 11.2;
     const hash = '0x' + [...Array(40)].map(() => Math.floor(Math.random()*16).toString(16)).join('');
+    let amt = document.getElementById('mAmount').value || '1000';
+    amt = Number(amt).toLocaleString();
     document.getElementById('mOkDetail').innerHTML =
-      `<strong style="color:var(--ink)">1,000 USDC</strong> deposited into ${vaultName}<br>` +
-      `<strong style="color:var(--ink)">1,000 $vsUSD</strong> minted · Earning <strong style="color:var(--lime)">${apy}% Est. APY</strong>`;
+      `<strong style="color:var(--ink)">${amt} USDC</strong> deposited into ${currentModalVault} VAULT<br>` +
+      `<strong style="color:var(--ink)">${amt} $vsUSD</strong> minted · Earning <strong style="color:var(--lime)">${apy}% Est. APY</strong>`;
     document.getElementById('mOkHash').textContent = 'TX: ' + hash.slice(0, 44) + '…';
     document.getElementById('mOk').className = 'modal-ok show';
   }, 4600);
@@ -1567,4 +1634,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 </script>
 </body>
 </html>
+
+
+
 
