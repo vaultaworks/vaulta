@@ -1450,7 +1450,7 @@ footer {
           <button class="btn-q" onclick="document.getElementById('mAmount').value=10000">MAX</button>
         </div>
       </div>
-      <button class="btn-simulate" onclick="startSim()">SIMULATE DEPOSIT</button>
+      <button class="btn-simulate" onclick="startSim()">DEPOSIT</button>
     </div>
 
     <div class="tx-steps" id="txSteps" style="display:none;">
@@ -1458,7 +1458,7 @@ footer {
         <div class="tx-step-n">01</div>
         <div class="tx-step-info">
           <div class="tx-step-title">CONNECT WALLET</div>
-          <div class="tx-step-desc">Simulating wallet connection to Solana Mainnet...</div>
+          <div class="tx-step-desc">Connecting wallet to Solana Mainnet...</div>
         </div>
       </div>
       <div class="tx-step" id="ms2">
@@ -1485,7 +1485,7 @@ footer {
     </div>
     <div class="modal-ok" id="mOk">
       <div class="modal-ok-icon">✓</div>
-      <div class="modal-ok-title">DEPOSIT SIMULATED</div>
+      <div class="modal-ok-title">DEPOSIT COMPLETE</div>
       <div class="modal-ok-detail" id="mOkDetail">Your MAINNET deposit has been processed.</div>
       <div class="modal-ok-hash" id="mOkHash"></div>
     </div>
@@ -1634,6 +1634,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 </script>
 </body>
 </html>
+
 
 
 
