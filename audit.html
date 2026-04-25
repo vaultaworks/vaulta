@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -29,6 +29,19 @@
       --sans: 'DM Sans', sans-serif;
       --radius: 12px;
       --radius-lg: 20px;
+
+      /* Mapped legacy docs variables */
+      --void: var(--bg); --deep: var(--bg2); --surface: var(--bg2); --lift: var(--bg3);
+      --glass: rgba(255,255,255,0.04); --line: var(--border); --line2: var(--border);
+      --sol-purple: #9945FF; --sol-green: var(--green); --sol-grad: linear-gradient(90deg, #9945FF, var(--green));
+      --gold: var(--green); --gold-hi: var(--green); --gold-lo: var(--green-mid);
+      --gold-bg: var(--green-dim); --gold-bd: var(--green-mid);
+      --lime: var(--green); --lime-lo: var(--green-mid);
+      --lime-bg: var(--green-dim); --lime-bd: var(--green-mid);
+      --sky: var(--muted); --red: #ff4444;
+      --red-bg: rgba(255,68,68,0.05); --red-bd: rgba(255,68,68,0.25);
+      --ink: var(--white); --fog: var(--muted); --mist: rgba(255,255,255,0.1); --ghost: rgba(255,255,255,0.05);
+      --display: var(--mono); --t: 0.2s; --ease: ease-out; --snap: cubic-bezier(0.4, 0, 0.2, 1); --amber: #ffb300;
     }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 body { background: var(--bg);color:var(--ink);font-family:var(--sans);height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;}
