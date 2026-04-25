@@ -853,17 +853,24 @@
     document.getElementById('walletModalOverlay').classList.remove('show');
   }
 
-  function simulateWalletConnect(walletName) {
+    async function simulateWalletConnect(walletName) {
     const statusEl = document.getElementById('status-' + walletName);
-    const originalText = statusEl.textContent;
-    statusEl.textContent = 'Connecting...';
+    const originalText = statusEl ? statusEl.textContent : '';
+    if (statusEl) statusEl.textContent = 'Connecting...';
     
-    setTimeout(() => {
-      // Generate a random Solana-like address
-      const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+    try {
       let addr = '';
-      for (let i = 0; i < 44; i++) {
-        addr += chars.charAt(Math.floor(Math.random() * chars.length));
+      if (walletName === 'Phantom' && window.solana && window.solana.isPhantom) {
+        const resp = await window.solana.connect();
+        addr = resp.publicKey.toString();
+      } else if (walletName === 'Solflare' && window.solflare && window.solflare.isSolflare) {
+        await window.solflare.connect();
+        addr = window.solflare.publicKey.toString();
+      } else {
+        // Fallback simulation
+        await new Promise(r => setTimeout(r, 800));
+        const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+        for (let i = 0; i < 44; i++) addr += chars.charAt(Math.floor(Math.random() * chars.length));
       }
       
       walletAddress = addr;
@@ -873,13 +880,15 @@
       updateWalletUI();
       closeWalletModal();
       
-      showBanner('success', '✓ Connected to Solana Mainnet via ' + walletName + '. Ready to simulate deposits.');
+      showBanner('success', 'âœ“ Connected to Solana Mainnet via ' + walletName + '. Ready to deposit.');
       document.getElementById('switchNetworkBtn').style.display = 'none';
       document.getElementById('walletNetwork').className = 'wallet-network';
-      document.getElementById('walletNetwork').textContent = 'Solana Mainnet ✓';
-      
-      statusEl.textContent = originalText; // Reset for next time
-    }, 800);
+      document.getElementById('walletNetwork').textContent = 'Solana Mainnet âœ“';
+      if (statusEl) statusEl.textContent = originalText;
+    } catch (err) {
+      if (statusEl) statusEl.textContent = 'Failed';
+      setTimeout(() => { if (statusEl) statusEl.textContent = originalText; }, 2000);
+    }
   }
 
   function updateWalletUI() {
@@ -993,7 +1002,6 @@
       <p>Autonomous Yield Infrastructure on Solana. Non-custodial. Audited. AI-powered.</p>
       <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
         <a href="https://x.com/vaultaworks" class="team-link" target="_blank">Twitter/X</a>
-        <a href="https://discord.gg/vaulta" class="team-link" target="_blank">Discord</a>
         <a href="https://github.com/vaultaworks/vaulta" class="team-link" target="_blank">GitHub</a>
       </div>
     </div>

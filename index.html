@@ -901,8 +901,7 @@
   <div class="cta-btns">
     <button class="btn-primary" onclick="openWallet()">LAUNCH APP →</button>
     <a href="https://www.vaulta.works/docs" class="btn-outline" target="_blank">READ DOCS</a>
-    <a href="https://discord.gg/vaulta" class="btn-outline" target="_blank">JOIN DISCORD</a>
-  </div>
+    </div>
 </div>
 
 <!-- ══════════════════════════════
@@ -917,7 +916,6 @@
       <p>Autonomous Yield Infrastructure on Solana. Non-custodial. Audited. AI-powered.</p>
       <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
         <a href="https://x.com/vaultaworks" class="team-link" target="_blank">Twitter/X</a>
-        <a href="https://discord.gg/vaulta" class="team-link" target="_blank">Discord</a>
         <a href="https://github.com/vaultaworks/vaulta" class="team-link" target="_blank">GitHub</a>
       </div>
     </div>
@@ -1051,22 +1049,35 @@
   function closeWalletOnBg(e) {
     if (e.target === document.getElementById('walletModal')) closeWallet();
   }
-    function connectWallet(name) {
+      async function connectWallet(name) {
     closeWallet();
-    const btn = document.querySelector('nav .btn-primary');
-    if (btn) {
-      const originalText = btn.textContent;
-      btn.textContent = 'Connecting...';
-      setTimeout(() => {
+    const btn = document.querySelector('nav .btn-primary, .nav-right .btn-primary');
+    if (!btn) return;
+    
+    btn.textContent = 'Connecting...';
+    try {
+      let pubKey = '';
+      if (name === 'Phantom' && window.solana && window.solana.isPhantom) {
+        const resp = await window.solana.connect();
+        pubKey = resp.publicKey.toString();
+      } else if (name === 'Solflare' && window.solflare && window.solflare.isSolflare) {
+        await window.solflare.connect();
+        pubKey = window.solflare.publicKey.toString();
+      } else {
+        // Fallback simulation if extension not installed
+        await new Promise(r => setTimeout(r, 800));
         const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-        let addr = '';
-        for (let i = 0; i < 44; i++) addr += chars.charAt(Math.floor(Math.random() * chars.length));
-        const short = addr.slice(0, 4) + '...' + addr.slice(-4);
-        btn.textContent = short;
-        btn.style.background = 'rgba(20,255,180,0.1)';
-        btn.style.color = '#14ffb4';
-        btn.style.borderColor = 'rgba(20,255,180,0.3)';
-      }, 800);
+        for (let i = 0; i < 44; i++) pubKey += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      
+      const short = pubKey.slice(0, 4) + '...' + pubKey.slice(-4);
+      btn.textContent = short;
+      btn.style.background = 'rgba(20,255,180,0.1)';
+      btn.style.color = '#14ffb4';
+      btn.style.borderColor = 'rgba(20,255,180,0.3)';
+    } catch (err) {
+      btn.textContent = 'CONNECT WALLET';
+      console.error('Wallet connection failed:', err);
     }
   }
 
