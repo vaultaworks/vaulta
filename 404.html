@@ -267,6 +267,27 @@ body::after{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;b
           <div class="wallet-desc">Most popular Solana wallet</div>
         </div>
       </div>
+      <div class="wallet-option" onclick="connectWallet('Solflare')">
+        <img src='data:image/png;base64,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' class="wallet-icon" style="width:28px; height:28px; border-radius:6px; margin-right:16px;">
+        <div>
+          <div class="wallet-name">Solflare</div>
+          <div class="wallet-desc">Native Solana wallet</div>
+        </div>
+      </div>
+      <div class="wallet-option" onclick="connectWallet('Backpack')">
+        <img src='data:image/png;base64,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' class="wallet-icon" style="width:28px; height:28px; border-radius:6px; margin-right:16px;">
+        <div>
+          <div class="wallet-name">Backpack</div>
+          <div class="wallet-desc">xNFT wallet for Solana</div>
+        </div>
+      </div>
+      <p class="modal-note">
+        By connecting, you agree to our <a href="/terms">Terms of Service</a> and <a href="/risk">Risk Disclosure</a>.<br/>
+        Vaulta is non-custodial — your keys stay yours.
+      </p>
+    </div>
+  </div>
+</div>
 
 <script>
   // ── TICKER ──
@@ -344,6 +365,31 @@ body::after{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;b
     el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
     observer.observe(el);
   });
+
+  // â”€â”€ CLEAN URL SCROLL â”€â”€
+  document.querySelectorAll('a[href^="/#"], a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      const href = this.getAttribute('href');
+      const id = href.substring(href.indexOf('#') + 1);
+      const target = document.getElementById(id);
+      
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth' });
+        history.replaceState(null, null, window.location.pathname + window.location.search);
+      }
+    });
+  });
+
+  if (window.location.hash) {
+    const target = document.getElementById(window.location.hash.substring(1));
+    if (target) {
+      setTimeout(() => {
+        target.scrollIntoView({ behavior: 'smooth' });
+        history.replaceState(null, null, window.location.pathname + window.location.search);
+      }, 100);
+    }
+  }
 </script>
 </body>
 </html>
