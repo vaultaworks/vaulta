@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -593,7 +593,7 @@
   </div>
   <div class="nav-right">
     <div class="badge-live">MAINNET · SOLANA</div>
-    <button class="btn-primary" onclick="openWallet()">CONNECT WALLET</button>
+    <button class="btn-primary" onclick="handleConnect()">CONNECT WALLET</button>
   </div>
 </nav>
 
@@ -996,82 +996,6 @@
     </div>
   </div>
 </footer>
-
-<div class="modal-overlay" id="walletModal" onclick="closeWalletOnBg(event)">
-  <div class="modal">
-    <div class="modal-header">
-      <h3>CONNECT WALLET</h3>
-      <button class="modal-close" onclick="closeWallet()">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="wallet-option" onclick="connectWallet('Phantom')">
-        <span class="wallet-icon">👻</span>
-        <div>
-          <div class="wallet-name">Phantom</div>
-          <div class="wallet-desc">Most popular Solana wallet</div>
-        </div>
-      </div>
-
-<script>
-  // ── TICKER ──
-  const tickerItems = [
-    { label: 'STABLE VAULT', val: '+11.2% APY', cls: 'pos' },
-    { label: 'BOOST VAULT',  val: '+18.7% APY', cls: 'pos' },
-    { label: 'ALPHA VAULT',  val: '+33.4% APY', cls: 'pos' },
-    { label: 'VAULTA TVL',   val: '$2.14M',     cls: 'val' },
-    { label: '$vsUSD HOLDERS', val: '3,104',    cls: 'val' },
-    { label: 'AI REBALANCES', val: '1,847 TODAY', cls: 'val' },
-    { label: 'MORPHO',       val: 'LIVE ●',      cls: 'pos' },
-    { label: 'AERODROME',    val: 'LIVE ●',      cls: 'pos' },
-    { label: 'x402 PROTOCOL',val: 'INTEGRATED',  cls: 'val' },
-    { label: 'ONDO FINANCE', val: 'LIVE ●',      cls: 'pos' },
-    { label: 'NETWORK',      val: 'Solana Mainnet', cls: 'val' },
-    { label: 'AUDIT',        val: 'OtterSec ✓',  cls: 'pos' },
-  ];
-
-  function buildTicker() {
-    const wrap = document.getElementById('ticker');
-    const html = tickerItems.map(t =>
-      `<span class="ticker-item"><span class="ticker-dot"></span><span class="label">${t.label}</span><span class="${t.cls}">${t.val}</span></span>`
-    ).join('');
-    wrap.innerHTML = html + html; // duplicate for seamless loop
-  }
-  buildTicker();
-
-  // ── LIVE COUNTER ──
-  let rebalCount = 1847;
-  setInterval(() => {
-    rebalCount++;
-    const fmt = rebalCount.toLocaleString();
-    const el1 = document.getElementById('stat-rebalances');
-    const el2 = document.getElementById('term-rebal');
-    if (el1) el1.textContent = fmt;
-    if (el2) el2.textContent = fmt;
-  }, 4200);
-
-  // ── TERMINAL TIME ──
-  let secs = 4;
-  setInterval(() => {
-    secs = Math.floor(Math.random() * 8) + 1;
-    const el = document.getElementById('term-time');
-    if (el) el.textContent = secs + 's ago';
-  }, 3000);
-
-  // ── WALLET MODAL ──
-  function openWallet() {
-    document.getElementById('walletModal').classList.add('open');
-  }
-  function closeWallet() {
-    document.getElementById('walletModal').classList.remove('open');
-  }
-  function closeWalletOnBg(e) {
-    if (e.target === document.getElementById('walletModal')) closeWallet();
-  }
-  function connectWallet(name) {
-    alert(`Connecting to ${name}... \n\nIntegrate @solana/wallet-adapter here untuk koneksi nyata.`);
-    closeWallet();
-  }
-
   // ── SCROLL REVEAL ──
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
