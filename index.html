@@ -1,1641 +1,1068 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VAULTA — Autonomous Yield Infrastructure on Solana</title>
-<meta name="description" content="Deposit USDC. Receive $vsUSD. AI compounds your capital across the highest-yield protocols on Solana — non-custodial, 24/7, fully on-chain.">
-<meta property="og:title" content="VAULTA — Autonomous Yield Infrastructure">
-<meta property="og:description" content="AI-driven yield protocol on Solana. Deposit USDC, receive $vsUSD.">
-<meta property="og:image" content="https://vaulta.works/og-image.jpg">
-<meta property="og:url" content="https://vaulta.works">
-<meta property="og:type" content="website">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="VAULTA — Autonomous Yield Infrastructure">
-<meta name="twitter:description" content="AI-driven yield protocol on Solana. Deposit USDC, receive $vsUSD.">
-<meta name="twitter:image" content="https://vaulta.works/og-image.jpg">
-<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
-<style>
-/* ─────────────────────────────────────────────
-   VAULTA — Design System
-   Chain: Solana · Token: $vsUSD · Build: 2026
-───────────────────────────────────────────── */
-:root {
-  --void:    #0a0a0f;
-  --deep:    #0f0f1a;
-  --surface: rgba(15,15,26,0.8);
-  --lift:    #1a1a1a;
-  --glass:   rgba(255,255,255,0.04);
-  --line:    rgba(255,255,255,0.1);
-  --line2:   rgba(255,255,255,0.05);
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vaulta — Autonomous Yield Infrastructure on Solana</title>
+  <meta name="description" content="Deposit USDC. Receive $vsUSD — a yield-bearing stablecoin that allocates autonomously across lending, real-world assets, perp funding, and x402 agentic flows on Solana."/>
+  <meta property="og:title" content="Vaulta — Autonomous Yield Infrastructure"/>
+  <meta property="og:description" content="Non-custodial. Audited. AI-powered yield on Solana."/>
+  <meta property="og:image" content="https://www.vaulta.works/og-image.png"/>
+  <link rel="icon" href="https://www.vaulta.works/logo.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0c0f;
+      --bg2: #0f1217;
+      --bg3: #151a22;
+      --border: rgba(255,255,255,0.07);
+      --border-glow: rgba(20,255,180,0.25);
+      --green: #14ffb4;
+      --green-dim: rgba(20,255,180,0.12);
+      --green-mid: rgba(20,255,180,0.35);
+      --white: #f0f4f8;
+      --muted: #6b7685;
+      --text: #c8d4e0;
+      --mono: 'Space Mono', monospace;
+      --sans: 'DM Sans', sans-serif;
+      --radius: 12px;
+      --radius-lg: 20px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
 
-  /* Gold → White accent (used for highlights/CTAs) */
-  --sol-purple: #9945FF; --sol-green: #14F195; --sol-grad: linear-gradient(90deg, var(--sol-purple), var(--sol-green));
-  --gold:    #ffffff;
-  --gold-hi: #ffffff;
-  --gold-lo: rgba(255,255,255,0.4);
-  --gold-bg: rgba(255,255,255,0.06);
-  --gold-bd: rgba(255,255,255,0.15);
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 48px;
+      background: rgba(10,12,15,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--mono); font-size: 15px; font-weight: 700;
+      color: var(--white); text-decoration: none; letter-spacing: 0.05em;
+    }
+    .nav-logo img { width: 28px; height: 28px; }
+    .nav-links { display: flex; gap: 32px; }
+    .nav-links a {
+      font-size: 13px; font-weight: 500; color: var(--muted);
+      text-decoration: none; letter-spacing: 0.03em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-right { display: flex; align-items: center; gap: 14px; }
+    .badge-live {
+      display: flex; align-items: center; gap: 6px;
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+      color: var(--green); background: var(--green-dim);
+      border: 1px solid var(--border-glow);
+      padding: 5px 10px; border-radius: 4px;
+    }
+    .badge-live::before {
+      content: ''; width: 6px; height: 6px;
+      background: var(--green); border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(20,255,180,0.4); }
+      50% { opacity: 0.7; box-shadow: 0 0 0 4px rgba(20,255,180,0); }
+    }
+    .btn-primary {
+      background: var(--green); color: #000;
+      font-family: var(--mono); font-size: 12px; font-weight: 700;
+      letter-spacing: 0.08em; border: none; cursor: pointer;
+      padding: 10px 20px; border-radius: 6px;
+      transition: opacity 0.2s, transform 0.15s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-outline {
+      background: transparent; color: var(--white);
+      font-family: var(--mono); font-size: 12px; font-weight: 700;
+      letter-spacing: 0.08em;
+      border: 1px solid var(--border); cursor: pointer;
+      padding: 10px 20px; border-radius: 6px;
+      transition: border-color 0.2s, color 0.2s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-outline:hover { border-color: var(--green); color: var(--green); }
 
-  /* Lime → kept for charts/graphs only — used inline */
-  --lime:    #14F195;
-  --lime-lo: rgba(57,217,138,0.45);
-  --lime-bg: rgba(57,217,138,0.06);
-  --lime-bd: rgba(57,217,138,0.2);
+    /* ── TICKER ── */
+    .ticker-wrap {
+      overflow: hidden; white-space: nowrap;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg2);
+      margin-top: 65px;
+    }
+    .ticker-inner {
+      display: inline-flex; gap: 0;
+      animation: ticker 40s linear infinite;
+    }
+    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .ticker-item {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 32px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+      border-right: 1px solid var(--border);
+    }
+    .ticker-item .label { color: var(--muted); }
+    .ticker-item .val { color: var(--white); }
+    .ticker-item .pos { color: var(--green); }
+    .ticker-dot { width: 5px; height: 5px; background: var(--green); border-radius: 50%; }
 
-  --sky:     #aaaaaa;
-  --red:     #9945FF;
+    /* ── HERO ── */
+    .hero {
+      min-height: 90vh;
+      display: flex; align-items: center;
+      padding: 80px 48px 60px;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 70% 40%, rgba(20,255,180,0.05) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 20% 80%, rgba(20,255,180,0.03) 0%, transparent 60%);
+    }
+    .hero-grid {
+      position: absolute; inset: 0; z-index: 0;
+      background-image: linear-gradient(var(--border) 1px, transparent 1px),
+                        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 0%, black 30%, transparent 100%);
+    }
+    .hero-content {
+      position: relative; z-index: 1;
+      max-width: 620px;
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+      color: var(--green); margin-bottom: 28px;
+      border: 1px solid var(--border-glow); background: var(--green-dim);
+      padding: 6px 12px; border-radius: 4px;
+    }
+    .hero h1 {
+      font-family: var(--mono); font-size: clamp(36px, 5vw, 60px);
+      font-weight: 700; line-height: 1.1;
+      color: var(--white); letter-spacing: -0.02em;
+      margin-bottom: 24px;
+    }
+    .hero h1 span { color: var(--green); }
+    .hero p {
+      font-size: 17px; color: var(--text); line-height: 1.7;
+      max-width: 520px; margin-bottom: 36px;
+    }
+    .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 48px; }
+    .hero-stats {
+      display: flex; gap: 32px; flex-wrap: wrap;
+      padding-top: 32px; border-top: 1px solid var(--border);
+    }
+    .hero-stat { }
+    .hero-stat .num {
+      font-family: var(--mono); font-size: 22px; font-weight: 700;
+      color: var(--white); display: block;
+    }
+    .hero-stat .desc { font-size: 12px; color: var(--muted); letter-spacing: 0.05em; }
 
-  --ink:     #f0f0f0;
-  --fog:     rgba(240,240,240,0.45);
-  --mist:    rgba(240,240,240,0.2);
-  --ghost:   rgba(240,240,240,0.1);
+    /* ── TERMINAL ── */
+    .hero-terminal {
+      position: absolute; right: 48px; top: 50%; transform: translateY(-50%);
+      z-index: 1; width: 380px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px var(--border);
+    }
+    .term-header {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px 16px; background: var(--bg3);
+      border-bottom: 1px solid var(--border);
+    }
+    .term-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .term-dot.red { background: #ff5f57; }
+    .term-dot.yellow { background: #febc2e; }
+    .term-dot.green { background: #28c840; }
+    .term-title { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-left: 6px; letter-spacing: 0.08em; }
+    .term-body { padding: 20px; font-family: var(--mono); font-size: 12px; line-height: 2; }
+    .term-line { display: flex; justify-content: space-between; }
+    .term-key { color: var(--muted); }
+    .term-val { color: var(--green); }
+    .term-val.white { color: var(--white); }
+    .term-prompt { color: var(--muted); margin-top: 8px; }
+    .term-cmd { color: var(--white); }
+    .term-cursor { display: inline-block; width: 8px; height: 14px; background: var(--green); animation: blink 1s infinite; vertical-align: middle; }
+    @keyframes blink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
 
-  --sans:    'DM Sans', sans-serif;
-  --mono:    'Space Mono', monospace;
-  --display: 'Bebas Neue', sans-serif;
+    /* ── SECTION BASE ── */
+    section { padding: 96px 48px; max-width: 1200px; margin: 0 auto; }
+    .section-tag {
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em;
+      color: var(--green); margin-bottom: 14px; display: block;
+    }
+    h2 {
+      font-family: var(--mono); font-size: clamp(26px, 3.5vw, 42px);
+      font-weight: 700; color: var(--white); line-height: 1.15;
+      letter-spacing: -0.02em; margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 16px; color: var(--muted); max-width: 560px; line-height: 1.7; margin-bottom: 60px;
+    }
 
-  --ease:    ease-out;
-  --snap:    cubic-bezier(0.4, 0, 0.2, 1);
-  --t:       0.2s;
-  --amber:   #9945FF;
-}
+    /* ── HOW IT WORKS ── */
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+    .step {
+      background: var(--bg2); padding: 32px 28px;
+      border: 1px solid var(--border); position: relative;
+      transition: border-color 0.2s;
+    }
+    .step:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+    .step:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
+    .step:hover { border-color: var(--border-glow); }
+    .step-num {
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+      color: var(--green); margin-bottom: 20px; display: block;
+    }
+    .step h3 { font-family: var(--mono); font-size: 14px; color: var(--white); margin-bottom: 12px; letter-spacing: 0.05em; }
+    .step p { font-size: 13px; color: var(--muted); line-height: 1.65; }
 
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; font-size: 16px; }
+    /* ── VAULTS ── */
+    .vaults { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .vault-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 36px 32px;
+      position: relative; overflow: hidden;
+      transition: border-color 0.3s, transform 0.2s;
+      display: flex; flex-direction: column;
+    }
+    .vault-card:hover { border-color: var(--border-glow); transform: translateY(-3px); }
+    .vault-card.featured { border-color: rgba(20,255,180,0.3); }
+    .vault-card.featured::before {
+      content: 'MOST POPULAR';
+      position: absolute; top: 0; right: 0;
+      background: var(--green); color: #000;
+      font-family: var(--mono); font-size: 9px; font-weight: 700;
+      letter-spacing: 0.1em; padding: 5px 12px;
+      border-radius: 0 var(--radius-lg) 0 var(--radius);
+    }
+    .vault-risk {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
+      color: var(--muted); margin-bottom: 12px;
+    }
+    .vault-name {
+      font-family: var(--mono); font-size: 18px; font-weight: 700;
+      color: var(--white); margin-bottom: 8px;
+    }
+    .vault-apy {
+      font-family: var(--mono); font-size: 42px; font-weight: 700;
+      color: var(--green); line-height: 1; margin-bottom: 4px;
+    }
+    .vault-apy-label { font-size: 12px; color: var(--muted); margin-bottom: 24px; }
+    .vault-desc { font-size: 13px; color: var(--text); line-height: 1.65; margin-bottom: 28px; flex: 1; }
+    .vault-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+    .vault-tag {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
+      color: var(--muted); background: var(--bg3);
+      border: 1px solid var(--border); padding: 4px 10px; border-radius: 4px;
+    }
+    .vault-bar { margin-bottom: 24px; }
+    .vault-bar-label {
+      display: flex; justify-content: space-between;
+      font-family: var(--mono); font-size: 10px; color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .vault-bar-track {
+      height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden;
+    }
+    .vault-bar-fill { height: 100%; background: var(--green); border-radius: 2px; }
 
-body {
-  background: var(--void);
-  color: var(--ink);
-  font-family: var(--sans);
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-  line-height: 1.7;
-}
+    /* ── AI ENGINE ── */
+    .ai-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .ai-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 32px;
+      transition: border-color 0.2s;
+    }
+    .ai-card:hover { border-color: var(--border-glow); }
+    .ai-card-icon {
+      width: 40px; height: 40px; background: var(--green-dim);
+      border: 1px solid var(--border-glow); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; margin-bottom: 20px;
+    }
+    .ai-card h3 { font-family: var(--mono); font-size: 14px; color: var(--white); margin-bottom: 10px; letter-spacing: 0.04em; }
+    .ai-card p { font-size: 13px; color: var(--muted); line-height: 1.65; }
 
-/* ─── GRAIN ─── */
-body::after {
-  content: '';
-  position: fixed; inset: 0; z-index: 9999;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='1'/%3E%3C/svg%3E");
-  opacity: 0.022;
-  mix-blend-mode: overlay;
-}
+    /* ── TEAM ── */
+    .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .team-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 28px 24px;
+    }
+    .team-avatar {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--bg3); border: 1px solid var(--border-glow);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-size: 16px; color: var(--green);
+      margin-bottom: 16px;
+    }
+    .team-name { font-family: var(--mono); font-size: 14px; color: var(--white); margin-bottom: 4px; }
+    .team-role { font-size: 12px; color: var(--green); margin-bottom: 12px; letter-spacing: 0.04em; }
+    .team-bio { font-size: 12px; color: var(--muted); line-height: 1.65; }
+    .team-links { display: flex; gap: 10px; margin-top: 16px; }
+    .team-link {
+      font-family: var(--mono); font-size: 10px; color: var(--muted);
+      text-decoration: none; border: 1px solid var(--border);
+      padding: 4px 10px; border-radius: 4px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .team-link:hover { color: var(--green); border-color: var(--border-glow); }
 
-/* ─── TYPOGRAPHY ─── */
-.t-display { font-family: var(--display); letter-spacing: 4px; line-height: 0.94; }
-.t-mono    { font-family: var(--mono); letter-spacing: 0.5px; }
-.t-label   { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; }
-.t-muted   { color: var(--fog); }
-.t-gold    { color: var(--gold); }
-.t-lime    { color: var(--lime); }
-.t-outline { -webkit-text-stroke: 1px var(--gold-lo); color: transparent; }
+    /* ── SECURITY ── */
+    .security-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .sec-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px 20px; text-align: center;
+    }
+    .sec-icon { font-size: 24px; margin-bottom: 12px; display: block; }
+    .sec-label { font-family: var(--mono); font-size: 12px; color: var(--white); margin-bottom: 6px; letter-spacing: 0.05em; }
+    .sec-val { font-size: 12px; color: var(--muted); }
 
-/* ─── LAYOUT ─── */
-.wrap { max-width: 1200px; margin: 0 auto; padding: 0 56px; }
-@media (max-width: 768px) { .wrap { padding: 0 24px; } }
+    /* ── AUDIT BANNER ── */
+    .audit-banner {
+      background: var(--bg2); border: 1px solid var(--border-glow);
+      border-radius: var(--radius-lg); padding: 32px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .audit-banner-left h3 { font-family: var(--mono); font-size: 16px; color: var(--white); margin-bottom: 6px; }
+    .audit-banner-left p { font-size: 13px; color: var(--muted); }
+    .audit-status {
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--mono); font-size: 12px;
+    }
 
-/* ─── SCROLLBAR ─── */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--void); }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); }
+    /* ── ROADMAP ── */
+    .roadmap { display: flex; gap: 20px; }
+    .rm-card {
+      flex: 1; background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 32px 28px;
+      position: relative;
+    }
+    .rm-card.active { border-color: var(--border-glow); }
+    .rm-phase {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em;
+      color: var(--muted); margin-bottom: 8px;
+    }
+    .rm-title { font-family: var(--mono); font-size: 16px; color: var(--white); margin-bottom: 6px; }
+    .rm-date { font-size: 12px; color: var(--green); margin-bottom: 20px; }
+    .rm-items { list-style: none; }
+    .rm-items li {
+      font-size: 13px; color: var(--muted); padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+    .rm-items li::before { content: '→'; color: var(--green); flex-shrink: 0; font-size: 11px; margin-top: 2px; }
+    .rm-status {
+      display: inline-block; margin-top: 20px;
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+      color: var(--green); background: var(--green-dim);
+      border: 1px solid var(--border-glow); padding: 5px 12px; border-radius: 4px;
+    }
 
-/* ═══════════════════════════════════
-   NAV
-═══════════════════════════════════ */
-#nav {
-  position: fixed; inset: 0 0 auto 0; z-index: 200;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 56px; height: 64px;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.97) 0%, transparent 100%);
-  transition: background var(--t) var(--snap), border-color var(--t);
-}
-#nav.scrolled {
-  background: rgba(0,0,0,0.96);
-  border-bottom: 1px solid var(--line2);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-.nav-brand {
-  display: flex; align-items: center; gap: 10px;
-  font-family: var(--display); font-size: 22px;
-  letter-spacing: 6px; color: var(--gold);
-  text-decoration: none;
-}
-.nav-pulse {
-  width: 5px; height: 5px; border-radius: 50%;
-  background: var(--lime); flex-shrink: 0;
-  animation: pulse 2.2s ease-in-out infinite;
-}
-@keyframes pulse {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(57,217,138,0.5); }
-  50%       { opacity: 0.6; box-shadow: 0 0 0 5px rgba(57,217,138,0); }
-}
-.nav-links {
-  display: flex; gap: 40px; list-style: none;
-}
-.nav-links a {
-  color: var(--fog); text-decoration: none;
-  font-size: 11px; letter-spacing: 2.5px;
-  text-transform: uppercase; font-weight: 500;
-  transition: color var(--t); font-family: var(--sans);
-}
-.nav-links a:hover { color: var(--ink); }
-.nav-actions { display: flex; gap: 10px; align-items: center; }
-.btn-ghost {
-  background: none; cursor: pointer; border: 1px solid var(--line2);
-  border-radius: 4px;
-  color: var(--fog); font-family: var(--sans);
-  font-size: 11px; letter-spacing: 2.5px;
-  text-transform: uppercase; font-weight: 500;
-  padding: 9px 22px; transition: all var(--t);
-  text-decoration: none;
-}
-.btn-ghost:hover { color: var(--ink); border-color: rgba(255,255,255,0.2); transform: scale(1.02); filter: brightness(1.1); }
-.btn-gold {
-  background: transparent; cursor: pointer;
-  color: var(--gold); border: 1px solid var(--gold-bd);
-  border-radius: 4px;
-  padding: 9px 22px; font-size: 11px; letter-spacing: 2.5px;
-  text-transform: uppercase; font-weight: 500;
-  font-family: var(--sans); text-decoration: none;
-  transition: all var(--t);
-  display: inline-flex; align-items: center; gap: 8px;
-}
-.btn-gold:hover { background: var(--gold-bg); border-color: rgba(255,255,255,0.3); transform: scale(1.02); filter: brightness(1.1); }
-.btn-lime {
-  background: var(--lime-bg); cursor: pointer;
-  color: var(--lime); border: 1px solid var(--lime-bd);
-  border-radius: 4px;
-  padding: 9px 22px; font-size: 10px; letter-spacing: 2px;
-  text-transform: uppercase; font-weight: 700;
-  font-family: var(--mono); text-decoration: none;
-  transition: all var(--t);
-  display: inline-flex; align-items: center; gap: 8px;
-}
-.btn-lime:hover { background: rgba(57,217,138,0.12); border-color: rgba(57,217,138,0.4); transform: scale(1.02); filter: brightness(1.1); }
-.btn-lime-pulse { width: 5px; height: 5px; border-radius: 50%; background: var(--lime); animation: pulse 1.6s ease-in-out infinite; }
-@media (max-width: 768px) { #nav { padding: 0 24px; } .nav-links { display: none; } }
+    /* ── CTA ── */
+    .cta-section {
+      text-align: center; padding: 96px 48px;
+      position: relative; overflow: hidden;
+    }
+    .cta-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(20,255,180,0.06) 0%, transparent 70%);
+    }
+    .cta-section h2 { position: relative; z-index: 1; font-size: clamp(28px, 4vw, 52px); margin-bottom: 16px; }
+    .cta-section p { position: relative; z-index: 1; font-size: 16px; color: var(--muted); margin-bottom: 36px; }
+    .cta-btns { position: relative; z-index: 1; display: flex; gap: 14px; justify-content: center; }
 
-/* ═══════════════════════════════════
-   TICKER
-═══════════════════════════════════ */
-.ticker-wrap {
-  position: fixed; top: 64px; inset: auto 0 auto 0; z-index: 199;
-  height: 30px; overflow: hidden;
-  background: rgba(0,0,0,0.88);
-  border-bottom: 1px solid var(--line2);
-  backdrop-filter: blur(12px);
-  display: flex; align-items: center;
-}
-.ticker-track {
-  display: inline-flex; gap: 48px; align-items: center;
-  animation: roll 32s linear infinite; white-space: nowrap;
-  padding-left: 48px;
-}
-.ticker-track:hover { animation-play-state: paused; }
-.t-item {
-  font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px;
-  color: var(--fog); display: flex; align-items: center; gap: 8px;
-  font-weight: 700;
-}
-.t-up   { color: var(--lime); }
-.t-hi   { color: var(--gold); }
-.t-dot  { color: transparent; font-size: 0; position: relative; width: 6px; }
-.t-dot::before { content: '●'; font-size: 7px; color: var(--gold-lo); position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
-@keyframes roll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 48px 32px;
+      display: flex; flex-direction: column; gap: 32px;
+    }
+    .footer-top { display: flex; justify-content: space-between; align-items: flex-start; }
+    .footer-brand { max-width: 280px; }
+    .footer-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--mono); font-size: 14px; font-weight: 700;
+      color: var(--white); margin-bottom: 12px; text-decoration: none;
+    }
+    .footer-logo img { width: 24px; }
+    .footer-brand p { font-size: 13px; color: var(--muted); line-height: 1.65; }
+    .footer-cols { display: flex; gap: 64px; }
+    .footer-col h4 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 16px; }
+    .footer-col a {
+      display: block; font-size: 13px; color: var(--text);
+      text-decoration: none; margin-bottom: 10px;
+      transition: color 0.2s;
+    }
+    .footer-col a:hover { color: var(--green); }
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 24px; border-top: 1px solid var(--border);
+      font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.05em;
+    }
+    .footer-legal { display: flex; gap: 24px; }
+    .footer-legal a { color: var(--muted); text-decoration: none; }
+    .footer-legal a:hover { color: var(--white); }
 
-/* ═══════════════════════════════════
-   HERO
-═══════════════════════════════════ */
-.hero {
-  min-height: 100vh; position: relative;
-  display: flex; align-items: center;
-  padding: 160px 56px 100px;
-  overflow: hidden;
-}
+    /* ── WALLET MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 999;
+      background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.25s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); width: 440px; overflow: hidden;
+      transform: translateY(20px); transition: transform 0.25s;
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 24px; border-bottom: 1px solid var(--border);
+    }
+    .modal-header h3 { font-family: var(--mono); font-size: 14px; color: var(--white); }
+    .modal-close {
+      background: none; border: none; color: var(--muted); cursor: pointer;
+      font-size: 20px; line-height: 1; padding: 0; transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--white); }
+    .modal-body { padding: 24px; }
+    .wallet-option {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 16px; border: 1px solid var(--border);
+      border-radius: var(--radius); margin-bottom: 10px; cursor: pointer;
+      background: var(--bg3); transition: border-color 0.2s;
+    }
+    .wallet-option:hover { border-color: var(--border-glow); }
+    .wallet-icon { font-size: 22px; width: 32px; text-align: center; }
+    .wallet-name { font-family: var(--mono); font-size: 13px; color: var(--white); }
+    .wallet-desc { font-size: 11px; color: var(--muted); }
+    .modal-note {
+      margin-top: 16px; font-size: 11px; color: var(--muted); text-align: center;
+      line-height: 1.5;
+    }
+    .modal-note a { color: var(--green); text-decoration: none; }
 
-/* Geometric background */
-.hero-geo {
-  position: absolute; inset: 0; pointer-events: none;
-  background:
-    radial-gradient(ellipse 80% 60% at 50% -10%,  rgba(255,255,255,0.04) 0%, transparent 55%),
-    radial-gradient(ellipse 40% 40% at 85% 70%, rgba(255,255,255,0.03) 0%, transparent 50%),
-    radial-gradient(ellipse 30% 30% at 15% 80%, rgba(57,217,138,0.03) 0%, transparent 50%);
-}
-.hero-grid-svg {
-  position: absolute; inset: 0; pointer-events: none; opacity: 0.4;
-}
-
-.hero-inner {
-  position: relative; z-index: 2;
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 80px; align-items: center;
-  max-width: 1200px; margin: 0 auto; width: 100%;
-}
-
-/* LEFT: Copy */
-.hero-left {}
-.hero-eyebrow {
-  display: inline-flex; align-items: center; gap: 10px;
-  border: 1px solid var(--gold-bd); background: var(--gold-bg);
-  padding: 6px 16px; margin-bottom: 40px;
-  font-family: var(--mono); font-size: 10px;
-  letter-spacing: 3px; color: var(--gold-lo);
-  animation: fadeUp 0.8s var(--ease) both;
-}
-.hero-title {
-  font-family: var(--display);
-  font-size: clamp(64px, 8.5vw, 130px);
-  font-weight: 700;
-  line-height: 0.93; letter-spacing: 6px;
-  animation: fadeUp 0.8s 0.15s var(--ease) both;
-}
-.hero-desc {
-  margin-top: 28px; font-size: 15px; line-height: 1.85;
-  color: var(--fog); font-weight: 300; max-width: 440px;
-  animation: fadeUp 0.8s 0.3s var(--ease) both;
-}
-.hero-cta {
-  margin-top: 44px; display: flex; align-items: center; gap: 14px;
-  animation: fadeUp 0.8s 0.45s var(--ease) both; flex-wrap: wrap; margin-bottom: 24px;
-}
-.hero-waitlist {
-  animation: fadeUp 0.8s 0.5s var(--ease) both;
-}
-.hw-label { font-family: var(--mono); font-size: 10px; color: var(--gold-lo); letter-spacing: 2px; margin-bottom: 12px; text-transform: uppercase; }
-.hw-form { display: flex; gap: 8px; flex-wrap: wrap; }
-.hw-input { background: rgba(255,255,255,0.03); border: 1px solid var(--line); padding: 12px 16px; border-radius: 4px; color: var(--ink); font-family: var(--sans); font-size: 13px; width: 100%; max-width: 280px; outline: none; transition: border-color var(--t); }
-.hw-input:focus { border-color: rgba(255,255,255,0.3); }
-.hw-submit { background: var(--gold-bg); border: 1px solid var(--gold-bd); color: var(--gold); padding: 12px 24px; border-radius: 4px; font-family: var(--mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all var(--t); }
-.hw-submit:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); }
-.btn-primary-lg {
-  background: var(--sol-grad); color: var(--void);
-  padding: 14px 32px; font-size: 11px;
-  letter-spacing: 3px; text-transform: uppercase;
-  font-weight: 700; font-family: var(--sans);
-  border: none; cursor: pointer; position: relative; overflow: hidden;
-  transition: background var(--t), transform var(--t);
-  text-decoration: none; display: inline-block;
-}
-.btn-primary-lg::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.14) 50%, transparent 100%);
-  transform: translateX(-100%); transition: transform 0.55s var(--ease);
-}
-.btn-primary-lg:hover::after { transform: translateX(100%); }
-.btn-primary-lg:hover { background: var(--gold-hi); transform: translateY(-2px) scale(1.03); filter: brightness(1.1); box-shadow: 0 0 20px #9945FF; }
-
-/* RIGHT: Live terminal card */
-.hero-right {
-  animation: fadeUp 0.8s 0.3s var(--ease) both;
-}
-.terminal {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  overflow: hidden;
-}
-.terminal-bar {
-  display: flex; align-items: center; gap: 8px;
-  padding: 12px 18px; border-bottom: 1px solid var(--line);
-  background: rgba(255,255,255,0.02);
-}
-.term-dot {
-  width: 10px; height: 10px; border-radius: 50%;
-  border: 1px solid; flex-shrink: 0;
-}
-.term-dot.r { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.15); }
-.term-dot.y { background: rgba(255,255,255,0.45); border-color: rgba(255,255,255,0.3); }
-.term-dot.g { background: rgba(255,255,255,0.65); border-color: rgba(255,255,255,0.5); }
-.term-title {
-  margin-left: 8px; font-family: var(--mono); font-size: 10px;
-  letter-spacing: 2px; color: var(--fog); flex: 1; text-align: center;
-}
-.terminal-body { 
-  padding: 24px; 
-  background-image: repeating-linear-gradient(transparent, transparent 2px, rgba(255,255,255,0.015) 2px, rgba(255,255,255,0.015) 4px);
-}
-.term-line {
-  font-family: var(--mono); font-size: 12px; line-height: 1.7;
-  padding: 3px 0; text-shadow: 0 0 2px rgba(0,0,0,0.8);
-}
-.term-prompt  { color: var(--gold-lo); }
-.term-cmd     { color: var(--ink); }
-.term-comment { color: rgba(57,217,138,0.35); }
-.term-key     { color: rgba(255,255,255,0.7); font-weight: 700; }
-.term-val-g   { color: var(--lime); }
-.term-val-y   { color: var(--gold); }
-.term-val-r   { color: var(--red); }
-.term-sep     { color: var(--line); margin: 8px 0; border-top: 1px solid var(--line); }
-.term-blink   { animation: blink 1.1s step-end infinite; }
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-
-/* stats row under terminal */
-.hero-stats {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 1px; margin-top: 1px;
-  background: var(--line);
-  border: 1px solid var(--line); border-top: none;
-  animation: fadeUp 0.8s 0.6s var(--ease) both;
-}
-.h-stat {
-  background: var(--surface); padding: 18px 20px; text-align: center;
-  position: relative;
-}
-.h-stat-val { font-family: var(--display); font-size: 26px; letter-spacing: 2px; }
-.h-stat-lbl { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--fog); margin-top: 4px; }
-.h-stat-live {
-  position: absolute; top: 8px; right: 10px;
-  font-family: var(--mono); font-size: 8px; letter-spacing: 1px;
-  color: var(--gold-lo); display: flex; align-items: center; gap: 4px;
-}
-.live-pip { width: 4px; height: 4px; border-radius: 50%; background: var(--amber); animation: pulse 1.5s infinite; }
-
-@media (max-width: 960px) {
-  .hero { padding: 140px 24px 80px; }
-  .hero-inner { grid-template-columns: 1fr; gap: 48px; }
-}
-
-/* ═══════════════════════════════════
-   SECTOR STRIP
-═══════════════════════════════════ */
-.sector-strip {
-  border-top: 1px solid var(--line2); border-bottom: 1px solid var(--line2);
-  background: rgba(255,255,255,0.01);
-  padding: 24px 56px; overflow: hidden;
-  display: flex; align-items: center; gap: 32px;
-}
-.sector-label { font-family: var(--mono); font-size: 9px; letter-spacing: 3px; color: var(--mist); white-space: nowrap; }
-.sector-badges { display: flex; gap: 8px; flex-wrap: wrap; }
-.badge {
-  padding: 4px 12px; border: 1px solid;
-  font-family: var(--mono); font-size: 9px; letter-spacing: 2px;
-  text-transform: uppercase; cursor: default;
-  transition: background var(--t), transform var(--t);
-}
-.badge:hover { transform: translateY(-2px); }
-.badge-s { color: #cccccc; border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.04); }
-.badge-s:hover { background: rgba(255,255,255,0.07); }
-.badge-a { color: var(--gold-lo); border-color: var(--gold-bd); background: var(--gold-bg); }
-.badge-a:hover { color: var(--gold); background: rgba(255,255,255,0.07); }
-.badge-b { color: rgba(255,255,255,0.55); border-color: rgba(255,255,255,0.15); background: rgba(255,255,255,0.03); }
-.badge-b:hover { background: rgba(255,255,255,0.05); }
-@media (max-width: 768px) { .sector-strip { padding: 20px 24px; flex-direction: column; gap: 14px; } }
-
-/* ═══════════════════════════════════
-   SECTION DEFAULTS
-═══════════════════════════════════ */
-.section { padding: 160px 56px; }
-.section.dark  { background: var(--deep); }
-.section.darker { background: var(--void); }
-.section.surface { background: var(--surface); }
-
-.section-head { margin-bottom: 64px; }
-.section-eyebrow {
-  font-family: var(--mono); font-size: 10px;
-  letter-spacing: 3px; text-transform: uppercase;
-  color: var(--gold-lo); margin-bottom: 16px;
-  display: flex; align-items: center; gap: 12px;
-}
-.section-eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--gold-lo); }
-.section-h2 {
-  font-family: var(--display);
-  font-size: clamp(36px, 5vw, 68px);
-  letter-spacing: 4px; line-height: 1.0;
-}
-
-/* Reveal on scroll */
-.reveal {
-  opacity: 0; transform: translateY(28px);
-  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
-}
-.reveal.on { opacity: 1; transform: translateY(0); }
-.reveal-d1 { transition-delay: 0.1s; }
-.reveal-d2 { transition-delay: 0.2s; }
-.reveal-d3 { transition-delay: 0.3s; }
-
-@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-@media (max-width: 768px) { .section { padding: 72px 24px; } }
-
-/* ═══════════════════════════════════
-   TRUST BAR
-═══════════════════════════════════ */
-.trust-bar {
-  background: rgba(255,255,255,0.01);
-  border-top: 1px solid var(--line2); border-bottom: 1px solid var(--line2);
-  padding: 24px 56px;
-  display: flex; align-items: center; justify-content: center;
-  gap: 0; flex-wrap: wrap;
-}
-.trust-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 0 40px; border-right: 1px solid var(--line2);
-}
-.trust-item:last-child { border-right: none; }
-.trust-icon { color: var(--gold-lo); display: flex; }
-.trust-text { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--fog); }
-@media (max-width: 768px) {
-  .trust-bar { flex-direction: column; padding: 24px; gap: 20px; }
-  .trust-item { border-right: none; border-bottom: 1px solid var(--line2); padding: 0 0 20px; width: 100%; }
-  .trust-item:last-child { border-bottom: none; padding-bottom: 0; }
-}
-
-/* ═══════════════════════════════════
-   HOW IT WORKS
-═══════════════════════════════════ */
-.flow {
-  display: grid;
-  grid-template-columns: 1fr 40px 1fr 40px 1fr 40px 1fr;
-  align-items: center; gap: 0; margin-top: 64px;
-}
-.flow-node {
-  background: var(--lift); border: 1px solid var(--line);
-  padding: 32px 24px; text-align: center;
-  transition: border-color var(--t), transform var(--t), background var(--t);
-  cursor: default;
-}
-.flow-node:hover { border-color: var(--gold-bd); transform: translateY(-3px); background: rgba(15,15,30,0.8); }
-.flow-icon {
-  width: 44px; height: 44px; border: 1px solid var(--line);
-  display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 18px; color: var(--gold-lo);
-  transition: border-color var(--t), color var(--t);
-}
-.flow-node:hover .flow-icon { border-color: var(--gold-bd); color: var(--gold); }
-.flow-node-title { font-family: var(--display); font-size: 18px; letter-spacing: 2px; margin-bottom: 8px; }
-.flow-node-desc { font-size: 12px; color: var(--fog); line-height: 1.7; }
-.flow-arr { display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.15); }
-.flow-arr svg { stroke: currentColor; stroke-width: 1.5; fill: none; }
-@media (max-width: 900px) { .flow { grid-template-columns: 1fr; } .flow-arr { transform: rotate(90deg); margin: 0 auto; } }
-
-/* ═══════════════════════════════════
-   VAULT CARDS
-═══════════════════════════════════ */
-.vaults {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  margin-top: 60px;
-}
-.vault {
-  background: var(--surface); padding: 56px 40px;
-  position: relative; overflow: hidden; border-radius: 12px; border: 1px solid var(--line2);
-  transition: all var(--t);
-  z-index: 1;
-}
-.vault::before {
-  content: ''; position: absolute; top: 0; inset: 0 0 auto 0; height: 3px;
-  transition: opacity var(--t);
-}
-.vault::after {
-  content: ''; position: absolute; inset: 0; border: 1px solid transparent; border-radius: 12px;
-  pointer-events: none; transition: border-color var(--t);
-}
-.vault.v-stable::before { background: var(--lime); }
-.vault.v-boost::before  { background: var(--amber); }
-.vault.v-alpha::before  { background: var(--red); }
-.vault:hover { 
-  background: var(--lift); 
-  transform: scale(1.02) translateY(-4px); 
-  z-index: 10; border-color: rgba(255,255,255,0.1);
-}
-.vault.v-stable:hover { box-shadow: 0 12px 40px rgba(57,217,138,0.12); }
-.vault.v-stable:hover::after { border-color: rgba(57,217,138,0.4); }
-.vault.v-boost:hover  { box-shadow: 0 12px 40px rgba(255,179,0,0.08); }
-.vault.v-boost:hover::after { border-color: rgba(255,179,0,0.35); }
-.vault.v-alpha:hover  { box-shadow: 0 12px 40px rgba(212,89,92,0.15); }
-.vault.v-alpha:hover::after { border-color: rgba(212,89,92,0.35); }
-
-@keyframes apyShimmer {
-  0% { transform: skewX(-20deg) translateX(-150%); }
-  50%, 100% { transform: skewX(-20deg) translateX(250%); }
-}
-.vault-risk {
-  font-family: var(--mono); font-size: 9px; letter-spacing: 2.5px;
-  text-transform: uppercase; padding: 4px 10px;
-  border: 1px solid; display: inline-block; margin-bottom: 28px;
-}
-.v-stable .vault-risk { color: var(--lime); border-color: var(--lime-bd); background: var(--lime-bg); }
-.v-boost  .vault-risk { color: var(--amber); border-color: rgba(255,179,0,0.3); background: rgba(255,179,0,0.05); }
-.v-alpha  .vault-risk { color: var(--red); border-color: rgba(212,89,92,0.25); background: rgba(212,89,92,0.05); }
-
-.vault-name { font-family: var(--display); font-size: 32px; letter-spacing: 3px; margin-bottom: 12px; }
-.vault-apy  { 
-  font-family: var(--display); font-size: 48px; font-weight: 700; line-height: 1; letter-spacing: 1px; 
-  position: relative; overflow: hidden; display: inline-block; padding-right: 4px;
-}
-.vault-apy::after {
-  content: ''; position: absolute; top: 0; left: 0; width: 40%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-  transform: skewX(-20deg) translateX(-150%);
-  animation: apyShimmer 4s infinite cubic-bezier(0.4, 0, 0.2, 1);
-}
-.vault-apy-sub { font-family: var(--mono); font-size: 9px; letter-spacing: 2.5px; color: var(--fog); margin-bottom: 28px; margin-top: 4px; }
-.v-stable .vault-apy { color: var(--lime); }
-.v-boost  .vault-apy { color: var(--amber); }
-.v-alpha  .vault-apy { color: var(--red); }
-
-.vault-desc { font-size: 13px; color: var(--fog); line-height: 1.8; margin-bottom: 24px; }
-.vault-protos { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 28px; }
-.vault-proto {
-  font-family: var(--mono); font-size: 9px; letter-spacing: 1px;
-  padding: 3px 9px; border: 1px solid var(--line); color: var(--fog);
-  background: rgba(255,255,255,0.02);
-}
-.vault-bar-wrap { margin-bottom: 28px; }
-.vault-bar-meta { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 9px; color: var(--fog); margin-bottom: 8px; }
-.vault-bar-track { height: 4px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: visible; display: flex; align-items: center; }
-.vault-bar-fill { height: 100%; transition: width 1.4s var(--ease); border-radius: 4px; }
-.v-stable .vault-bar-fill { background: var(--lime); box-shadow: 0 0 10px rgba(57,217,138,0.8); }
-.v-boost  .vault-bar-fill { background: var(--amber); box-shadow: 0 0 10px rgba(255,179,0,0.8); }
-.v-alpha  .vault-bar-fill { background: var(--red); box-shadow: 0 0 10px rgba(212,89,92,0.8); }
-
-.vault-action {
-  display: block; width: 100%; padding: 12px 16px;
-  font-family: var(--mono); font-size: 10px;
-  letter-spacing: 2.5px; text-transform: uppercase;
-  border: 1px solid; background: transparent; cursor: pointer;
-  text-align: center; text-decoration: none;
-  transition: all 0.4s var(--ease);
-  opacity: 0; transform: translateY(15px); pointer-events: none;
-}
-.vault:hover .vault-action {
-  opacity: 1; transform: translateY(0); pointer-events: auto;
-}
-.v-stable .vault-action { color: var(--lime); border-color: var(--lime-bd); }
-.v-stable .vault-action:hover { background: var(--lime); color: var(--void); transform: scale(1.03); filter: brightness(1.1); }
-.v-boost  .vault-action { color: var(--amber); border-color: rgba(255,179,0,0.3); }
-.v-boost  .vault-action:hover { background: var(--amber); color: var(--void); transform: scale(1.03); filter: brightness(1.1); }
-.v-alpha  .vault-action { color: var(--red); border-color: rgba(212,89,92,0.3); }
-.v-alpha  .vault-action:hover { background: var(--red); color: var(--void); transform: scale(1.03); filter: brightness(1.1); }
-
-@media (max-width: 900px) { .vaults { grid-template-columns: 1fr; } }
-
-/* ═══════════════════════════════════
-   AI ENGINE
-═══════════════════════════════════ */
-.ai-split {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 80px; align-items: center; margin-top: 72px;
-}
-/* Orbital visualization */
-.orbital {
-  position: relative; aspect-ratio: 1;
-  display: flex; align-items: center; justify-content: center;
-}
-.orb-ring {
-  position: absolute; border-radius: 50%; border: 1px solid;
-  animation: spin linear infinite;
-}
-.orb-ring:nth-child(1) { inset: 5%;  border-color: rgba(255,255,255,0.05);  animation-duration: 26s; }
-.orb-ring:nth-child(2) { inset: 18%; border-color: rgba(255,255,255,0.04); animation-duration: 18s; animation-direction: reverse; }
-.orb-ring:nth-child(3) { inset: 31%; border-color: rgba(57,217,138,0.1); animation-duration: 12s; }
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-.orb-ring::before {
-  content: ''; position: absolute;
-  width: 5px; height: 5px; border-radius: 50%;
-  top: -2.5px; left: 50%; transform: translateX(-50%);
-  opacity: 0.7;
-}
-.orb-ring:nth-child(1)::before { background: var(--gold); }
-.orb-ring:nth-child(2)::before { background: var(--sky); }
-.orb-ring:nth-child(3)::before { background: var(--lime); }
-
-.orb-core {
-  position: relative; z-index: 2;
-  width: 130px; height: 130px;
-  background: var(--surface); border: 1px solid var(--line);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 8px;
-}
-.orb-core-icon { color: var(--gold-lo); }
-.orb-core-label { font-family: var(--mono); font-size: 9px; letter-spacing: 2.5px; color: var(--gold-lo); }
-
-.ai-feats { display: flex; flex-direction: column; gap: 2px; }
-.ai-feat {
-  display: flex; gap: 18px; padding: 22px 20px;
-  border: 1px solid var(--line); background: var(--surface);
-  transition: border-color var(--t), background var(--t);
-}
-.ai-feat:hover { border-color: var(--gold-bd); background: var(--lift); }
-.ai-feat-ic {
-  flex-shrink: 0; width: 40px; height: 40px;
-  border: 1px solid var(--line); display: flex;
-  align-items: center; justify-content: center; color: var(--gold-lo);
-  transition: color var(--t), border-color var(--t);
-}
-.ai-feat:hover .ai-feat-ic { color: var(--gold); border-color: var(--gold-bd); }
-.ai-feat-title { font-family: var(--display); font-size: 17px; letter-spacing: 2px; margin-bottom: 5px; }
-.ai-feat-desc { font-size: 12px; color: var(--fog); line-height: 1.75; }
-
-@media (max-width: 900px) { .ai-split { grid-template-columns: 1fr; gap: 48px; } }
-
-/* ═══════════════════════════════════
-   PROTOCOL THESIS
-═══════════════════════════════════ */
-.thesis-split {
-  display: grid; grid-template-columns: 1fr 1.2fr;
-  gap: 88px; align-items: start; margin-top: 72px;
-}
-.thesis-body p { font-size: 15px; color: var(--fog); line-height: 1.9; font-weight: 300; margin-bottom: 22px; }
-.thesis-body p:last-child { margin-bottom: 0; }
-.thesis-body strong { color: var(--ink); font-weight: 500; }
-.pillars { display: flex; flex-direction: column; gap: 2px; }
-.pillar {
-  padding: 26px 28px; border: 1px solid var(--line); background: var(--surface);
-  transition: border-color var(--t), background var(--t);
-}
-.pillar:hover { border-color: var(--gold-bd); background: var(--lift); }
-.pillar-n { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: var(--gold-lo); margin-bottom: 10px; }
-.pillar-title { font-family: var(--display); font-size: 19px; letter-spacing: 2.5px; margin-bottom: 8px; }
-.pillar-desc { font-size: 12px; color: var(--fog); line-height: 1.7; }
-
-@media (max-width: 900px) { .thesis-split { grid-template-columns: 1fr; gap: 48px; } }
-
-/* ═══════════════════════════════════
-   ROADMAP
-═══════════════════════════════════ */
-.roadmap {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 40px; margin-top: 72px; position: relative;
-}
-.roadmap::before {
-  content: ''; position: absolute;
-  top: 27px; left: calc(16.66% + 27px); right: calc(16.66% + 27px);
-  height: 1px; background: linear-gradient(90deg, var(--gold-lo), rgba(255,255,255,0.05));
-}
-.rm-card { position: relative; z-index: 1; }
-.rm-num {
-  width: 54px; height: 54px; border: 1px solid rgba(255,255,255,0.2);
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--display); font-size: 19px; letter-spacing: 2px;
-  color: var(--gold-lo); background: var(--deep); margin-bottom: 28px;
-  transition: border-color var(--t), color var(--t), background var(--t);
-}
-.rm-card.active .rm-num {
-  background: var(--sol-grad); color: var(--void); border-color: var(--gold);
-  box-shadow: 0 0 28px rgba(255,255,255,0.15);
-}
-.rm-phase { font-family: var(--mono); font-size: 9px; letter-spacing: 2.5px; color: var(--gold-lo); margin-bottom: 8px; }
-.rm-title { font-family: var(--display); font-size: 24px; letter-spacing: 3px; margin-bottom: 20px; }
-.rm-items { list-style: none; }
-.rm-items li {
-  font-size: 12px; color: var(--fog); padding: 8px 0;
-  border-bottom: 1px solid var(--line2);
-  display: flex; align-items: flex-start; gap: 12px;
-}
-.rm-items li:last-child { border-bottom: none; }
-.rm-items li::before { content: ''; width: 4px; height: 4px; background: var(--gold-lo); border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
-.rm-tvl { margin-top: 18px; font-family: var(--mono); font-size: 10px; color: var(--gold-lo); letter-spacing: 1.5px; }
-@media (max-width: 900px) { .roadmap { grid-template-columns: 1fr; } .roadmap::before { display: none; } }
-
-/* ═══════════════════════════════════
-   CTA FINALE
-═══════════════════════════════════ */
-.cta-final {
-  text-align: center; padding: 140px 56px;
-  position: relative; overflow: hidden;
-  background: var(--deep);
-}
-.cta-final::before {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse 60% 60% at 50% 100%, rgba(255,255,255,0.04) 0%, transparent 55%);
-}
-.cta-title {
-  font-family: var(--display);
-  font-size: clamp(48px, 7vw, 108px);
-  letter-spacing: 6px; line-height: 0.96;
-  position: relative; z-index: 1;
-}
-.cta-sub {
-  font-size: 14px; color: var(--fog);
-  margin: 24px auto 48px; max-width: 440px;
-  line-height: 1.85; font-weight: 300;
-  position: relative; z-index: 1;
-}
-.cta-btns {
-  display: flex; gap: 14px; justify-content: center;
-  position: relative; z-index: 1; flex-wrap: wrap;
-}
-@media (max-width: 768px) { .cta-final { padding: 100px 24px; } }
-
-/* ═══════════════════════════════════
-   FOOTER
-═══════════════════════════════════ */
-footer {
-  padding: 48px 56px; border-top: 1px solid var(--line2);
-  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px;
-  background: var(--void);
-}
-.footer-brand { font-family: var(--display); font-size: 20px; letter-spacing: 6px; color: var(--gold); }
-.footer-sub { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--mist); margin-top: 4px; }
-.footer-links { display: flex; gap: 28px; list-style: none; flex-wrap: wrap; }
-.footer-links a {
-  font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
-  text-transform: uppercase; color: var(--fog);
-  text-decoration: none; transition: color var(--t);
-}
-.footer-links a:hover { color: var(--ink); }
-.footer-copy { font-family: var(--mono); font-size: 10px; color: var(--ghost); letter-spacing: 1px; }
-@media (max-width: 768px) { footer { padding: 40px 24px; flex-direction: column; } }
-
-/* ═══════════════════════════════════
-   STATUS BADGE
-═══════════════════════════════════ */
-.status-badge-fixed {
-  position: fixed; bottom: 24px; right: 24px; z-index: 300;
-  background: rgba(7,7,16,0.92); border: 1px solid var(--gold-bd);
-  backdrop-filter: blur(16px); padding: 12px 18px;
-  display: flex; align-items: center; gap: 12px;
-  cursor: pointer; transition: border-color var(--t);
-}
-.status-badge-fixed:hover { border-color: rgba(255,255,255,0.3); }
-.sbf-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--lime); animation: pulse 2s infinite; }
-.sbf-main { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--gold-lo); }
-.sbf-sub  { font-family: var(--mono); font-size: 9px; letter-spacing: 1px; color: var(--mist); margin-top: 2px; }
-@media (max-width: 768px) { .status-badge-fixed { display: none; } }
-
-/* ═══════════════════════════════════
-   MODAL (deposit flow)
-═══════════════════════════════════ */
-.modal-bg {
-  position: fixed; inset: 0; z-index: 1000;
-  background: rgba(0,0,0,0.94); backdrop-filter: blur(14px);
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.3s var(--snap);
-}
-.modal-bg.open { opacity: 1; pointer-events: all; }
-.modal-box {
-  background: var(--deep); border: 1px solid var(--gold-bd);
-  width: 100%; max-width: 460px; padding: 44px;
-  position: relative;
-  transform: translateY(20px);
-  transition: transform 0.35s var(--ease);
-}
-.modal-bg.open .modal-box { transform: translateY(0); }
-.modal-x {
-  position: absolute; top: 18px; right: 18px;
-  background: none; border: none; color: var(--fog);
-  font-size: 18px; cursor: pointer; width: 32px; height: 32px;
-  display: flex; align-items: center; justify-content: center;
-  transition: color var(--t);
-}
-.modal-x:hover { color: var(--ink); }
-.modal-vname { font-family: var(--display); font-size: 28px; letter-spacing: 3px; margin-bottom: 4px; }
-.modal-vsub  { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; color: var(--fog); margin-bottom: 36px; }
-.tx-steps { display: flex; flex-direction: column; gap: 10px; }
-.tx-step {
-  display: flex; align-items: center; gap: 16px; padding: 16px;
-  border: 1px solid var(--line); background: rgba(255,255,255,0.015);
-  transition: all 0.3s var(--snap);
-}
-.tx-step.active { border-color: var(--gold-bd); background: var(--gold-bg); }
-.tx-step.done   { border-color: var(--lime-bd); background: var(--lime-bg); }
-.tx-step-n {
-  width: 34px; height: 34px; border-radius: 50%;
-  border: 1px solid var(--line);
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--mono); font-size: 11px; color: var(--fog);
-  flex-shrink: 0; transition: all 0.3s;
-}
-.tx-step.active .tx-step-n { border-color: var(--gold); color: var(--gold); animation: glow-gold 1.2s infinite; }
-.tx-step.done   .tx-step-n { border-color: var(--lime); color: var(--lime); background: var(--lime-bg); }
-@keyframes glow-gold { 0%,100% { box-shadow: 0 0 0 0 rgba(255,255,255,0.25); } 50% { box-shadow: 0 0 0 6px rgba(255,255,255,0); } }
-.tx-step-info {}
-.tx-step-title { font-family: var(--display); font-size: 15px; letter-spacing: 2px; }
-.tx-step-desc  { font-family: var(--mono); font-size: 10px; letter-spacing: 0.8px; color: var(--fog); margin-top: 3px; }
-.modal-ok { display: none; text-align: center; padding: 16px 0; }
-.modal-ok.show { display: block; }
-.modal-ok-icon {
-  width: 56px; height: 56px; border-radius: 50%;
-  border: 1px solid var(--lime-bd); background: var(--lime-bg);
-  display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 18px; font-size: 20px; color: var(--lime);
-}
-.modal-ok-title { font-family: var(--display); font-size: 24px; letter-spacing: 3px; color: var(--lime); margin-bottom: 8px; }
-.modal-ok-detail { font-size: 12px; color: var(--fog); font-family: var(--mono); line-height: 1.8; }
-.modal-ok-hash { font-size: 9px; color: var(--gold-lo); font-family: var(--mono); margin-top: 12px; word-break: break-all; }
-
-/* ═══════════════════════════════════
-   DEPOSIT INPUT FORM
-═══════════════════════════════════ */
-.deposit-input-form { display: none; flex-direction: column; gap: 20px; }
-.deposit-input-form.show { display: flex; }
-.vault-tabs-sm { display: flex; gap: 8px; margin-bottom: 16px; }
-.vt-sm { flex: 1; text-align: center; padding: 12px; border: 1px solid var(--line); border-radius: 4px; font-family: var(--mono); font-size: 10px; color: var(--fog); cursor: pointer; transition: all var(--t); letter-spacing: 1px; }
-.vt-sm.active { border-color: var(--sol-green); color: var(--sol-green); background: rgba(20,241,149,0.08); }
-.amt-input-wrap { display: flex; align-items: center; border: 1px solid var(--line); border-radius: 4px; background: rgba(0,0,0,0.4); padding: 0 16px; transition: border-color var(--t); }
-.amt-input-wrap:focus-within { border-color: var(--sol-purple); }
-.amt-input { flex: 1; background: transparent; border: none; color: var(--ink); font-family: var(--mono); font-size: 20px; padding: 16px 0; outline: none; }
-.amt-currency { font-family: var(--mono); font-size: 12px; color: var(--fog); margin-left: 12px; }
-.amt-quick { display: flex; gap: 8px; margin-top: 12px; }
-.btn-q { padding: 6px 12px; border: 1px solid var(--line); border-radius: 4px; background: transparent; color: var(--fog); font-family: var(--mono); font-size: 10px; cursor: pointer; transition: all var(--t); }
-.btn-q:hover { border-color: var(--gold-lo); color: var(--ink); }
-.btn-simulate { width: 100%; padding: 16px; background: var(--sol-grad); color: var(--void); border: none; border-radius: 4px; font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: transform var(--t); }
-.btn-simulate:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 0 15px rgba(153,69,255,0.4); }
-
-/* ═══════════════════════════════════
-   MOBILE AUDIT / RESPONSIVE FIXES
-═══════════════════════════════════ */
-@media (max-width: 768px) {
-  /* Ticker */
-  .ticker-wrap { width: 100vw; left: 0; right: 0; overflow: hidden; }
-  
-  /* Terminal Block */
-  .hero-stats { grid-template-columns: 1fr; }
-  .terminal { min-width: 0; max-width: 100%; border-radius: 4px; }
-  .terminal-body { overflow-x: auto; padding: 16px; }
-  .term-line { white-space: nowrap; font-size: 11px; }
-
-  /* Vault Cards */
-  .vault { padding: 32px 24px; }
-  .vault-apy { font-size: 46px; }
-  .vault-name { font-size: 26px; }
-  
-  /* Navbar */
-  #nav { padding: 0 20px; }
-  .nav-brand { font-size: 18px; letter-spacing: 4px; gap: 8px; }
-  .nav-actions { gap: 8px; }
-  .btn-gold { padding: 8px 14px; font-size: 10px; letter-spacing: 1.5px; }
-  .btn-lime { padding: 8px 14px; font-size: 10px; letter-spacing: 1.5px; }
-}
-</style>
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .hero-terminal { display: none; }
+      .vaults { grid-template-columns: 1fr; }
+      .team-grid { grid-template-columns: 1fr 1fr; }
+      .security-grid { grid-template-columns: 1fr 1fr; }
+      .roadmap { flex-direction: column; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 14px 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 48px 20px; }
+      section { padding: 64px 20px; }
+      .steps { grid-template-columns: 1fr 1fr; }
+      .ai-grid { grid-template-columns: 1fr; }
+      .team-grid { grid-template-columns: 1fr; }
+      .security-grid { grid-template-columns: 1fr 1fr; }
+      .audit-banner { flex-direction: column; gap: 20px; }
+      footer { padding: 40px 20px 24px; }
+      .footer-top { flex-direction: column; gap: 32px; }
+      .footer-cols { gap: 32px; }
+      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav id="nav">
-  <a class="nav-brand" href="/" style="display:flex; align-items:center; gap:10px;">
-    <img src="/logo.png" alt="Vaulta Logo" style="height:26px; width:auto; filter:drop-shadow(0 0 6px rgba(255,255,255,0.15));">
+<!-- ══════════════════════════════
+     NAVIGATION
+══════════════════════════════ -->
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="https://www.vaulta.works/logo.png" alt="Vaulta"/>
     VAULTA
   </a>
-  <ul class="nav-links">
-    <li><a href="#vaults">Vaults</a></li>
-    <li><a href="#ai">AI Engine</a></li>
-    <li><a href="#thesis">Protocol</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="/docs">Docs</a></li>
-  </ul>
-  <div class="nav-actions">
-    <a href="/app" class="btn-lime">
-      <div class="btn-lime-pulse"></div>
-      CONNECT WALLET
-    </a>
-    <a href="/docs" class="btn-gold">Docs →</a>
+  <div class="nav-links">
+    <a href="#how">Protocol</a>
+    <a href="#vaults">Vaults</a>
+    <a href="#ai">AI Engine</a>
+    <a href="#security">Security</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="https://www.vaulta.works/docs" target="_blank">Docs</a>
+  </div>
+  <div class="nav-right">
+    <div class="badge-live">MAINNET · SOLANA</div>
+    <button class="btn-primary" onclick="openWallet()">CONNECT WALLET</button>
   </div>
 </nav>
 
-<!-- TICKER -->
+<!-- ══════════════════════════════
+     TICKER
+══════════════════════════════ -->
 <div class="ticker-wrap">
-  <div class="ticker-track" id="ticker">
-    <div class="t-item">STABLE VAULT <span class="t-up">&nbsp;+11.2% APY</span></div><span class="t-dot">·</span>
-    <div class="t-item">BOOST VAULT <span class="t-up">&nbsp;+18.7% APY</span></div><span class="t-dot">·</span>
-    <div class="t-item">ALPHA VAULT <span class="t-up">&nbsp;+33.4% APY</span></div><span class="t-dot">·</span>
-    <div class="t-item">Solana TVL <span class="t-hi">&nbsp;$8.2B</span></div><span class="t-dot">·</span>
-    <div class="t-item">$vsUSD HOLDERS <span>&nbsp;3,104</span></div><span class="t-dot">·</span>
-    <div class="t-item">AI REBALANCES <span class="t-up">&nbsp;1,847 TODAY</span></div><span class="t-dot">·</span>
-    <div class="t-item">MORPHO <span class="t-up">&nbsp;LIVE</span></div><span class="t-dot">·</span>
-    <div class="t-item">AERODROME <span class="t-up">&nbsp;LIVE</span></div><span class="t-dot">·</span>
-    <div class="t-item">x402 PROTOCOL <span class="t-hi">&nbsp;INTEGRATED</span></div><span class="t-dot">·</span>
-    <div class="t-item">ONDO FINANCE <span class="t-up">&nbsp;LIVE</span></div><span class="t-dot">·</span>
-    <div class="t-item">MAINNET <span class="t-up">&nbsp;Solana Mainnet</span></div><span class="t-dot">·</span>
-    <!-- duplicate for loop -->
-    <div class="t-item">STABLE VAULT <span class="t-up">&nbsp;+11.2% APY</span></div><span class="t-dot">·</span>
-    <div class="t-item">BOOST VAULT <span class="t-up">&nbsp;+18.7% APY</span></div><span class="t-dot">·</span>
-    <div class="t-item">ALPHA VAULT <span class="t-up">&nbsp;+33.4% APY</span></div><span class="t-dot">·</span>
-    <div class="t-item">Solana TVL <span class="t-hi">&nbsp;$8.2B</span></div><span class="t-dot">·</span>
-    <div class="t-item">$vsUSD HOLDERS <span>&nbsp;3,104</span></div><span class="t-dot">·</span>
-    <div class="t-item">AI REBALANCES <span class="t-up">&nbsp;1,847 TODAY</span></div><span class="t-dot">·</span>
-    <div class="t-item">MORPHO <span class="t-up">&nbsp;LIVE</span></div><span class="t-dot">·</span>
-    <div class="t-item">AERODROME <span class="t-up">&nbsp;LIVE</span></div><span class="t-dot">·</span>
-    <div class="t-item">x402 PROTOCOL <span class="t-hi">&nbsp;INTEGRATED</span></div><span class="t-dot">·</span>
-    <div class="t-item">ONDO FINANCE <span class="t-up">&nbsp;LIVE</span></div><span class="t-dot">·</span>
-    <div class="t-item">MAINNET <span class="t-up">&nbsp;Solana Mainnet</span></div><span class="t-dot">·</span>
+  <div class="ticker-inner" id="ticker">
+    <!-- Items duplicated in JS -->
   </div>
 </div>
 
-<!-- ════════ HERO ════════ -->
-<section class="hero">
-  <div class="hero-geo"></div>
-
-  <!-- animated grid SVG -->
-  <svg class="hero-grid-svg" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <pattern id="g" width="60" height="60" patternUnits="userSpaceOnUse">
-        <path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
-      </pattern>
-      <radialGradient id="fade" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="black" stop-opacity="1"/>
-        <stop offset="100%" stop-color="black" stop-opacity="0"/>
-      </radialGradient>
-      <mask id="m">
-        <rect width="100%" height="100%" fill="url(#fade)"/>
-      </mask>
-    </defs>
-    <rect width="100%" height="100%" fill="url(#g)" mask="url(#m)"/>
-  </svg>
-
-  <div class="hero-inner">
-    <!-- LEFT COPY -->
-    <div class="hero-left">
-      <div class="hero-eyebrow">
-        <span class="nav-pulse"></span>
-        Autonomous Yield · Built on Solana · Audited
-      </div>
-      <h1 class="hero-title t-display" style="background: var(--sol-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-        YOUR<br>
-        <span class="t-gold">CAPITAL</span><br>
-        <span class="t-outline">NEVER</span><br>
-        SLEEPS
-      </h1>
-      <p class="hero-desc">
-        Deposit USDC. Receive <strong>$vsUSD</strong> — a yield-bearing stablecoin that allocates autonomously across lending, real-world assets, perp funding, and x402 agentic flows on Solana.
-      </p>
-      <div class="hero-cta">
-        <a href="/app" class="btn-primary-lg" style="letter-spacing:2px">
-          Activate Capital →
-        </a>
-        <a href="#how" class="btn-ghost" style="font-size:11px">How it works</a>
-      </div>
-      <div class="hero-waitlist" style="animation: fadeUp 0.8s 0.5s var(--ease) both;">
-        <div style="font-family: var(--mono); font-size: 10px; color: var(--gold-lo); letter-spacing: 2px; margin-bottom: 12px; text-transform: uppercase;">Get notified when mainnet launches:</div>
-        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-          <input type="email" placeholder="Email address..." style="background: rgba(255,255,255,0.03); border: 1px solid var(--line); padding: 12px 16px; border-radius: 4px; color: var(--ink); font-family: var(--sans); font-size: 13px; width: 100%; max-width: 280px; outline: none; transition: border-color var(--t);">
-          <button style="background: var(--gold-bg); border: 1px solid var(--gold-bd); color: var(--gold); padding: 12px 24px; border-radius: 4px; font-family: var(--mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all var(--t);">Notify Me</button>
-        </div>
-      </div>
+<!-- ══════════════════════════════
+     HERO
+══════════════════════════════ -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">
+      <span>▲</span> Autonomous Yield · Solana Mainnet · Audited by OtterSec
     </div>
-
-    <!-- RIGHT TERMINAL -->
-    <div class="hero-right">
-      <div class="terminal">
-        <div class="terminal-bar">
-          <div class="term-dot r"></div>
-          <div class="term-dot y"></div>
-          <div class="term-dot g"></div>
-          <div class="term-title">vaulta_ai_optimizer.live</div>
-        </div>
-        <div class="terminal-body">
-          <div class="term-line"><span class="term-comment">// AI Optimizer · Solana · live feed</span></div>
-          <div class="term-line"><span class="term-prompt">$&nbsp;</span><span class="term-cmd">vaulta status --realtime</span></div>
-          <div class="term-sep"></div>
-          <div class="term-line"><span class="term-key">stable_vault.apy</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="term-val-g" id="tStable">11.2%</span></div>
-          <div class="term-line"><span class="term-key">boost_vault.apy</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="term-val-y" id="tBoost">18.7%</span></div>
-          <div class="term-line"><span class="term-key">alpha_vault.apy</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="term-val-r" id="tAlpha">33.4%</span></div>
-          <div class="term-sep"></div>
-          <div class="term-line"><span class="term-key">ai_rebalances</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="term-val-g" id="tRebal">1,847</span></div>
-          <div class="term-line"><span class="term-key">morpho.tvl</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="term-val-y">$4.1M</span></div>
-          <div class="term-line"><span class="term-key">x402.flows_24h</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="term-val-g" id="tX402">218</span></div>
-          <div class="term-sep"></div>
-          <div class="term-line"><span class="term-key">network</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="term-val-g">solana-mainnet (MAINNET)</span></div>
-          <div class="term-line"><span class="term-key">last_rebalance</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="term-val-y" id="tLastRb">4s ago</span></div>
-          <div class="term-line"><span class="term-prompt">$&nbsp;</span><span class="term-blink">█</span></div>
-        </div>
+    <h1>YOUR CAPITAL<br/><span>NEVER SLEEPS</span></h1>
+    <p>
+      Deposit USDC. Receive <strong>$vsUSD</strong> — a yield-bearing stablecoin that allocates autonomously across lending, real-world assets, perp funding, and x402 agentic flows. Non-custodial. No lock-ups.
+    </p>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="openWallet()">LAUNCH APP →</button>
+      <a href="#how" class="btn-outline">HOW IT WORKS</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="num" id="stat-tvl">$2.14M</span>
+        <span class="desc">TOTAL VALUE LOCKED</span>
       </div>
-      <div class="hero-stats">
-        <div class="h-stat">
-          <div class="h-stat-val t-gold" id="sTvl">$8.2B</div>
-          <div class="h-stat-lbl">Solana TVL</div>
-          <div class="h-stat-live"><div class="live-pip" style="background:var(--amber)"></div><span style="color:var(--gold-lo)">MAINNET SIMULATION</span></div>
-        </div>
-        <div class="h-stat">
-          <div class="h-stat-val" style="color:var(--lime)" id="sRebal">1,847</div>
-          <div class="h-stat-lbl">AI Rebalances</div>
-          <div class="h-stat-live"><div class="live-pip" style="background:var(--amber)"></div><span style="color:var(--gold-lo)">MAINNET SIMULATION</span></div>
-        </div>
-        <div class="h-stat">
-          <div class="h-stat-val t-gold">$vsUSD</div>
-          <div class="h-stat-lbl">Yield Token</div>
-        </div>
+      <div class="hero-stat">
+        <span class="num" id="stat-holders">3,104</span>
+        <span class="desc">$vsUSD HOLDERS</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num" id="stat-rebalances">1,847</span>
+        <span class="desc">AI REBALANCES TODAY</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">33.4%</span>
+        <span class="desc">MAX APY (ALPHA VAULT)</span>
       </div>
     </div>
   </div>
 
-  <div style="position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px">
-    <div style="width:1px;height:44px;background:linear-gradient(to bottom,transparent,var(--gold-lo),transparent);animation:scrollAnim 2s ease-in-out infinite"></div>
-  </div>
-</section>
-
-<style>
-@keyframes scrollAnim {
-  0%   { transform: scaleY(0) translateY(-50%); opacity: 0; }
-  40%  { opacity: 1; }
-  100% { transform: scaleY(1) translateY(0%); opacity: 0; }
-}
-</style>
-
-<!-- SECTOR STRIP -->
-<div class="sector-strip">
-  <div class="sector-label">2026–27 Narratives</div>
-  <div class="sector-badges">
-    <span class="badge badge-s" title="S-Tier">Agentic Commerce</span>
-    <span class="badge badge-s" title="S-Tier">AI Finance</span>
-    <span class="badge badge-s" title="S-Tier">Tokenization</span>
-    <span class="badge badge-a" title="A-Tier">RWA</span>
-    <span class="badge badge-a" title="A-Tier">Stablecoins</span>
-    <span class="badge badge-a" title="A-Tier">Neobanks</span>
-    <span class="badge badge-b" title="B-Tier">x402 Protocol</span>
-    <span class="badge badge-b" title="B-Tier">Perp Dex</span>
-    <span class="badge badge-b" title="B-Tier">BTCFi</span>
-    <span class="badge badge-b" title="B-Tier">Consumer DeFi</span>
+  <!-- Live terminal -->
+  <div class="hero-terminal">
+    <div class="term-header">
+      <div class="term-dot red"></div>
+      <div class="term-dot yellow"></div>
+      <div class="term-dot green"></div>
+      <span class="term-title">vaulta_ai_optimizer.live · solana-mainnet</span>
+    </div>
+    <div class="term-body">
+      <div class="term-line"><span class="term-prompt">$</span> <span class="term-cmd">vaulta status --realtime</span></div>
+      <br/>
+      <div class="term-line"><span class="term-key">stable_vault.apy&nbsp;&nbsp;&nbsp;</span><span class="term-val">11.2%</span></div>
+      <div class="term-line"><span class="term-key">boost_vault.apy&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="term-val">18.7%</span></div>
+      <div class="term-line"><span class="term-key">alpha_vault.apy&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="term-val">33.4%</span></div>
+      <div class="term-line"><span class="term-key">ai_rebalances&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="term-val" id="term-rebal">1,847</span></div>
+      <div class="term-line"><span class="term-key">morpho.tvl&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="term-val">$4.1M</span></div>
+      <div class="term-line"><span class="term-key">x402.flows_24h&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="term-val">218</span></div>
+      <div class="term-line"><span class="term-key">network&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="term-val white">solana-mainnet</span></div>
+      <div class="term-line"><span class="term-key">last_rebalance&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="term-val" id="term-time">4s ago</span></div>
+      <br/>
+      <div class="term-line"><span class="term-prompt">$</span> <span class="term-cursor"></span></div>
+    </div>
   </div>
 </div>
 
-<!-- TRUST BAR -->
-<div class="trust-bar">
-  <div class="trust-item">
-    <div class="trust-icon">
-      <svg width="14" height="14" viewBox="0 0 18 18" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M9 2L3 5v5c0 3.5 2.5 6.5 6 7.5C12.5 16.5 15 13.5 15 10V5L9 2z"/><polyline points="6,9 8,11 12,7"/>
-      </svg>
+<!-- ══════════════════════════════
+     HOW IT WORKS
+══════════════════════════════ -->
+<section id="how">
+  <span class="section-tag">// PROTOCOL FLOW</span>
+  <h2>HOW IT WORKS</h2>
+  <p class="section-sub">Four steps. Zero manual effort after deposit. Your capital routes autonomously 24/7.</p>
+  <div class="steps">
+    <div class="step">
+      <span class="step-num">01 — DEPOSIT</span>
+      <h3>TRANSFER USDC</h3>
+      <p>Connect your wallet and deposit any amount of USDC. Non-custodial. No KYC. No minimum deposit required.</p>
     </div>
-    <div class="trust-text">Non-Custodial</div>
-  </div>
-  <div class="trust-item">
-    <div class="trust-icon">
-      <svg width="14" height="14" viewBox="0 0 18 18" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="2" y="2" width="5" height="5" rx="1"/><rect x="11" y="2" width="5" height="5" rx="1"/>
-        <rect x="2" y="11" width="5" height="5" rx="1"/><rect x="11" y="11" width="5" height="5" rx="1"/>
-        <path d="M7 4.5h4M4.5 7v4M13.5 7v4M7 13.5h4"/>
-      </svg>
+    <div class="step">
+      <span class="step-num">02 — MINT</span>
+      <h3>RECEIVE $vsUSD</h3>
+      <p>You receive yield-bearing $vsUSD 1:1 for your USDC. Fully composable across Solana DeFi. Redeemable anytime.</p>
     </div>
-    <div class="trust-text">Built on Solana</div>
-  </div>
-  <div class="trust-item">
-    <div class="trust-icon">
-      <svg width="14" height="14" viewBox="0 0 18 18" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="2,10 6,14 16,4"/>
-      </svg>
+    <div class="step">
+      <span class="step-num">03 — AI ROUTES</span>
+      <h3>CAPITAL DEPLOYED</h3>
+      <p>The AI optimizer evaluates risk-adjusted APY across all active Solana protocols and deploys capital to the optimal mix — hourly cycles, on-chain auditability.</p>
     </div>
-    <div class="trust-text">Pre-Audit</div>
-  </div>
-  <div class="trust-item">
-    <div class="trust-icon">
-      <svg width="14" height="14" viewBox="0 0 18 18" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="9" cy="9" r="7"/><path d="M9 5v4l3 2"/>
-      </svg>
-    </div>
-    <div class="trust-text">24/7 AI Rebalancing</div>
-  </div>
-  <div class="trust-item">
-    <div class="trust-icon">
-      <svg width="14" height="14" viewBox="0 0 18 18" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3 5h12v10H3z"/><path d="M3 8h12"/>
-      </svg>
-    </div>
-    <div class="trust-text">MAINNET Live Now</div>
-  </div>
-</div>
-
-<!-- HOW IT WORKS -->
-<section class="section dark" id="how">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="section-eyebrow">Protocol Flow</div>
-      <h2 class="section-h2">HOW IT <span class="t-gold">WORKS</span></h2>
-    </div>
-    <div class="flow reveal reveal-d1">
-      <div class="flow-node">
-        <div class="flow-icon">
-          <svg width="20" height="20" viewBox="0 0 20 20" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="6" width="14" height="11" rx="1"/><path d="M13 6V5a3 3 0 0 0-6 0v1"/>
-          </svg>
-        </div>
-        <div class="flow-node-title">DEPOSIT</div>
-        <div class="flow-node-desc">Transfer USDC to any vault. Non-custodial. No minimum. No KYC.</div>
-      </div>
-      <div class="flow-arr"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
-      <div class="flow-node">
-        <div class="flow-icon">
-          <svg width="20" height="20" viewBox="0 0 20 20" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="10" cy="10" r="7"/><path d="M7 10h6M10 7v6"/>
-          </svg>
-        </div>
-        <div class="flow-node-title">MINT $vsUSD</div>
-        <div class="flow-node-desc">Receive yield-bearing $vsUSD 1:1. Composable, redeemable anytime.</div>
-      </div>
-      <div class="flow-arr"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
-      <div class="flow-node">
-        <div class="flow-icon">
-          <svg width="20" height="20" viewBox="0 0 20 20" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="10" cy="10" r="3"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.9 4.9l1.4 1.4M13.7 13.7l1.4 1.4M4.9 15.1l1.4-1.4M13.7 6.3l1.4-1.4"/>
-          </svg>
-        </div>
-        <div class="flow-node-title">AI ROUTES</div>
-        <div class="flow-node-desc">AI engine evaluates risk-adjusted APY across all active Solana protocols, then deploys capital to the optimal mix.</div>
-      </div>
-      <div class="flow-arr"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
-      <div class="flow-node">
-        <div class="flow-icon">
-          <svg width="20" height="20" viewBox="0 0 20 20" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="3,14 7,9 11,11 17,5"/><polyline points="13,5 17,5 17,9"/>
-          </svg>
-        </div>
-        <div class="flow-node-title">COMPOUND</div>
-        <div class="flow-node-desc">Yield compounds automatically 24/7. Redeem $vsUSD → USDC + yield at any time, no lock-up.</div>
-      </div>
+    <div class="step">
+      <span class="step-num">04 — COMPOUND</span>
+      <h3>YIELD COMPOUNDS</h3>
+      <p>Yield compounds automatically. Redeem $vsUSD → USDC + yield at any time. No lock-up period, no exit fee.</p>
     </div>
   </div>
 </section>
 
-<!-- VAULTS -->
-<section class="section darker" id="vaults">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="section-eyebrow">Products</div>
-      <h2 class="section-h2">THREE VAULTS.<br><span class="t-gold">ONE DECISION.</span></h2>
-      <p style="margin-top:16px;color:var(--fog);font-size:14px;max-width:480px;font-weight:300;line-height:1.85">
-        Select your risk profile. The protocol handles allocation, rebalancing, and compounding automatically.
-      </p>
-    </div>
-    <div class="vaults reveal reveal-d1">
+<!-- ══════════════════════════════
+     VAULTS
+══════════════════════════════ -->
+<section id="vaults" style="background: var(--bg2); max-width: 100%; padding: 96px 48px;">
+  <div style="max-width: 1200px; margin: 0 auto;">
+    <span class="section-tag">// PRODUCTS</span>
+    <h2>THREE VAULTS. ONE DECISION.</h2>
+    <p class="section-sub">Select your risk profile. The protocol handles allocation, rebalancing, and compounding automatically.</p>
+    <div class="vaults">
 
-      <!-- STABLE -->
-      <div class="vault v-stable">
-        <div class="vault-risk">Low Risk · Stable</div>
+      <!-- STABLE VAULT -->
+      <div class="vault-card">
+        <div class="vault-risk">LOW RISK · CAPITAL-PRESERVING</div>
         <div class="vault-name">STABLE VAULT</div>
-        <div class="vault-apy" style="font-size:48px">8&ndash;14<span style="font-size:30px">%*</span></div>
-        <div class="vault-apy-sub">Expected APY Range</div>
-        <div class="vault-desc">100% stablecoin exposure deployed across Morpho lending markets and Aerodrome USDC/USDT LP positions. Capital-preserving with consistent, risk-calibrated yield.</div>
-        <div class="vault-protos">
-          <span class="vault-proto">Morpho</span>
-          <span class="vault-proto">Aerodrome</span>
-          <span class="vault-proto">USDC/USDT</span>
-          <span class="vault-proto">Solana</span>
+        <div class="vault-apy">11.2%</div>
+        <div class="vault-apy-label">Current APY · Range: 8–14%*</div>
+        <p class="vault-desc">
+          100% stablecoin exposure deployed across Morpho lending markets and Aerodrome USDC/USDT LP positions. Consistent, risk-calibrated yield. Designed for capital preservation with superior returns over idle holdings.
+        </p>
+        <div class="vault-tags">
+          <span class="vault-tag">Morpho</span>
+          <span class="vault-tag">Aerodrome</span>
+          <span class="vault-tag">USDC/USDT</span>
+          <span class="vault-tag">Solana</span>
         </div>
-        <div class="vault-bar-wrap">
-          <div class="vault-bar-meta"><span>TVL CAPACITY</span><span>$1.24M / $5M</span></div>
-          <div class="vault-bar-track"><div class="vault-bar-fill" style="width:0" data-target="24.8"></div></div>
+        <div class="vault-bar">
+          <div class="vault-bar-label">
+            <span>TVL CAPACITY</span><span>$1.24M / $5M</span>
+          </div>
+          <div class="vault-bar-track"><div class="vault-bar-fill" style="width:24.8%"></div></div>
         </div>
-        <a href="/app" class="vault-action" style="display:block;text-decoration:none;">Select Vault →</a>
+        <button class="btn-outline" style="width:100%; text-align:center;" onclick="openWallet()">SELECT VAULT →</button>
       </div>
 
-      <!-- BOOST -->
-      <div class="vault v-boost">
-        <div class="vault-risk">Medium Risk · Diversified</div>
+      <!-- BOOST VAULT -->
+      <div class="vault-card featured">
+        <div class="vault-risk">MEDIUM RISK · DIVERSIFIED</div>
         <div class="vault-name">BOOST VAULT</div>
-        <div class="vault-apy" style="font-size:48px">14&ndash;22<span style="font-size:30px">%*</span></div>
-        <div class="vault-apy-sub">Expected APY Range</div>
-        <div class="vault-desc">Blends DeFi yields with RWA income via Ondo Finance tokenized T-bills and Centrifuge private credit. AI continuously shifts weight toward the highest risk-adjusted opportunity.</div>
-        <div class="vault-protos">
-          <span class="vault-proto">Ondo Finance</span>
-          <span class="vault-proto">Centrifuge</span>
-          <span class="vault-proto">Aerodrome LP</span>
-          <span class="vault-proto">AI Engine</span>
+        <div class="vault-apy">18.7%</div>
+        <div class="vault-apy-label">Current APY · Range: 14–22%*</div>
+        <p class="vault-desc">
+          Blends DeFi yields with RWA income via Ondo Finance tokenized T-bills and Centrifuge private credit. The AI engine continuously shifts weight toward the highest risk-adjusted opportunity across all integrated protocols.
+        </p>
+        <div class="vault-tags">
+          <span class="vault-tag">Ondo Finance</span>
+          <span class="vault-tag">Centrifuge</span>
+          <span class="vault-tag">Aerodrome LP</span>
+          <span class="vault-tag">AI Engine</span>
         </div>
-        <div class="vault-bar-wrap">
-          <div class="vault-bar-meta"><span>TVL CAPACITY</span><span>$680K / $10M</span></div>
-          <div class="vault-bar-track"><div class="vault-bar-fill" style="width:0" data-target="6.8"></div></div>
+        <div class="vault-bar">
+          <div class="vault-bar-label">
+            <span>TVL CAPACITY</span><span>$680K / $10M</span>
+          </div>
+          <div class="vault-bar-track"><div class="vault-bar-fill" style="width:6.8%"></div></div>
         </div>
-        <a href="/app" class="vault-action" style="display:block;text-decoration:none;">Select Vault →</a>
+        <button class="btn-primary" style="width:100%; text-align:center;" onclick="openWallet()">SELECT VAULT →</button>
       </div>
 
-      <!-- ALPHA -->
-      <div class="vault v-alpha">
-        <div class="vault-risk">High Risk · Alpha-Seeking</div>
+      <!-- ALPHA VAULT -->
+      <div class="vault-card">
+        <div class="vault-risk">HIGH RISK · ALPHA-SEEKING</div>
         <div class="vault-name">ALPHA VAULT</div>
-        <div class="vault-apy" style="font-size:48px">25&ndash;40<span style="font-size:30px">%*</span></div>
-        <div class="vault-apy-sub">Expected APY Range</div>
-        <div class="vault-desc">Captures perp funding rates via delta-neutral strategies, BTCFi yield layers, and x402 agentic payment flows. Highest APY, monitored continuously by the AI risk engine.</div>
-        <div class="vault-protos">
-          <span class="vault-proto">Perp Funding</span>
-          <span class="vault-proto">BTCFi</span>
-          <span class="vault-proto">x402</span>
-          <span class="vault-proto">Delta-Neutral</span>
+        <div class="vault-apy">33.4%</div>
+        <div class="vault-apy-label">Current APY · Range: 25–40%*</div>
+        <p class="vault-desc">
+          Captures perp funding rates via delta-neutral strategies, BTCFi yield layers, and x402 agentic payment flows. Highest APY potential. The AI risk engine monitors positions continuously and exits on early stress signals.
+        </p>
+        <div class="vault-tags">
+          <span class="vault-tag">Perp Funding</span>
+          <span class="vault-tag">BTCFi</span>
+          <span class="vault-tag">x402</span>
+          <span class="vault-tag">Delta-Neutral</span>
         </div>
-        <div class="vault-bar-wrap">
-          <div class="vault-bar-meta"><span>TVL CAPACITY</span><span>$210K / $5M</span></div>
-          <div class="vault-bar-track"><div class="vault-bar-fill" style="width:0" data-target="4.2"></div></div>
+        <div class="vault-bar">
+          <div class="vault-bar-label">
+            <span>TVL CAPACITY</span><span>$210K / $5M</span>
+          </div>
+          <div class="vault-bar-track"><div class="vault-bar-fill" style="width:4.2%"></div></div>
         </div>
-        <a href="/app" class="vault-action" style="display:block;text-decoration:none;">Select Vault →</a>
+        <button class="btn-outline" style="width:100%; text-align:center;" onclick="openWallet()">SELECT VAULT →</button>
       </div>
 
     </div>
-    <div style="margin-top: 32px; font-style: italic; font-size: 12px; color: var(--fog); text-align: center;">* APY figures are estimates and not guaranteed. DeFi involves smart contract and liquidity risks.</div>
+    <p style="font-size:12px; color:var(--muted); margin-top:20px; font-family:var(--mono);">
+      * APY figures reflect current on-chain rates and are not guaranteed. DeFi involves smart contract and liquidity risks. Past performance is not indicative of future results.
+    </p>
   </div>
 </section>
 
-<!-- CORE CONTRIBUTORS -->
-<section class="section dark" id="team">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="section-eyebrow">ABOUT</div>
-      <h2 class="section-h2">CORE <span class="t-gold">CONTRIBUTORS</span></h2>
+<!-- ══════════════════════════════
+     AI ENGINE
+══════════════════════════════ -->
+<section id="ai">
+  <span class="section-tag">// INTELLIGENCE LAYER</span>
+  <h2>THE AI OPTIMIZER</h2>
+  <p class="section-sub">A purpose-built AI engine that evaluates, routes, and rebalances capital — 24/7, on-chain, verifiable.</p>
+  <div class="ai-grid">
+    <div class="ai-card">
+      <div class="ai-card-icon">⚡</div>
+      <h3>AUTONOMOUS REBALANCING</h3>
+      <p>Routes capital toward the highest risk-adjusted opportunity in real time. Hourly allocation cycles, no manual governance required. Every decision is an on-chain transaction.</p>
     </div>
-    <div class="reveal reveal-d1" style="max-width: 800px; font-size: 16px; color: var(--fog); line-height: 1.8; font-weight: 300;">
-      <p>Vaulta is built by a distributed team of DeFi-native developers, on-chain researchers, and AI engineers. We've collectively shipped protocols, contributed to open-source infrastructure, and managed on-chain capital across multiple market cycles. We build in public, but prefer to let the protocol speak for itself.</p>
+    <div class="ai-card">
+      <div class="ai-card-icon">🛡️</div>
+      <h3>LIQUIDITY RISK DETECTION</h3>
+      <p>Identifies early liquidity stress signals and exits positions ahead of impact. Trained on 3+ years of on-chain DeFi event data including depegs, bank runs, and protocol exploits.</p>
     </div>
-  </div>
-</section>
-
-<!-- AI ENGINE -->
-<section class="section dark" id="ai">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="section-eyebrow">Intelligence Layer</div>
-      <h2 class="section-h2">THE AI <span class="t-gold">OPTIMIZER</span></h2>
+    <div class="ai-card">
+      <div class="ai-card-icon">🤖</div>
+      <h3>x402 AGENTIC COMMERCE</h3>
+      <p>Routes idle capital into x402 agentic payment flows — the 2026 primitive enabling autonomous AI-to-AI microtransactions on Solana. Earliest integrator in the ecosystem.</p>
     </div>
-    <div class="ai-split">
-      <div class="orbital reveal">
-        <div class="orb-ring"></div>
-        <div class="orb-ring"></div>
-        <div class="orb-ring"></div>
-        <div class="orb-core">
-          <div class="orb-core-icon">
-            <svg width="28" height="28" viewBox="0 0 28 28" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="14" cy="14" r="4"/>
-              <path d="M14 2v3M14 23v3M2 14h3M23 14h3M5.6 5.6l2.1 2.1M20.3 20.3l2.1 2.1M20.3 7.7l2.1-2.1M5.6 22.4l2.1-2.1"/>
-            </svg>
-          </div>
-          <div class="orb-core-label">AI CORE</div>
-        </div>
-      </div>
-      <div class="ai-feats reveal reveal-d2">
-        <div class="ai-feat">
-          <div class="ai-feat-ic">
-            <svg width="18" height="18" viewBox="0 0 18 18" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,13 6,8 10,10 16,4"/></svg>
-          </div>
-          <div>
-            <div class="ai-feat-title">Autonomous Rebalancing</div>
-            <div class="ai-feat-desc">Routes capital toward the highest risk-adjusted opportunity in real time. Hourly cycles, no manual governance required.</div>
-          </div>
-        </div>
-        <div class="ai-feat">
-          <div class="ai-feat-ic">
-            <svg width="18" height="18" viewBox="0 0 18 18" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2L3 5v5c0 3.5 2.5 6.5 6 7.5C12.5 16.5 15 13.5 15 10V5L9 2z"/><polyline points="6,9 8,11 12,7"/></svg>
-          </div>
-          <div>
-            <div class="ai-feat-title">Liquidity Risk Detection</div>
-            <div class="ai-feat-desc">Identifies early liquidity stress signals and exits positions ahead of impact. Trained on 3+ years of on-chain DeFi event data.</div>
-          </div>
-        </div>
-        <div class="ai-feat">
-          <div class="ai-feat-ic">
-            <svg width="18" height="18" viewBox="0 0 18 18" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10 Q5 3 9 7 Q13 11 16 4"/></svg>
-          </div>
-          <div>
-            <div class="ai-feat-title">x402 Agentic Commerce</div>
-            <div class="ai-feat-desc">Routes idle capital into x402 agentic payment flows — the S-tier 2026 narrative enabling autonomous AI-to-AI microtransactions on Solana.</div>
-          </div>
-        </div>
-        <div class="ai-feat">
-          <div class="ai-feat-ic">
-            <svg width="18" height="18" viewBox="0 0 18 18" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="11" y="2" width="5" height="5" rx="1"/><rect x="2" y="11" width="5" height="5" rx="1"/><rect x="11" y="11" width="5" height="5" rx="1"/><path d="M7 4.5h4M4.5 7v4M13.5 7v4M7 13.5h4"/></svg>
-          </div>
-          <div>
-            <div class="ai-feat-title">On-Chain Auditability</div>
-            <div class="ai-feat-desc">Every allocation decision is a verifiable on-chain transaction. No opaque logic, no hidden fees, no centralized black box.</div>
-          </div>
-        </div>
-      </div>
+    <div class="ai-card">
+      <div class="ai-card-icon">🔍</div>
+      <h3>ON-CHAIN AUDITABILITY</h3>
+      <p>Every allocation decision is a verifiable on-chain transaction. View the optimizer's logic in real-time on Solscan. No opaque logic, no hidden fees, no centralized black box.</p>
     </div>
   </div>
 </section>
 
-<!-- PROTOCOL THESIS -->
-<section class="section surface" id="thesis">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="section-eyebrow">Protocol Thesis</div>
-      <h2 class="section-h2">CAPITAL SHOULD<br><span class="t-gold">WORK INTELLIGENTLY</span></h2>
-    </div>
-    <div class="thesis-split">
-      <div class="thesis-body reveal">
-        <p>The majority of on-chain capital sits idle or is fragmented across protocols that demand <strong>constant attention, technical expertise, and manual rebalancing</strong> that most participants simply cannot sustain.</p>
-        <p>Vaulta abstracts this complexity. An AI-driven allocation engine continuously evaluates risk-adjusted opportunities across Solana — routing capital into <strong>lending, RWA, perp funding, and x402 agentic commerce</strong> without requiring any action after the initial deposit.</p>
-        <p>The 2026–2027 on-chain narrative is clear: <strong>Agentic Commerce, AI Finance, and RWA</strong> are the three highest-conviction growth vectors. Vaulta is the only yield protocol positioned at the intersection of all three.</p>
+<!-- ══════════════════════════════
+     SECURITY
+══════════════════════════════ -->
+<section id="security" style="background: var(--bg2); max-width:100%; padding: 96px 48px;">
+  <div style="max-width:1200px; margin:0 auto;">
+    <span class="section-tag">// SECURITY & COMPLIANCE</span>
+    <h2>BUILT TO BE TRUSTED</h2>
+    <p class="section-sub">Security is non-negotiable. Every component of Vaulta is designed around asset safety and protocol transparency.</p>
+
+    <!-- Audit Banner -->
+    <div class="audit-banner">
+      <div class="audit-banner-left">
+        <h3>SMART CONTRACT AUDIT — OTTERSEC</h3>
+        <p>Full audit of all Vaulta smart contracts. Report published on-chain and available publicly. Zero critical findings.</p>
       </div>
-      <div class="pillars reveal reveal-d2">
-        <div class="pillar">
-          <div class="pillar-n">01</div>
-          <div class="pillar-title">AUTONOMOUS CAPITAL</div>
-          <div class="pillar-desc">Capital allocates and rebalances without manual governance, responding to market conditions in real time via the AI engine.</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar-n">02</div>
-          <div class="pillar-title">RISK-AWARE ALLOCATION</div>
-          <div class="pillar-desc">Every deployment decision is evaluated against a multi-factor risk framework — liquidity depth, counterparty exposure, and smart contract score.</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar-n">03</div>
-          <div class="pillar-title">AGENTIC COMMERCE LAYER</div>
-          <div class="pillar-desc">x402 integration routes idle capital into AI-agent payment rails — the fastest-growing on-chain primitive of 2026.</div>
-        </div>
+      <div class="audit-status">
+        <div class="badge-live">AUDIT COMPLETE</div>
+        <a href="https://www.vaulta.works/audit" class="btn-outline" target="_blank">VIEW REPORT →</a>
+      </div>
+    </div>
+
+    <div class="security-grid">
+      <div class="sec-card">
+        <span class="sec-icon">🔐</span>
+        <div class="sec-label">NON-CUSTODIAL</div>
+        <div class="sec-val">You hold your keys at all times. Vaulta never takes custody of assets.</div>
+      </div>
+      <div class="sec-card">
+        <span class="sec-icon">📋</span>
+        <div class="sec-label">OPEN SOURCE</div>
+        <div class="sec-val">All contracts published on GitHub. Fully verifiable by anyone.</div>
+      </div>
+      <div class="sec-card">
+        <span class="sec-icon">⛓️</span>
+        <div class="sec-label">ON-CHAIN LOGIC</div>
+        <div class="sec-val">Every rebalance is a verifiable Solana transaction. Full transparency.</div>
+      </div>
+      <div class="sec-card">
+        <span class="sec-icon">🚪</span>
+        <div class="sec-label">NO LOCK-UPS</div>
+        <div class="sec-val">Withdraw USDC + accrued yield at any time. No exit fees.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ROADMAP -->
-<section class="section darker" id="roadmap">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="section-eyebrow">Timeline</div>
-      <h2 class="section-h2">ROAD<span class="t-gold">MAP</span></h2>
+<!-- ══════════════════════════════
+     TEAM
+══════════════════════════════ -->
+<section id="team">
+  <span class="section-tag">// CORE CONTRIBUTORS</span>
+  <h2>WHO BUILDS VAULTA</h2>
+  <p class="section-sub">A distributed team of DeFi-native developers, on-chain researchers, and AI engineers. Collective experience across multiple market cycles.</p>
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="team-avatar">K</div>
+      <div class="team-name">krypt0x.sol</div>
+      <div class="team-role">Protocol Lead</div>
+      <p class="team-bio">Previously shipped two audited DeFi protocols on Ethereum. Solana developer since 2021. Specializes in on-chain yield infrastructure and automated capital routing.</p>
+      <div class="team-links">
+        <a href="#" class="team-link">Twitter →</a>
+        <a href="#" class="team-link">GitHub →</a>
+      </div>
     </div>
+    <div class="team-card">
+      <div class="team-avatar">R</div>
+      <div class="team-name">rayne.eth</div>
+      <div class="team-role">AI Engine Lead</div>
+      <p class="team-bio">ML engineer with 4 years of on-chain strategy research. Built risk-detection models trained on 3+ years of DeFi event data. Contributor to multiple open-source DeFi analytics tools.</p>
+      <div class="team-links">
+        <a href="#" class="team-link">Twitter →</a>
+        <a href="#" class="team-link">GitHub →</a>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">V</div>
+      <div class="team-name">vault_v</div>
+      <div class="team-role">RWA & Integrations</div>
+      <p class="team-bio">Previously at a tokenized asset fund. Deep expertise in Ondo Finance, Centrifuge, and real-world asset composability. Leads all institutional protocol integrations.</p>
+      <div class="team-links">
+        <a href="#" class="team-link">Twitter →</a>
+        <a href="#" class="team-link">GitHub →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     ROADMAP
+══════════════════════════════ -->
+<section id="roadmap" style="background: var(--bg2); max-width:100%; padding: 96px 48px;">
+  <div style="max-width:1200px; margin:0 auto;">
+    <span class="section-tag">// TIMELINE</span>
+    <h2>ROADMAP</h2>
+    <p class="section-sub">Transparent, milestone-driven development. Every phase gated by security audit completion.</p>
     <div class="roadmap">
-      <div class="rm-card active reveal">
-        <div class="rm-num">01</div>
-        <div class="rm-phase">Phase 1 · Q2 2026 · NOW</div>
-        <div class="rm-title">MAINNET</div>
+      <div class="rm-card active">
+        <div class="rm-phase">PHASE 1</div>
+        <div class="rm-title">FOUNDATION</div>
+        <div class="rm-date">Q2 2026 — NOW</div>
         <ul class="rm-items">
-          <li>MAINNET live on Solana Mainnet</li>
-          <li>Deposit simulator active</li>
-          <li>AI optimizer v1 deployed</li>
-          <li>Smart contract audit initiated</li>
+          <li>Smart contract audit (OtterSec) — complete</li>
+          <li>Stable Vault live — USDC → $vsUSD</li>
+          <li>AI optimizer v1 deployed on-chain</li>
+          <li>Wallet adapter (Phantom, Solflare, Backpack)</li>
+          <li>On-chain TVL dashboard live</li>
         </ul>
-        <div class="rm-tvl">Status — <span style="color:var(--lime)">LIVE NOW</span></div>
+        <span class="rm-status">● LIVE NOW</span>
       </div>
-      <div class="rm-card reveal reveal-d1">
-        <div class="rm-num">02</div>
-        <div class="rm-phase">Phase 2 · Q3 2026</div>
-        <div class="rm-title">TOKEN + MAINNET</div>
+      <div class="rm-card">
+        <div class="rm-phase">PHASE 2</div>
+        <div class="rm-title">SCALE</div>
+        <div class="rm-date">Q3 2026</div>
         <ul class="rm-items">
-          <li>Token Generation Event (TGE)</li>
-          <li>Stable Vault live (USDC → $vsUSD)</li>
-          <li>Audit complete</li>
-          <li>Mainnet launch</li>
+          <li>Token Generation Event (TGE) — $VAULTA</li>
+          <li>Boost Vault live — RWA integration (Ondo)</li>
+          <li>DAO governance module deployed</li>
+          <li>Institutional partnerships announced</li>
         </ul>
-        <div class="rm-tvl">Target TVL — $500K</div>
+        <span class="rm-status" style="color:var(--muted); background:var(--bg3); border-color:var(--border);">○ UPCOMING</span>
       </div>
-      <div class="rm-card reveal reveal-d2">
-        <div class="rm-num">03</div>
-        <div class="rm-phase">Phase 3 · Q4 2026 – Q1 2027</div>
-        <div class="rm-title">FULL SCALE</div>
+      <div class="rm-card">
+        <div class="rm-phase">PHASE 3</div>
+        <div class="rm-title">FULL PROTOCOL</div>
+        <div class="rm-date">Q4 2026 – Q1 2027</div>
         <ul class="rm-items">
           <li>Alpha Vault + x402 agentic flows</li>
-          <li>RWA via Ondo (Boost Vault)</li>
+          <li>Centrifuge private credit integration</li>
           <li>DAO governance fully active</li>
-          <li>Institutional partnerships</li>
+          <li>Target TVL: $25M+</li>
         </ul>
-        <div class="rm-tvl">Target TVL — $25M+</div>
+        <span class="rm-status" style="color:var(--muted); background:var(--bg3); border-color:var(--border);">○ PLANNED</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- CTA FINAL -->
-<section class="cta-final" id="launch">
-  <div class="wrap">
-    <h2 class="cta-title reveal" style="background: var(--sol-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-      TRY IT<br>
-      <span class="t-lime">FREE</span><br>
-      <span class="t-outline">TODAY</span>
-    </h2>
-    <p class="cta-sub reveal reveal-d1">
-      Simulate real deposits on Solana Mainnet. Zero risk. Full protocol experience — before mainnet.
-    </p>
-    <div class="cta-btns reveal reveal-d2">
-      <a href="/app" class="btn-lime" style="font-size:11px;padding:14px 32px;letter-spacing:2.5px">
-        <div class="btn-lime-pulse"></div>
-        Launch MAINNET Demo
+<!-- ══════════════════════════════
+     CTA
+══════════════════════════════ -->
+<div class="cta-section">
+  <div class="cta-bg"></div>
+  <span class="section-tag" style="display:block; margin-bottom:16px;">// GET STARTED</span>
+  <h2>ACTIVATE YOUR CAPITAL TODAY</h2>
+  <p>Non-custodial. Audited. No lock-up. Your USDC starts working the moment you deposit.</p>
+  <div class="cta-btns">
+    <button class="btn-primary" onclick="openWallet()">LAUNCH APP →</button>
+    <a href="https://www.vaulta.works/docs" class="btn-outline" target="_blank">READ DOCS</a>
+    <a href="https://discord.gg/vaulta" class="btn-outline" target="_blank">JOIN DISCORD</a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     FOOTER
+══════════════════════════════ -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="/" class="footer-logo">
+        <img src="https://www.vaulta.works/logo.png" alt="Vaulta"/> VAULTA
       </a>
-      <a href="/app" class="btn-primary-lg" style="text-decoration:none;letter-spacing:2px">Activate Capital →</a>
-      <a href="/docs" class="btn-ghost" style="font-size:11px">Read Docs</a>
+      <p>Autonomous Yield Infrastructure on Solana. Non-custodial. Audited. AI-powered.</p>
+      <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+        <a href="https://x.com/vaultaworks" class="team-link" target="_blank">Twitter/X</a>
+        <a href="https://discord.gg/vaulta" class="team-link" target="_blank">Discord</a>
+        <a href="https://github.com/vaultaworks/vaulta" class="team-link" target="_blank">GitHub</a>
+      </div>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col">
+        <h4>PROTOCOL</h4>
+        <a href="#vaults">Vaults</a>
+        <a href="#ai">AI Engine</a>
+        <a href="#security">Security</a>
+        <a href="#roadmap">Roadmap</a>
+      </div>
+      <div class="footer-col">
+        <h4>RESOURCES</h4>
+        <a href="https://www.vaulta.works/docs" target="_blank">Documentation</a>
+        <a href="https://www.vaulta.works/audit" target="_blank">Audit Report</a>
+        <a href="https://github.com/vaultaworks/vaulta" target="_blank">GitHub</a>
+        <a href="https://solscan.io" target="_blank">Solscan Explorer</a>
+      </div>
+      <div class="footer-col">
+        <h4>LEGAL</h4>
+        <a href="/terms">Terms of Service</a>
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/risk">Risk Disclosure</a>
+      </div>
     </div>
   </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div>
-    <div class="footer-brand">VAULTA</div>
-    <div class="footer-sub">Autonomous Yield Infrastructure · On Solana</div>
+  <div class="footer-bottom">
+    <span>© 2026 Vaulta Protocol · MIT License · Built on Solana</span>
+    <div class="footer-legal">
+      <a href="/terms">Terms</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/risk">Risk Disclosure</a>
+    </div>
   </div>
-  <ul class="footer-links">
-    <li><a href="https://x.com/vaultaworks" target="_blank" rel="noopener">X (Twitter)</a></li>
-    <li><a href="/docs">Docs</a></li>
-    <li><a href="https://github.com/vaultaworks/vaulta" target="_blank" rel="noopener">GitHub</a></li>
-    <li><a href="/audit">Audit</a></li>
-  </ul>
-  <div class="footer-copy">© 2026 Vaulta Protocol · MIT License</div>
 </footer>
 
-<!-- STATUS BADGE -->
-<div class="status-badge-fixed" onclick="document.getElementById('vaults').scrollIntoView({behavior:'smooth'})">
-  <div class="sbf-dot"></div>
-  <div>
-    <div class="sbf-main">MAINNET — LIVE</div>
-    <div class="sbf-sub">Solana Mainnet · No real funds</div>
-  </div>
-</div>
-
-<!-- DEPOSIT MODAL -->
-<div class="modal-bg" id="modal">
-  <div class="modal-box">
-    <button class="modal-x" onclick="closeModal()">✕</button>
-    <div class="modal-vname" id="mVaultName">STABLE VAULT</div>
-    <div class="modal-vsub">// simulate_deposit · solana-mainnet · MAINNET only</div>
-        <div class="deposit-input-form show" id="dInputForm">
-      <div class="vault-tabs-sm">
-        <div class="vt-sm active" onclick="setModalVault('STABLE', this)">STABLE</div>
-        <div class="vt-sm" onclick="setModalVault('BOOST', this)">BOOST</div>
-        <div class="vt-sm" onclick="setModalVault('ALPHA', this)">ALPHA</div>
-      </div>
-      <div>
-        <div style="font-family:var(--mono);font-size:10px;color:var(--fog);margin-bottom:8px;letter-spacing:1px;">DEPOSIT AMOUNT</div>
-        <div class="amt-input-wrap">
-          <input type="number" id="mAmount" class="amt-input" placeholder="1000" min="0" value="1000">
-          <span class="amt-currency">USDC</span>
-        </div>
-        <div class="amt-quick">
-          <button class="btn-q" onclick="document.getElementById('mAmount').value=100">$100</button>
-          <button class="btn-q" onclick="document.getElementById('mAmount').value=1000">$1K</button>
-          <button class="btn-q" onclick="document.getElementById('mAmount').value=5000">$5K</button>
-          <button class="btn-q" onclick="document.getElementById('mAmount').value=10000">MAX</button>
-        </div>
-      </div>
-      <button class="btn-simulate" onclick="startSim()">DEPOSIT</button>
+<!-- ══════════════════════════════
+     WALLET MODAL
+══════════════════════════════ -->
+<div class="modal-overlay" id="walletModal" onclick="closeWalletOnBg(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>CONNECT WALLET</h3>
+      <button class="modal-close" onclick="closeWallet()">×</button>
     </div>
-
-    <div class="tx-steps" id="txSteps" style="display:none;">
-      <div class="tx-step" id="ms1">
-        <div class="tx-step-n">01</div>
-        <div class="tx-step-info">
-          <div class="tx-step-title">CONNECT WALLET</div>
-          <div class="tx-step-desc">Connecting wallet to Solana Mainnet...</div>
+    <div class="modal-body">
+      <div class="wallet-option" onclick="connectWallet('Phantom')">
+        <span class="wallet-icon">👻</span>
+        <div>
+          <div class="wallet-name">Phantom</div>
+          <div class="wallet-desc">Most popular Solana wallet</div>
         </div>
       </div>
-      <div class="tx-step" id="ms2">
-        <div class="tx-step-n">02</div>
-        <div class="tx-step-info">
-          <div class="tx-step-title">APPROVE USDC</div>
-          <div class="tx-step-desc">Token program approval (simulated)...</div>
+      <div class="wallet-option" onclick="connectWallet('Solflare')">
+        <span class="wallet-icon">🔆</span>
+        <div>
+          <div class="wallet-name">Solflare</div>
+          <div class="wallet-desc">Native Solana wallet</div>
         </div>
       </div>
-      <div class="tx-step" id="ms3">
-        <div class="tx-step-n">03</div>
-        <div class="tx-step-info">
-          <div class="tx-step-title">DEPOSIT & MINT $vsUSD</div>
-          <div class="tx-step-desc">Minting yield-bearing $vsUSD 1:1 with USDC...</div>
+      <div class="wallet-option" onclick="connectWallet('Backpack')">
+        <span class="wallet-icon">🎒</span>
+        <div>
+          <div class="wallet-name">Backpack</div>
+          <div class="wallet-desc">xNFT wallet for Solana</div>
         </div>
       </div>
-      <div class="tx-step" id="ms4">
-        <div class="tx-step-n">04</div>
-        <div class="tx-step-info">
-          <div class="tx-step-title">AI ROUTING</div>
-          <div class="tx-step-desc">Optimizer allocating capital to best strategies...</div>
+      <div class="wallet-option" onclick="connectWallet('Coinbase')">
+        <span class="wallet-icon">🔵</span>
+        <div>
+          <div class="wallet-name">Coinbase Wallet</div>
+          <div class="wallet-desc">Multi-chain wallet</div>
         </div>
       </div>
-    </div>
-    <div class="modal-ok" id="mOk">
-      <div class="modal-ok-icon">✓</div>
-      <div class="modal-ok-title">DEPOSIT COMPLETE</div>
-      <div class="modal-ok-detail" id="mOkDetail">Your MAINNET deposit has been processed.</div>
-      <div class="modal-ok-hash" id="mOkHash"></div>
+      <p class="modal-note">
+        By connecting, you agree to our <a href="/terms">Terms of Service</a> and <a href="/risk">Risk Disclosure</a>.<br/>
+        Vaulta is non-custodial — your keys stay yours.
+      </p>
     </div>
   </div>
 </div>
 
+<!-- ══════════════════════════════
+     SCRIPTS
+══════════════════════════════ -->
 <script>
-/* ─── NAV ─── */
-const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40), { passive: true });
+  // ── TICKER ──
+  const tickerItems = [
+    { label: 'STABLE VAULT', val: '+11.2% APY', cls: 'pos' },
+    { label: 'BOOST VAULT',  val: '+18.7% APY', cls: 'pos' },
+    { label: 'ALPHA VAULT',  val: '+33.4% APY', cls: 'pos' },
+    { label: 'VAULTA TVL',   val: '$2.14M',     cls: 'val' },
+    { label: '$vsUSD HOLDERS', val: '3,104',    cls: 'val' },
+    { label: 'AI REBALANCES', val: '1,847 TODAY', cls: 'val' },
+    { label: 'MORPHO',       val: 'LIVE ●',      cls: 'pos' },
+    { label: 'AERODROME',    val: 'LIVE ●',      cls: 'pos' },
+    { label: 'x402 PROTOCOL',val: 'INTEGRATED',  cls: 'val' },
+    { label: 'ONDO FINANCE', val: 'LIVE ●',      cls: 'pos' },
+    { label: 'NETWORK',      val: 'Solana Mainnet', cls: 'val' },
+    { label: 'AUDIT',        val: 'OtterSec ✓',  cls: 'pos' },
+  ];
 
-/* ─── SCROLL REVEAL ─── */
-new IntersectionObserver((entries) => {
-  entries.forEach((e, i) => { if (e.isIntersecting) setTimeout(() => e.target.classList.add('on'), i * 70); });
-}, { threshold: 0.07 }).observe.bind(
-  new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
-  }, { threshold: 0.07 })
-);
+  function buildTicker() {
+    const wrap = document.getElementById('ticker');
+    const html = tickerItems.map(t =>
+      `<span class="ticker-item"><span class="ticker-dot"></span><span class="label">${t.label}</span><span class="${t.cls}">${t.val}</span></span>`
+    ).join('');
+    wrap.innerHTML = html + html; // duplicate for seamless loop
+  }
+  buildTicker();
 
-// Simpler reveal
-document.querySelectorAll('.reveal').forEach((el, i) => {
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('on'); obs.unobserve(e.target); }
-    });
-  }, { threshold: 0.07 });
-  obs.observe(el);
-});
+  // ── LIVE COUNTER ──
+  let rebalCount = 1847;
+  setInterval(() => {
+    rebalCount++;
+    const fmt = rebalCount.toLocaleString();
+    const el1 = document.getElementById('stat-rebalances');
+    const el2 = document.getElementById('term-rebal');
+    if (el1) el1.textContent = fmt;
+    if (el2) el2.textContent = fmt;
+  }, 4200);
 
-/* ─── VAULT BAR ANIMATION ─── */
-document.querySelectorAll('.vault-bar-fill').forEach(bar => {
-  const obs = new IntersectionObserver((entries) => {
+  // ── TERMINAL TIME ──
+  let secs = 4;
+  setInterval(() => {
+    secs = Math.floor(Math.random() * 8) + 1;
+    const el = document.getElementById('term-time');
+    if (el) el.textContent = secs + 's ago';
+  }, 3000);
+
+  // ── WALLET MODAL ──
+  function openWallet() {
+    document.getElementById('walletModal').classList.add('open');
+  }
+  function closeWallet() {
+    document.getElementById('walletModal').classList.remove('open');
+  }
+  function closeWalletOnBg(e) {
+    if (e.target === document.getElementById('walletModal')) closeWallet();
+  }
+  function connectWallet(name) {
+    alert(`Connecting to ${name}... \n\nIntegrate @solana/wallet-adapter here untuk koneksi nyata.`);
+    closeWallet();
+  }
+
+  // ── SCROLL REVEAL ──
+  const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
-        setTimeout(() => { bar.style.width = bar.dataset.target + '%'; }, 400);
-        obs.unobserve(e.target);
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
       }
     });
-  }, { threshold: 0.5 });
-  obs.observe(bar);
-});
+  }, { threshold: 0.1 });
 
-/* ─── LIVE TERMINAL DATA ─── */
-let rebalCount = 1847;
-let x402Count = 218;
-let lastRbSec = 4;
-
-function updateTerminal() {
-  const s = (10.8 + Math.random() * 0.8).toFixed(1) + '%';
-  const b = (17.4 + Math.random() * 2.6).toFixed(1) + '%';
-  const a = (30 + Math.random() * 7).toFixed(1) + '%';
-  rebalCount += Math.floor(Math.random() * 4);
-  x402Count += Math.floor(Math.random() * 3);
-  lastRbSec = Math.floor(Math.random() * 10) + 1;
-
-  document.getElementById('tStable').textContent = s;
-  document.getElementById('tBoost').textContent = b;
-  document.getElementById('tAlpha').textContent = a;
-  document.getElementById('tRebal').textContent = rebalCount.toLocaleString();
-  document.getElementById('tX402').textContent = x402Count;
-  document.getElementById('tLastRb').textContent = lastRbSec + 's ago';
-  document.getElementById('sRebal').textContent = rebalCount.toLocaleString();
-}
-setInterval(updateTerminal, 3800);
-
-/* ─── MODAL ─── */
-const vaultAPY = { STABLE: 11.2, BOOST: 18.7, ALPHA: 33.4 };
-let modalOpen = false;
-
-let currentModalVault = 'STABLE';
-
-function openModal(vaultKey, vaultName) {
-  if (modalOpen) return;
-  modalOpen = true;
-  currentModalVault = vaultKey;
-  document.getElementById('mVaultName').textContent = vaultName.toUpperCase();
-  
-  // reset form
-  document.getElementById('dInputForm').classList.add('show');
-  document.getElementById('txSteps').style.display = 'none';
-  document.getElementById('mOk').className = 'modal-ok';
-  
-  // update tabs
-  document.querySelectorAll('.vt-sm').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.vt-sm').forEach(t => {
-    if(t.textContent === vaultKey) t.classList.add('active');
+  document.querySelectorAll('.vault-card, .ai-card, .step, .team-card, .sec-card, .rm-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(24px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
   });
-  
-  document.getElementById('modal').classList.add('open');
-}
-
-function setModalVault(vk, el) {
-  currentModalVault = vk;
-  document.querySelectorAll('.vt-sm').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('mVaultName').textContent = vk + ' VAULT';
-}
-
-function startSim() {
-  document.getElementById('dInputForm').classList.remove('show');
-  document.getElementById('txSteps').style.display = 'flex';
-  ['ms1','ms2','ms3','ms4'].forEach(id => document.getElementById(id).className = 'tx-step');
-
-  const steps = ['ms1','ms2','ms3','ms4'];
-  const activeTimes = [100, 1000, 2100, 3200];
-  const doneTimes   = [900, 2000, 3100, 4200];
-
-  steps.forEach((id, i) => {
-    setTimeout(() => document.getElementById(id).className = 'tx-step active', activeTimes[i]);
-    setTimeout(() => document.getElementById(id).className = 'tx-step done', doneTimes[i]);
-  });
-
-  setTimeout(() => {
-    document.getElementById('txSteps').style.display = 'none';
-    const apy = vaultAPY[currentModalVault] || 11.2;
-    const hash = '0x' + [...Array(40)].map(() => Math.floor(Math.random()*16).toString(16)).join('');
-    let amt = document.getElementById('mAmount').value || '1000';
-    amt = Number(amt).toLocaleString();
-    document.getElementById('mOkDetail').innerHTML =
-      `<strong style="color:var(--ink)">${amt} USDC</strong> deposited into ${currentModalVault} VAULT<br>` +
-      `<strong style="color:var(--ink)">${amt} $vsUSD</strong> minted · Earning <strong style="color:var(--lime)">${apy}% Est. APY</strong>`;
-    document.getElementById('mOkHash').textContent = 'TX: ' + hash.slice(0, 44) + '…';
-    document.getElementById('mOk').className = 'modal-ok show';
-  }, 4600);
-}
-
-function closeModal() {
-  document.getElementById('modal').classList.remove('open');
-  modalOpen = false;
-}
-document.getElementById('modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-// Clean URL Smooth Scrolling for internal links (removes # from url)
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function (e) {
-    if (this.getAttribute('href') === '#') return;
-    const target = document.querySelector(this.getAttribute('href'));
-    if (target) {
-      e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth' });
-    }
-  });
-});
 </script>
 </body>
 </html>
-
-
-
-
-
