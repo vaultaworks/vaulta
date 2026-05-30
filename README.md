@@ -1,17 +1,12 @@
-# VAULTA — Autonomous Yield Infrastructure on Base
+# VAULTA — Autonomous Yield Infrastructure on Solana
 
 > Deposit USDC. Receive $vsUSD. Let AI compound your capital — 24/7, on-chain, transparent.
-
-[![Testnet](https://img.shields.io/badge/Testnet-Base_Sepolia-00C853?style=flat-square)](https://sepolia.basescan.org)
-[![Built on Base](https://img.shields.io/badge/Built_on-Base-0052FF?style=flat-square)](https://base.org)
-[![Status](https://img.shields.io/badge/Status-Testnet_Live-brightgreen?style=flat-square)]()
-[![License](https://img.shields.io/badge/License-MIT-gold?style=flat-square)](LICENSE)
 
 ---
 
 ## What is Vaulta?
 
-Vaulta is a **non-custodial, AI-driven yield protocol** on Base. Users deposit USDC into one of three vaults, receive the yield-bearing `$vsUSD` token, and earn optimized returns — automatically — without managing positions, monitoring rates, or paying excessive gas.
+Vaulta is a **non-custodial, AI-driven yield protocol** on Solana. Users deposit USDC into one of three vaults, receive the yield-bearing `$vsUSD` token, and earn optimized returns — automatically — without managing positions, monitoring rates, or paying excessive gas.
 
 The AI optimizer routes capital across **Morpho, Aerodrome, Ondo Finance, Centrifuge, and x402 agentic flows** — continuously rebalancing toward the highest risk-adjusted opportunity.
 
